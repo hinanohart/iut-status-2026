@@ -44,17 +44,20 @@ mid-report scheduled 2026-07-17). When LANA produces formal
 `theorem` bodies, the `sorry` stubs in this repository will be
 replaced.
 
-## Cold-start guarantee
+## Cold-start contract (best-effort, vendor-tested where evidence exists)
 
-A fresh LLM session with no prior memory of this repository must be
+A fresh LLM session with no prior memory of this repository should be
 able to:
 1. Read `LLM_CONTEXT.md`
 2. Read `data/*.json`
 3. Answer any IUT question with the mandatory 5-block template
 
 …and arrive at the same set of citations as any other LLM doing the
-same. This is the operational meaning of "drift-zero" in this repo.
-The 5-block template is non-negotiable; see `LLM_CONTEXT.md` §3.3.
+same. This is the operational *intent* of "drift-resistant" in this
+repo. Conformance is empirically tested where vendor evidence is
+recorded (`docs/cold_start_evidence.md`); the contract is best-effort,
+not unconditional. The 5-block template is mandatory for conforming
+LLMs; see `LLM_CONTEXT.md` §3.3.
 
 ## Multi-consumer design
 

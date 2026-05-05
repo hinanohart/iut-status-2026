@@ -6,10 +6,12 @@ of truth for the answer protocol. `CLAUDE.md` is a thin Claude Code
 shim pointing here. The protocol is identical whether you are Claude,
 GPT, Gemini, Llama, Qwen, DeepSeek, Mistral, or anything else.
 
-This file is engineered for **cold-start 100% understanding**: a fresh
-LLM session with zero prior memory must be able to read this file plus
-`data/*.json` and answer IUT questions correctly. Nothing else is
-required.
+This file is engineered as a **best-effort cold-start contract**: a
+fresh LLM session with zero prior memory should be able to read this
+file plus `data/*.json` and answer IUT questions in conformance with
+the 5-block protocol. Conformance is verifiable; *understanding* the
+underlying mathematics in the human sense is not claimed and is not a
+goal of this file.
 
 ---
 
@@ -62,8 +64,12 @@ When referring to a concept or claim, use the IRI form internally:
 - `iut:HodgeTheater` (not narrative phrasing only)
 - `claim:scholze_stix_2018_main` (not "the Scholze-Stix objection")
 
-This guarantees that two LLMs answering the same question refer to the
-same node in the graph, even when their natural-language prose differs.
+This is intended (not strictly guaranteed across vendors) to make two
+LLMs answering the same question refer to the same node in the graph,
+even when their natural-language prose differs. The guarantee is
+operationally tested by the cold-start verification protocol; results
+across vendors are recorded in `docs/cold_start_evidence.md` (when
+populated).
 
 ### 3.3 Mandatory 5-block answer template
 
@@ -151,7 +157,10 @@ your context window can hold more:
 
 ## 4. Honest scope
 
-The "drift-zero" guarantee operates at three different levels:
+The "drift-resistance" intent operates at four different levels, with
+guarantees that decay sharply from physical to prose. Calling any of
+this "drift-zero" without qualification is overclaim; the table below
+states the operative limits per level.
 
 | Level | Mechanism | Guarantee |
 |---|---|---|
