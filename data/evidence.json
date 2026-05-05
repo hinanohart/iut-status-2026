@@ -199,6 +199,14 @@
       "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Absolute%20Anabelian%20Cuspidalizations.pdf",
       "asserted_at": "2007-01-01",
       "publisher": "Publ. RIMS"
+    },
+    {
+      "id": "evidence:Frobenioids_II",
+      "type": "Paper",
+      "label": "The Geometry of Frobenioids II: Poly-Frobenioids (Mochizuki 2008)",
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/The%20Geometry%20of%20Frobenioids%20II.pdf",
+      "asserted_at": "2008-01-01",
+      "publisher": "Kyushu J. Math."
     }
   ]
 }
