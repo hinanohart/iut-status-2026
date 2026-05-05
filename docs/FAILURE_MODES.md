@@ -116,6 +116,119 @@ not the chosen path because it under-delivers on user intent ("really
 long"); however, the L1-investment portion of that proposal is folded
 into the v0.3 roadmap (multi-vendor CI, verbatim SHA-256 enforcement).
 
+## Hidden modes (added at v0.2.3 round-2 stress-test)
+
+The round-1 list above was widened by a second-round critic stress-test.
+These are second-order failure modes that the first round did not surface.
+
+### H1. Wikipedia editor cites this OSS as a primary source → WP:RS deletion war
+
+If a Wikipedia editor cites `iut-status-2026` as a source on the abc /
+IUT article, other editors will challenge it under WP:RS / WP:OR /
+WP:SYNTH (the multi-perspective preservation looks like synthesis to a
+WP reviewer). Probability ≈ 30 %; impact: maintainer reputation.
+
+**Mitigation.** README states explicitly: "Not a Wikipedia-citable
+secondary source. This is a tracking aggregator, not a peer-reviewed
+survey." The disclaimer is permanent.
+
+### H2. LANA mid-report (2026-07-17) overnight obsolescence
+
+If LANA's mid-report concludes either "Cor.3.12 is verified" or "the
+claimed gap is real", roughly 30 + records become stale within a day,
+and the two-side-preservation premise of several sections collapses.
+Probability ≈ 50 %; impact: structural rewrite required.
+
+**Mitigation.** Schema v0.3 reserves `superseded_by_lana_2026_07`
+optional field on every Mochizuki-side and SS-side claim, pre-wiring the
+sunset path. A v0.4 emergency pivot script
+(`tools/lana_pivot_2026_07.py`) is drafted in advance.
+
+### H3. RIMS server link-rot synchronous failure
+
+≈ 20 + evidence URLs depend on a single host (`kurims.kyoto-u.ac.jp`).
+A policy change or migration on that host can break all of them at once.
+Probability ≈ 25 % over 5 years; impact: evidence layer collapse.
+
+**Mitigation.** `archive_url` (Wayback Machine snapshot) is **required**
+on every Paper / Blog evidence record at v0.3 schema. `tools/archive_evidence.py`
+submits new URLs to the Wayback Machine on entry.
+
+### H4. Innovation-explorer triage fatigue → silent PR queue death
+
+If the explorer opens daily PRs and the maintainer fails to triage,
+50 + stale PRs accumulate within six months and the automation dies
+silently. Probability ≈ 70 %; impact: de facto loss of a key
+infrastructure piece.
+
+**Mitigation.** Cadence is monthly, gated on a "claim graph delta > 0"
+threshold (no graph change ⇒ no PR). A separate monthly heartbeat issue
+confirms the cron is alive even when no PR is opened.
+
+### H5. Dual-side false-balance accusation
+
+Both Western (Scholze-aligned) and Japanese (Mochizuki-aligned) social
+audiences may publicly accuse the repository of biased "neutrality":
+the former calls it Mochizuki apologism, the latter calls it Western
+slant. Probability ≈ 35 %; impact: maintainer social cost +
+repository's perceived legitimacy.
+
+**Mitigation.** `LLM_CONTEXT.md` and README explicitly position the
+repository as a *status aggregator, not arbiter*; the protocol forbids
+synthesis verdicts. A `docs/community_reception.md` (added at v0.3)
+records both sides' public reception, transparent rather than hidden.
+
+## Mitigation-impossible (acceptance-only) modes
+
+Some failure modes admit no in-repo mitigation; the only response is
+graceful acceptance plus survival mode.
+
+- GitHub Actions free tier deprecation / pricing change → switch to
+  self-hosted runners or accept loss of CI; the data remains valid.
+- Mochizuki / RIMS / EMS Press DMCA-style takedown → comply, remove the
+  affected snippets, leave locators only.
+- Anthropic Claude API deprecation → multi-vendor design absorbs;
+  drop Claude from the matrix.
+- abc conjecture proved by an unrelated method → repository becomes
+  historical record; flip `STATUS.md` to `ARCHIVED`, keep the artefact
+  for posterity.
+- Wayback Machine itself goes offline → host-local archive is the only
+  remaining recovery; document this in `tools/archive_evidence.py`.
+
+## Repository sustainability horizons
+
+- **Short-term (3 months).** The dominant variable is the LANA
+  mid-report. If H2 fires either way, response is a v0.4 emergency
+  pivot — not a shutdown. The schema's `superseded_by_lana_2026_07`
+  field exists precisely for this.
+- **Mid-term (12 months).** The dominant variable is maintainer
+  attention. A `docs/annual_review.md` records the past 12 months of
+  PRs merged, triage rate, and graph delta. Falling below thresholds
+  triggers a `STATUS.md = STALE` flag (still public, but warning).
+- **Long-term (5 years).** Natural sunset conditions: (a) mathematical
+  community consensus on abc emerges (Joshi verified or LANA refutes),
+  (b) Mochizuki retracts IUT, (c) maintainer interest ends. (a) and (b)
+  combined are about 30 % over five years; (c) is uncertain. End-of-life
+  protocol: flip `STATUS.md` to `ARCHIVED`, never delete (historical
+  value preserved).
+
+## Devil's-advocate option (re-evaluated at round 2)
+
+The round-1 review recorded "freeze at v0.2.x" as not chosen. The
+round-2 critic re-evaluation softened that: a **v0.2.5 hybrid**
+proposal stays at v0.2 scale (33 entities, 16 claims) but invests
+exclusively in L1 = 100 % via multi-vendor evidence and verbatim-SHA256
+enforcement, deferring v0.3 scale-up by 2-3 months until after the LANA
+mid-report. Rationale: H2 (overnight obsolescence) plus H4 (triage
+fatigue) make pre-LANA scale-up partially sunk-cost. The hybrid is a
+timing modification, not a different goal.
+
+This document records the hybrid as an **available option**; the chosen
+path remains the v0.3 → v0.5 → v1.0 phased expansion. The maintainer
+may switch to v0.2.5 hybrid at any time before tagging v0.3.0 by
+amending `docs/UNDERSTANDING_LEVELS.md` Roadmap and reverting to a
+freeze.
+
 ## Audit cadence
 
 - Every v0.x.0 minor release: 3-agent re-audit (analyst + architect +

@@ -139,10 +139,41 @@ Outputs are persisted as the three architecture documents below.
 The three documents are co-equal and must be read together by anyone
 attempting v0.3 work.
 
-Decision: phased expansion (v0.3 → v0.5 → v1.0) with verbatim-SHA256
-enforcement, multi-vendor CI, and PDF cache as host-local-only. The
-devil's-advocate "freeze at v0.2" option is not chosen but its L1
-investment portion is folded into the v0.3 plan.
+Decision (round 1): phased expansion (v0.3 → v0.5 → v1.0) with
+verbatim-SHA256 enforcement, multi-vendor CI, and PDF cache as
+host-local-only.
+
+## v0.2.3 architecture stress-test (round 2, 2026-05-06)
+
+A second-round 3-agent stress-test of the round-1 documents identified
+substantive gaps. The three documents were updated in the same commit:
+
+- **UNDERSTANDING_LEVELS.md** gained an interim Level 1.5
+  (Formally-Verified Navigation, post-LANA), seven L1 specification
+  refinements (prose quality bound, 5-block content floor, symmetry
+  secondary axis, coverage denominator freeze, L3 reclassification
+  protocol, consumer-class L1 spec, L1.5 forward-compatibility), and
+  three explicit warnings against common misreadings.
+- **ARCHITECTURE.md** revised three round-1 decisions: `entities/` is
+  a single file at v0.3 scale (per-type sharding deferred to v1.0+);
+  cross-reference indexes are computed on-the-fly (no `_indexes/`
+  directory at v0.3); `verbatim_short_statement` is constrained to
+  ≤ 100 chars per record and ≤ 25 KB cumulative across `data/` to
+  satisfy the JP Copyright Act Article 32 主従比 1:5 requirement.
+  Six v0.2.3 refinements (backward-compat contract, JP CL Art. 32,
+  shard_id invariant, multi-vendor cadence, explorer robustness,
+  archive_url mandatory) are mandated before any v0.3 expansion.
+- **FAILURE_MODES.md** gained five hidden modes (H1 Wikipedia
+  WP:RS war, H2 LANA overnight obsolescence, H3 RIMS link-rot
+  synchronous failure, H4 explorer triage fatigue silent death,
+  H5 dual-side false-balance accusation), an acceptance-only modes
+  list, repository sustainability horizons (3 mo / 12 mo / 5 y), and
+  a re-evaluated devil's-advocate `v0.2.5 hybrid` proposal recorded
+  as an available alternative path.
+
+These updates are normative; the architecture is now considered frozen
+at the document layer for the duration of v0.3 work. Any subsequent
+revision opens a new round-3 stress-test entry.
 
 ---
 
