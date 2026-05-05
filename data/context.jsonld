@@ -1,0 +1,60 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "iut": "https://hinanohart.github.io/iut-status-2026/iri/",
+    "claim": "https://hinanohart.github.io/iut-status-2026/iri/claim/",
+    "evidence": "https://hinanohart.github.io/iut-status-2026/iri/evidence/",
+    "math": "https://schema.org/MathSolver/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "id": "@id",
+    "type": "@type",
+
+    "Concept":     "iut:Concept",
+    "Theorem":     "iut:Theorem",
+    "Corollary":   "iut:Corollary",
+    "Definition":  "iut:Definition",
+    "Construction": "iut:Construction",
+    "Claim":       "iut:Claim",
+    "Evidence":    "iut:Evidence",
+    "Person":      "schema:Person",
+    "Paper":       "schema:ScholarlyArticle",
+
+    "label":           {"@id": "schema:name"},
+    "alt_labels":      {"@id": "schema:alternateName", "@container": "@set"},
+    "definedIn":       {"@id": "iut:definedIn", "@type": "@id"},
+    "depends_on":      {"@id": "iut:dependsOn", "@type": "@id", "@container": "@set"},
+    "introduced_by":   {"@id": "iut:introducedBy", "@type": "@id"},
+    "introduced_year": {"@id": "iut:introducedYear", "@type": "xsd:gYear"},
+
+    "informal_md":     "iut:informalMd",
+    "lean_stub":       "iut:leanStub",
+    "lean_module":     "iut:leanModule",
+
+    "claims":          {"@id": "iut:hasClaim", "@type": "@id", "@container": "@set"},
+    "about":           {"@id": "iut:claimAbout", "@type": "@id"},
+    "position":        "iut:claimPosition",
+    "proponents":      {"@id": "iut:proponents", "@container": "@set"},
+    "counters":        {"@id": "iut:counters", "@type": "@id", "@container": "@set"},
+    "supports":        {"@id": "iut:supports", "@type": "@id", "@container": "@set"},
+    "evidence":        {"@id": "iut:evidence", "@type": "@id", "@container": "@set"},
+    "specific_objection": "iut:specificObjection",
+    "stance":          "iut:stance",
+    "status":          "iut:status",
+    "asserted_at":     {"@id": "iut:assertedAt", "@type": "xsd:date"},
+    "verified_at":     {"@id": "iut:verifiedAt", "@type": "xsd:date"},
+
+    "doi":             "schema:identifier",
+    "url":             {"@id": "schema:url", "@type": "@id"},
+    "page":            "schema:pageStart",
+    "section":         "iut:section",
+    "quote":           "schema:text",
+    "quote_lang":      {"@id": "schema:inLanguage"},
+    "fair_use_note":   "iut:fairUseNote",
+
+    "event":           "schema:Event",
+    "date":            {"@id": "schema:startDate", "@type": "xsd:date"},
+    "actors":          {"@id": "schema:actor", "@container": "@set"}
+  }
+}

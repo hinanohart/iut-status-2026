@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hinanohart.github.io/iut-status-2026/schemas/claim.json",
+  "title": "IUT Claim",
+  "description": "A single claim in the IUT dispute graph. Claims have positions (valid/gap/alternative/pending) and may counter or support other claims.",
+  "type": "object",
+  "required": ["id", "type", "label", "about", "position", "stance", "asserted_at", "evidence", "verified_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^claim:[a-z][a-z0-9_]*$",
+      "description": "Stable IRI for the claim"
+    },
+    "type": {"const": "Claim"},
+    "label": {"type": "string", "minLength": 10},
+    "about": {
+      "type": "string",
+      "pattern": "^(iut|claim):[a-zA-Z][a-zA-Z0-9_.]*$",
+      "description": "IRI of the entity or claim this claim is about"
+    },
+    "position": {
+      "enum": ["valid", "gap", "alternative", "pending"],
+      "description": "Mathematical position. valid=claim asserts proof; gap=claim asserts flaw; alternative=claim offers different framework; pending=claim is investigation in progress"
+    },
+    "stance": {
+      "enum": ["supportive", "critical", "reformulation", "neutral-observation", "investigation"]
+    },
+    "proponents": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "asserted_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "counters": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^claim:[a-z][a-z0-9_]*$"}
+    },
+    "supports": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^claim:[a-z][a-z0-9_]*$"}
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^evidence:[a-zA-Z][a-zA-Z0-9_]*$"},
+      "minItems": 1,
+      "description": "Required: every claim must point to at least one evidence record"
+    },
+    "specific_objection": {"type": "string"},
+    "fair_use_note": {"type": "string"},
+    "status": {"type": "string"},
+    "verified_at": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": false
+}
