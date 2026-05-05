@@ -53,6 +53,28 @@ limit, not an achievable state.
 **Current status.** Approximately 5 % of L2 (heads of major theorems only;
 no FAQ coverage; no per-section SS claims yet).
 
+## Level 1.5 — Formally-Verified Navigation (interim, post-LANA)
+
+**Statement.** Every Lean stub in `lean/IutStatus/*.lean` has its `sorry`
+replaced by a body that compiles against `mathlib4` plus the LANA library
+(once published), and every entity carries a `lean_path` field pointing to
+the corresponding formal definition. Navigation answers can cite a Lean
+theorem name in addition to (not instead of) a paper / page locator.
+
+**Feasibility.** Achievable **only after** LANA delivers a usable formal
+library. The Lean naming convention in this repository is forward-compatible
+with LANA module conventions; bodies are replaceable mechanically.
+
+**Auto-verifiable success criteria.**
+- L1.5a: `lake build` exits 0 with no `sorry` remaining.
+- L1.5b: every entity has a populated `lean_path`.
+- L1.5c: an L1 cold-start fixture answer cites a Lean theorem name where
+  one is registered.
+
+**Current status (2026-05-06).** 0 % (LANA in progress; mid-report
+2026-07-17). L1.5 status is gated externally; the OSS implementation is
+ready to absorb LANA output as soon as it is published.
+
 ## Level 3 — Mathematical Understanding (validity judgment)
 
 **Statement.** Decide whether IUT, as Mochizuki formulated it, proves the
@@ -85,6 +107,60 @@ continuously. L1 100 % is reachable with 7-vendor multi-vendor CI plus
 verbatim-SHA256 enforcement; the engineering for that exists in this
 repository's architecture (see `ARCHITECTURE.md`) but is implemented
 incrementally.
+
+## L1 specification refinements (v0.2.3 stress-test)
+
+The following additions resolve ambiguities found by the round-2
+analyst stress-test (2026-05-06). They are normative; CI will gate them
+once implemented.
+
+1. **L1 prose quality bound.** A prose answer derived from an IRI must be
+   ≤ 200 characters per block, must contain ≥ 1 verbatim short quotation
+   from the cited evidence, and must contain 0 value-laden adjectives in
+   the LLM's own voice (cross-reference `LLM_CONTEXT.md` §3.4).
+2. **5-block content floor.** Each of the five blocks must contain ≥ 1
+   sentence. The Pending block, while
+   `claim:lana_formalization_in_progress.status` indicates the
+   investigation is active, must cite that claim explicitly; "no pending
+   investigation indexed" is non-conforming during that period.
+3. **Symmetry secondary axis.** In addition to character ratio in
+   [0.7, 1.3], the Mochizuki-side and SS-side citation counts must each
+   be ≥ 1, and the verbs framing each side must come from a small
+   approved list ("asserts", "writes", "argues", "states") rather than
+   evaluative verbs ("admits", "concedes", "claims wrongly").
+4. **Coverage denominator freeze.** L2 percentages are computed against
+   a paper-version-frozen denominator. New paper versions add a separate
+   row in the L2 report rather than overwriting the existing percentage.
+5. **L3 reclassification protocol.** The "out-of-scope" status of L3 is
+   revisable only if all three gates fire: (a) LANA produces a verified
+   formalization of the disputed corollary, (b) at least 6 calendar
+   months elapse without contradicting external publication, (c) ≥ 1
+   independent third-party (non-LANA) verification appears. Any
+   reclassification proposal opens a 30-day public comment period via
+   GitHub Issue before merge.
+6. **Consumer-class L1 specifications.** Three classes — chat-context,
+   MCP-only, and RAG / multi-document — each have separate L1 fixtures.
+   The current cold-start fixture is the chat-context class; MCP-only
+   and RAG fixtures are added at v0.3.
+7. **L1.5 forward-compatibility.** When LANA publishes any IUT-relevant
+   formalization, every affected entity gains a `lean_path` field in the
+   same commit that ingests the LANA artefact. L1.5 progress is tracked
+   in `docs/cold_start_evidence.md` alongside L1.
+
+## Common misreadings of "100 % understanding" (warnings)
+
+These misreadings have been observed or predicted; they are wrong.
+
+1. **"LANA mid-report 2026-07-17 = L3 achieved."** The mid-report is a
+   formalization progress update, not a validity judgement. L3 reclassification
+   requires the triple gate above.
+2. **"L1 = 95 % means IUT is 95 % understood."** L1 is protocol
+   compliance: navigation, citation, decline-gracefully. It is not a
+   measure of mathematical content mastery.
+3. **"L2 = 80 % means 80 % of the IUT literature is indexed."** L2 is
+   computed against papers registered in `data/entities.json` of type
+   `Paper`. Papers outside that set (e.g. Hoshi survey, Tan thesis,
+   Dupuy–Hilado preprints) are out of denominator until registered.
 
 ## What this repository will never promise
 

@@ -9,11 +9,11 @@ claims / ~15 000 + lines (v1.0). It complements `UNDERSTANDING_LEVELS.md`
 
 | Concern | Decision |
 |---|---|
-| JSON sharding | per-entity-type for `entities/` + per-section for `claims/by_section/` + a `data/manifest.json` |
+| JSON sharding | **`entities/all.json` single file** (per-type sharding deferred to v1.0+ when entities > 500); per-section for `claims/by_section/` (≤ 8 shards); `data/manifest.json` lists shards |
 | Schema versioning | `schemas/v0.2/` and `schemas/v0.3/` coexist; loader supports both via `oneOf` |
-| Cross-reference | build-time static indexes under `data/_indexes/` (excluded from Merkle) |
+| Cross-reference | **on-the-fly dict comprehension in loader** (≤ 5 ms at v0.5 scale); static `_indexes/` deferred to v1.0+ when entities > 500 |
 | Sub-section docs | `docs/section_<n>_<name>/<n><letter>_*.md` + `_verification_log.md` per section |
-| PDF cache | NOT in repository; `cache/` is `.gitignore`-d; `verbatim_short_statement` ≤ 200 chars; PDF SHA-256 in `evidence.json` |
+| PDF cache | NOT in repository; `cache/` is `.gitignore`-d; `verbatim_short_statement` **≤ 100 chars/record, cumulative ≤ 25 KB across all data/** (JP CL Art. 32 主従比 1:5 制約); PDF SHA-256 in `evidence.json`; `archive_url` (Wayback) mandatory on every Paper/Blog evidence record |
 | LLM context window | `data/manifest.json` + `data/_summary.json` cold-start; details lazy-loaded via MCP tools |
 | Merkle | per-shard Merkle root → top-level Merkle of Merkles; incremental rebuild |
 | Innovation explorer | GitHub Actions CRON daily arXiv / RIMS watch |
@@ -174,6 +174,72 @@ runs the L1 fixture against 3–7 LLM vendors and posts the matrix to
 6. on miss: no-op
 
 Cost: free GitHub Actions tier; ≤ 60 minutes / month.
+
+## v0.2.3 stress-test refinements (must precede v0.3 work)
+
+The round-2 architecture stress-test (2026-05-06) flagged the following
+items as blockers; they are mandated before any v0.3 expansion.
+
+### 1. Backward-compat contract (frozen)
+
+- v0.2 schemas under `schemas/v0.2/` are **frozen**; no edits.
+- v0.3 schemas under `schemas/v0.3/` add fields with explicit
+  `dependentRequired` (Draft 2020-12): `verbatim_short_statement` →
+  requires `verbatim_sha256`.
+- The loader (`loaders/python_minimal.py`) is **tolerant** — it reads
+  v0.2 records by ignoring v0.3-only fields and reads v0.3 records by
+  treating new fields as optional with `record.get(field)`. v0.2 *schema*
+  validation will fail-fast on a v0.3 record by design; this is intentional
+  to prevent silent downgrade.
+
+### 2. JP Copyright Act Article 32 主従比 (mandatory)
+
+- Per-record `verbatim_short_statement` is **≤ 100 characters**.
+- Cumulative `verbatim_short_statement` total across `data/` is **≤ 25 KB**.
+- `tools/validate.py` enforces both bounds with hard exit codes.
+- The 主 (main) text of `docs/section_*/<n><letter>_*.md` must exceed
+  the corresponding section's verbatim total by **5 ×** before that
+  section's verbatim records may be added.
+
+### 3. Merkle historical reproducibility (shard_id invariant)
+
+- Every shard has a stable `shard_id` (UUID-like) that is independent of
+  its `path`. Renaming a shard does not break historical Merkle
+  verification.
+- `tools/verify_merkle.py` auto-detects v0.2 (4-file flat) vs v0.3+
+  (sharded with `shard_id`) layouts and uses the matching algorithm.
+- `tests/test_merkle_history.py` (added before v0.3) asserts that the
+  v0.2 root `8dbc6334…` (then `348662ce…` after the v0.1.1 audit) is
+  recomputable from v0.3-era code given the v0.2 layout.
+
+### 4. Multi-vendor CI cadence
+
+- Daily multi-vendor cold-start is **descoped to weekly with 3 vendors**
+  (Claude / Gemini / GPT) on cost grounds (≈ $3-5 / month).
+- 7-vendor full matrix is run **monthly** as a separate job.
+- API keys are stored as GitHub Actions secrets; rotation is reminded
+  via a 6-monthly auto-issue, not enforced automatically.
+
+### 5. Innovation explorer robustness
+
+- arXiv keyword set widened to include the regex
+  `[Cc]or(ollary)?\s*\.?\s*3\.?12` plus "IUTT", "IUT-T", "universal
+  Teichmüller", "ABC conjecture proof".
+- Watchlist extends beyond RIMS / arXiv: Yamashita Twitter, Hoshi page,
+  any co-author personal page registered as a `Person` entity.
+- `.github/workflows/innovation_heartbeat.yml` opens a monthly issue
+  even when no hits are found, so silent death of the cron is detectable.
+- PR cadence is **gated by a delta threshold**: only if the new
+  evidence introduces at least one claim graph difference (new IRI, new
+  edge, new locator) does the explorer open a PR. Pure noise is silently
+  filtered.
+
+### 6. Schema v0.3 evidence record gains `archive_url`
+
+- Every `Paper` / `Blog` evidence record gains `archive_url` (Wayback
+  Machine snapshot URL) as **required** at v0.3 schema.
+- `tools/archive_evidence.py` is the canonical helper that submits the
+  URL to the Wayback Machine and stores the snapshot URL.
 
 ## Migration plan (v0.2.x → v0.3)
 
