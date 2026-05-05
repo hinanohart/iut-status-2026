@@ -2,38 +2,47 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hinanohart.github.io/iut-status-2026/schemas/claim.json",
   "title": "IUT Claim",
-  "description": "A single claim in the IUT dispute graph. Claims have positions (valid/gap/alternative/pending) and may counter or support other claims.",
+  "description": "A single claim in the IUT dispute graph. Position values are aligned 1:1 with the LLM_CONTEXT.md 5-block answer template (Mochizuki / SS / Joshi-alternative / pending-investigation / Unresolved-flag).",
   "type": "object",
   "required": ["id", "type", "label", "about", "position", "stance", "asserted_at", "evidence", "verified_at"],
   "properties": {
     "id": {
       "type": "string",
-      "pattern": "^claim:[a-z][a-z0-9_]*$",
-      "description": "Stable IRI for the claim"
+      "pattern": "^claim:[a-z][a-z0-9_]*$"
     },
     "type": {"const": "Claim"},
     "label": {"type": "string", "minLength": 10},
     "about": {
       "type": "string",
-      "pattern": "^(iut|claim):[a-zA-Z][a-zA-Z0-9_.]*$",
-      "description": "IRI of the entity or claim this claim is about"
+      "pattern": "^(iut|claim):[a-zA-Z][a-zA-Z0-9_.]*$"
     },
     "position": {
-      "enum": ["valid", "gap", "alternative", "pending"],
-      "description": "Mathematical position. valid=claim asserts proof; gap=claim asserts flaw; alternative=claim offers different framework; pending=claim is investigation in progress"
+      "enum": [
+        "valid",
+        "alleged_gap",
+        "alternative",
+        "pending",
+        "factual_statement",
+        "factual_publication"
+      ],
+      "description": "valid=claim asserts proof correct; alleged_gap=claim asserts flaw (renamed from gap to flag that the alleged-ness itself is contested); alternative=different framework; pending=investigation in progress; factual_statement=neutral mathematical statement; factual_publication=neutral publication event"
     },
     "stance": {
-      "enum": ["supportive", "critical", "reformulation", "neutral-observation", "investigation"]
+      "enum": [
+        "supportive",
+        "critical",
+        "reformulation",
+        "neutral-observation",
+        "investigation",
+        "neutral-statement"
+      ]
     },
     "proponents": {
       "type": "array",
       "items": {"type": "string"},
       "minItems": 1
     },
-    "asserted_at": {
-      "type": "string",
-      "format": "date"
-    },
+    "asserted_at": {"type": "string", "format": "date"},
     "counters": {
       "type": "array",
       "items": {"type": "string", "pattern": "^claim:[a-z][a-z0-9_]*$"}
@@ -42,19 +51,32 @@
       "type": "array",
       "items": {"type": "string", "pattern": "^claim:[a-z][a-z0-9_]*$"}
     },
+    "relates_to": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^claim:[a-z][a-z0-9_]*$"},
+      "description": "non-directional relationship (neither counter nor support); used e.g. for parallel reformulations"
+    },
     "evidence": {
       "type": "array",
-      "items": {"type": "string", "pattern": "^evidence:[a-zA-Z][a-zA-Z0-9_]*$"},
-      "minItems": 1,
-      "description": "Required: every claim must point to at least one evidence record"
+      "items": {"type": "string", "pattern": "^evidence:[A-Za-z][A-Za-z0-9_]*$"},
+      "minItems": 1
     },
     "specific_objection": {"type": "string"},
     "fair_use_note": {"type": "string"},
     "status": {"type": "string"},
-    "verified_at": {
-      "type": "string",
-      "format": "date"
-    }
+    "peer_review_status": {
+      "enum": [
+        "peer_reviewed",
+        "preprint_not_peer_reviewed",
+        "publication_event",
+        "informal_blog",
+        "self_published_preprint",
+        "project_announcement",
+        "n/a"
+      ],
+      "description": "structured peer-review status separated from free-form `status` field"
+    },
+    "verified_at": {"type": "string", "format": "date"}
   },
   "additionalProperties": false
 }

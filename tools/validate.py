@@ -1,13 +1,24 @@
 #!/usr/bin/env python3
-"""Validate JSON-LD data files against JSON Schema.
+"""Validate JSON-LD data files against JSON Schema and cross-references.
 
-This guards drift at structural level. CI runs this on every PR.
+This guards drift at the structural level. CI runs this on every PR.
 
 Validation rules (in addition to JSON Schema):
 1. Every claim's `about` IRI exists in `entities.json` or `claims.json`.
 2. Every claim's `evidence` IRI exists in `evidence.json`.
-3. Every claim's `counters` and `supports` IRIs exist in `claims.json`.
+3. Every claim's `counters`, `supports`, `relates_to` IRIs exist in
+   `claims.json`.
 4. Every entity's `depends_on` IRI exists in `entities.json`.
+5. Every entity's `introduced_by` IRI (when present) is a `person:`
+   namespace IRI registered in `entities.json` (`Person` type), or the
+   IRI of an entity (legacy compatibility).
+6. Every entity's `definedIn` IRI (when present) is a `paper:` namespace
+   IRI registered in `entities.json` (`Paper` type), or an `iut:` IRI.
+7. Every evidence record is referenced by at least one claim, OR is
+   listed in the `BACKGROUND_EVIDENCE_ALLOWLIST` constant for
+   intentional standalone reference records.
+8. Every entity's `informal_md` (when non-null) points to an existing
+   file relative to the repo root.
 
 Usage::
 
@@ -16,7 +27,7 @@ Usage::
 
 No external dependencies. Uses stdlib `json` only. JSON Schema
 validation is reimplemented at minimal level (required + type +
-pattern + enum + format=date).
+pattern + enum + format=date + format=uri + minLength + minItems).
 """
 from __future__ import annotations
 
@@ -34,13 +45,19 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "data"
 SCHEMA_DIR = REPO_ROOT / "schemas"
 
+BACKGROUND_EVIDENCE_ALLOWLIST: set[str] = {
+    "evidence:Frobenioids_I",
+    "evidence:EtaleTheta_2009",
+    "evidence:Alien_Copies_Survey",
+}
+
 
 class ValidationError(Exception):
-    """Raised when a record fails validation."""
+    pass
 
 
-def _check_type(value: Any, expected: str, path: str) -> None:
-    type_map = {
+def _check_type(value: Any, expected: str | list[str], path: str) -> None:
+    type_map: dict[str, type | tuple[type, ...]] = {
         "string": str,
         "array": list,
         "object": dict,
@@ -49,6 +66,17 @@ def _check_type(value: Any, expected: str, path: str) -> None:
         "boolean": bool,
         "null": type(None),
     }
+    if isinstance(expected, list):
+        valid = any(
+            isinstance(value, type_map[t]) if not isinstance(type_map[t], tuple)
+            else isinstance(value, type_map[t])
+            for t in expected
+        )
+        if not valid:
+            raise ValidationError(
+                f"{path}: expected one of {expected}, got {type(value).__name__}"
+            )
+        return
     py_type = type_map.get(expected)
     if py_type and not isinstance(value, py_type):
         raise ValidationError(
@@ -56,11 +84,15 @@ def _check_type(value: Any, expected: str, path: str) -> None:
         )
 
 
-def _check_format_date(value: str, path: str) -> None:
-    try:
-        date.fromisoformat(value)
-    except ValueError as exc:
-        raise ValidationError(f"{path}: invalid date '{value}': {exc}") from exc
+def _check_format(fmt: str, value: str, path: str) -> None:
+    if fmt == "date":
+        try:
+            date.fromisoformat(value)
+        except ValueError as exc:
+            raise ValidationError(f"{path}: invalid date '{value}': {exc}") from exc
+    elif fmt == "uri":
+        if not re.match(r"^https?://", value) and not value.startswith("urn:"):
+            raise ValidationError(f"{path}: not a valid URI: '{value}'")
 
 
 def _validate_record(record: dict[str, Any], schema: dict[str, Any], path: str) -> None:
@@ -87,21 +119,24 @@ def _validate_record(record: dict[str, Any], schema: dict[str, Any], path: str) 
             )
         if "type" in prop_schema:
             _check_type(value, prop_schema["type"], sub_path)
+        if value is None:
+            continue
         if "pattern" in prop_schema and isinstance(value, str):
             if not re.match(prop_schema["pattern"], value):
                 raise ValidationError(
                     f"{sub_path}: value '{value}' does not match pattern "
                     f"{prop_schema['pattern']}"
                 )
-        if prop_schema.get("format") == "date" and isinstance(value, str):
-            _check_format_date(value, sub_path)
-        if prop_schema.get("type") == "string":
+        fmt = prop_schema.get("format")
+        if fmt and isinstance(value, str):
+            _check_format(fmt, value, sub_path)
+        if isinstance(value, str):
             min_len = prop_schema.get("minLength")
             if min_len is not None and len(value) < min_len:
                 raise ValidationError(
                     f"{sub_path}: minLength {min_len} violated (got {len(value)})"
                 )
-        if prop_schema.get("type") == "array":
+        if isinstance(value, list):
             min_items = prop_schema.get("minItems")
             if min_items is not None and len(value) < min_items:
                 raise ValidationError(
@@ -133,54 +168,105 @@ def _load_schema(name: str) -> dict[str, Any]:
 
 
 def validate_all() -> list[str]:
-    """Run validation, return list of error strings (empty = pass)."""
     errors: list[str] = []
 
     entity_schema = _load_schema("entity.json")
     claim_schema = _load_schema("claim.json")
+    evidence_schema = _load_schema("evidence.json")
+    timeline_schema = _load_schema("timeline.json")
 
     entities = _load_graph(DATA_DIR / "entities.json")
     claims = _load_graph(DATA_DIR / "claims.json")
     evidence = _load_graph(DATA_DIR / "evidence.json")
+    timeline = _load_graph(DATA_DIR / "timeline.json")
 
     entity_ids = {e["id"] for e in entities}
     claim_ids = {c["id"] for c in claims}
     evidence_ids = {e["id"] for e in evidence}
 
     for entity in entities:
+        eid = entity.get("id", "?")
         try:
-            _validate_record(entity, entity_schema, f"entities[{entity.get('id', '?')}]")
+            _validate_record(entity, entity_schema, f"entities[{eid}]")
+
             for dep in entity.get("depends_on", []):
                 if dep not in entity_ids:
                     errors.append(
-                        f"entity {entity['id']}: depends_on '{dep}' not in entities"
+                        f"entity {eid}: depends_on '{dep}' not in entities"
+                    )
+
+            introduced_by = entity.get("introduced_by")
+            if introduced_by and introduced_by not in entity_ids:
+                errors.append(
+                    f"entity {eid}: introduced_by '{introduced_by}' not in entities"
+                )
+
+            defined_in = entity.get("definedIn")
+            if defined_in and defined_in not in entity_ids:
+                errors.append(
+                    f"entity {eid}: definedIn '{defined_in}' not in entities"
+                )
+
+            informal_md = entity.get("informal_md")
+            if informal_md is not None:
+                if not (REPO_ROOT / informal_md).exists():
+                    errors.append(
+                        f"entity {eid}: informal_md '{informal_md}' file not found"
                     )
         except ValidationError as exc:
             errors.append(str(exc))
 
+    referenced_evidence: set[str] = set()
     for claim in claims:
+        cid = claim.get("id", "?")
         try:
-            _validate_record(claim, claim_schema, f"claims[{claim.get('id', '?')}]")
+            _validate_record(claim, claim_schema, f"claims[{cid}]")
             about = claim.get("about", "")
             if about and about not in entity_ids and about not in claim_ids:
                 errors.append(
-                    f"claim {claim['id']}: about '{about}' not in entities or claims"
+                    f"claim {cid}: about '{about}' not in entities or claims"
                 )
             for ev in claim.get("evidence", []):
+                referenced_evidence.add(ev)
                 if ev not in evidence_ids:
                     errors.append(
-                        f"claim {claim['id']}: evidence '{ev}' not in evidence"
+                        f"claim {cid}: evidence '{ev}' not in evidence"
                     )
             for counter in claim.get("counters", []):
                 if counter not in claim_ids:
                     errors.append(
-                        f"claim {claim['id']}: counters '{counter}' not in claims"
+                        f"claim {cid}: counters '{counter}' not in claims"
                     )
             for support in claim.get("supports", []):
                 if support not in claim_ids:
                     errors.append(
-                        f"claim {claim['id']}: supports '{support}' not in claims"
+                        f"claim {cid}: supports '{support}' not in claims"
                     )
+            for related in claim.get("relates_to", []):
+                if related not in claim_ids:
+                    errors.append(
+                        f"claim {cid}: relates_to '{related}' not in claims"
+                    )
+        except ValidationError as exc:
+            errors.append(str(exc))
+
+    for ev_record in evidence:
+        eid = ev_record.get("id", "?")
+        try:
+            _validate_record(ev_record, evidence_schema, f"evidence[{eid}]")
+        except ValidationError as exc:
+            errors.append(str(exc))
+        if (eid not in referenced_evidence
+                and eid not in BACKGROUND_EVIDENCE_ALLOWLIST):
+            errors.append(
+                f"evidence {eid}: orphan (not referenced by any claim and not "
+                f"in BACKGROUND_EVIDENCE_ALLOWLIST)"
+            )
+
+    for event in timeline:
+        eid = event.get("id", "?")
+        try:
+            _validate_record(event, timeline_schema, f"timeline[{eid}]")
         except ValidationError as exc:
             errors.append(str(exc))
 

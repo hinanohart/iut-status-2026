@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hinanohart.github.io/iut-status-2026/schemas/evidence.json",
+  "title": "IUT Evidence Record",
+  "description": "A bibliographic evidence record (paper, blog post, talk, formalization project, book).",
+  "type": "object",
+  "required": ["id", "type", "label"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^evidence:[A-Za-z][A-Za-z0-9_]*$"
+    },
+    "type": {"enum": ["Paper", "Blog", "Talk", "Book", "Project"]},
+    "label": {"type": "string", "minLength": 5},
+    "url": {"type": "string", "format": "uri"},
+    "doi": {"type": "string"},
+    "isbn": {"type": "string"},
+    "publisher": {"type": "string"},
+    "asserted_at": {"type": "string", "format": "date"}
+  },
+  "additionalProperties": false
+}

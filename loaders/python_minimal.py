@@ -1,9 +1,21 @@
 #!/usr/bin/env python3
 """Minimal stdlib-only loader for iut-status-2026 JSON-LD data files.
 
-This loader has zero external dependencies. It is intentionally simple
-so that any Python 3.10+ runtime (including embedded LLM tool-use
-sandboxes) can read the IUT claim graph.
+Zero external dependencies. Python 3.10+. Reads `data/*.json` files
+shipped with the repository and exposes a typed object graph for
+inspection by humans, programs, and LLM tool-use sandboxes.
+
+The loader does NOT perform JSON-LD expansion (no `@context`
+resolution to absolute IRIs). For full RDF semantics, use a separate
+`pyld` install.
+
+Drift-zero contract
+-------------------
+This loader and the JSON-LD files together form the source of truth.
+The `@id` of an entity, claim, evidence record, or timeline event is
+the stable IRI; cross-tool consistency is guaranteed at the IRI
+level by `tools/validate.py`. Prose in `docs/` is a human-readable
+view, not source of truth.
 
 Usage::
 
@@ -13,9 +25,6 @@ Usage::
     claims = graph.claims_about("iut:Cor.3.12")
     for c in claims:
         print(c.label, c.position, c.proponents)
-
-The loader does NOT perform JSON-LD expansion (no @context resolution
-to absolute IRIs). For full RDF semantics, use `pyld` separately.
 """
 from __future__ import annotations
 
@@ -30,8 +39,6 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True, slots=True)
 class Entity:
-    """An IUT concept / definition / construction / theorem / corollary."""
-
     id: str
     type: str
     label: str
@@ -49,8 +56,6 @@ class Entity:
 
 @dataclass(frozen=True, slots=True)
 class Claim:
-    """A claim in the dispute graph."""
-
     id: str
     type: str
     label: str
@@ -63,27 +68,27 @@ class Claim:
     verified_at: str
     counters: tuple[str, ...] = ()
     supports: tuple[str, ...] = ()
+    relates_to: tuple[str, ...] = ()
     specific_objection: str | None = None
     fair_use_note: str | None = None
     status: str | None = None
+    peer_review_status: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class Evidence:
-    """A bibliographic evidence record."""
-
     id: str
     type: str
     label: str
     url: str | None = None
     doi: str | None = None
+    isbn: str | None = None
+    publisher: str | None = None
     asserted_at: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class TimelineEvent:
-    """A dated event in the IUT dispute timeline."""
-
     id: str
     type: str
     label: str
@@ -93,8 +98,6 @@ class TimelineEvent:
 
 @dataclass
 class IutGraph:
-    """The complete IUT status graph loaded from JSON-LD files."""
-
     entities: dict[str, Entity] = field(default_factory=dict)
     claims: dict[str, Claim] = field(default_factory=dict)
     evidence: dict[str, Evidence] = field(default_factory=dict)
@@ -102,15 +105,6 @@ class IutGraph:
 
     @classmethod
     def load(cls, data_dir: str | Path) -> "IutGraph":
-        """Load all JSON-LD files from `data_dir` and build the graph.
-
-        Args:
-            data_dir: Path to the `data/` directory.
-
-        Raises:
-            FileNotFoundError: When a required JSON file is missing.
-            ValueError: When a record fails minimal structural validation.
-        """
         data_path = Path(data_dir)
         if not data_path.is_dir():
             raise FileNotFoundError(f"data_dir not a directory: {data_path}")
@@ -143,19 +137,15 @@ class IutGraph:
         return graph
 
     def entity(self, iri: str) -> Entity | None:
-        """Return entity by IRI, or None if unknown."""
         return self.entities.get(iri)
 
     def claim(self, iri: str) -> Claim | None:
-        """Return claim by IRI, or None if unknown."""
         return self.claims.get(iri)
 
     def claims_about(self, target_iri: str) -> list[Claim]:
-        """All claims whose `about` field matches `target_iri`."""
         return [c for c in self.claims.values() if c.about == target_iri]
 
     def opposing_pairs(self) -> list[tuple[Claim, Claim]]:
-        """All (claim_a, claim_b) pairs where claim_a counters claim_b."""
         pairs: list[tuple[Claim, Claim]] = []
         for claim in self.claims.values():
             for other_id in claim.counters:
@@ -163,6 +153,12 @@ class IutGraph:
                 if other is not None:
                     pairs.append((claim, other))
         return pairs
+
+    def claims_by_position(self, position: str) -> list[Claim]:
+        return [c for c in self.claims.values() if c.position == position]
+
+    def claims_by_peer_review(self, status: str) -> list[Claim]:
+        return [c for c in self.claims.values() if c.peer_review_status == status]
 
     @staticmethod
     def _read_graph(path: Path) -> list[dict[str, Any]]:
@@ -211,9 +207,11 @@ class IutGraph:
                 verified_at=record["verified_at"],
                 counters=tuple(record.get("counters", ())),
                 supports=tuple(record.get("supports", ())),
+                relates_to=tuple(record.get("relates_to", ())),
                 specific_objection=record.get("specific_objection"),
                 fair_use_note=record.get("fair_use_note"),
                 status=record.get("status"),
+                peer_review_status=record.get("peer_review_status"),
             )
         except KeyError as exc:
             raise ValueError(f"claim missing required field {exc}: {record}") from exc
@@ -227,6 +225,8 @@ class IutGraph:
                 label=record["label"],
                 url=record.get("url"),
                 doi=record.get("doi"),
+                isbn=record.get("isbn"),
+                publisher=record.get("publisher"),
                 asserted_at=record.get("asserted_at"),
             )
         except KeyError as exc:

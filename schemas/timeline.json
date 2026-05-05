@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hinanohart.github.io/iut-status-2026/schemas/timeline.json",
+  "title": "IUT Dispute Timeline Event",
+  "type": "object",
+  "required": ["id", "type", "label", "date"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^event:[a-z0-9][a-z0-9_]*$"
+    },
+    "type": {"const": "event"},
+    "label": {"type": "string", "minLength": 5},
+    "date": {"type": "string", "format": "date"},
+    "actors": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": false
+}
