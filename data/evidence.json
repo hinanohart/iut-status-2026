@@ -100,9 +100,30 @@
     {
       "id": "evidence:Mochizuki_formalization_2026_04",
       "type": "Paper",
-      "label": "On the Formalization of IUT: a preliminary progress report (Mochizuki 2026-04)",
+      "label": "On the Formalization of IUT: a preliminary progress report (Mochizuki, Hoshi, Yamashita, Yang 2026-04)",
       "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Formalization%20of%20IUT%20(2026-04).pdf",
-      "asserted_at": "2026-04-15"
+      "asserted_at": "2026-04-07"
+    },
+    {
+      "id": "evidence:Mochizuki_IUT_report_2025_10",
+      "type": "Paper",
+      "label": "IUT report (Mochizuki 2025-10)",
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/IUT-report-2025-10.pdf",
+      "asserted_at": "2025-10-28"
+    },
+    {
+      "id": "evidence:Woit_blog_2025",
+      "type": "Paper",
+      "label": "A Report From Mochizuki (Not Even Wrong blog, Peter Woit)",
+      "url": "https://www.math.columbia.edu/~woit/wordpress/?p=13895",
+      "asserted_at": "2025-11-01"
+    },
+    {
+      "id": "evidence:Joshi_arxiv_2505_10568_v2",
+      "type": "Paper",
+      "label": "Final Report on the Mochizuki-Scholze-Stix Controversy v2 (Joshi 2026-05-02)",
+      "url": "https://arxiv.org/abs/2505.10568v2",
+      "asserted_at": "2026-05-02"
     },
     {
       "id": "evidence:Essential_Logical_Structure",

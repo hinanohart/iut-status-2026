@@ -100,7 +100,7 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - year: 2012
 - depends on: `iut:multiradial_algorithm`, `iut:Ind1`, `iut:Ind2`, `iut:Ind3`
 - Lean module: `IutStatus.Cor312`
-- claims about: 6
+- claims about: 8
 
 ## 07_abc
 

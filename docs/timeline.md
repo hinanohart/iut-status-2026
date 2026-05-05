@@ -12,8 +12,10 @@
 - **2018-09-20** — Quanta Magazine 'Titans of Mathematics Clash Over Epic Proof of ABC Conjecture' (actors: Hartnett (Quanta), Scholze (interviewed))
 - **2021-03-05** — IUT four papers published in PRIMS Vol.57 (2021-03-05) (actors: PRIMS editorial board)
 - **2024-06-25** — Yamashita survey 'A proof of abc conjecture after Mochizuki' updated (2024-06) (actors: Yamashita)
-- **2025-05-15** — Joshi 'Final Report on Mochizuki-Scholze-Stix Controversy' (arXiv:2505.10568) (actors: Joshi)
+- **2025-04-29** — Joshi 'Final Report on Mochizuki-Scholze-Stix Controversy' v1 (arXiv:2505.10568v1) (actors: Joshi)
+- **2025-10-28** — Mochizuki IUT progress report (RIMS preprint IUT-report-2025-10.pdf) (actors: Mochizuki)
 - **2026-03-31** — LANA (Lean for ANabelian geometry) project announced by ZMC (actors: Commelin, Kedlaya, Hoshi, Topaz, Kato Fumiharu, ZMC)
-- **2026-04-15** — Mochizuki preliminary report on IUT formalization (actors: Mochizuki)
+- **2026-04-07** — Mochizuki et al. 'On the Formalization of IUT: a preliminary progress report' (PDF Last-Modified 2026-04-07) (actors: Mochizuki, Hoshi, Yamashita, Yang)
+- **2026-05-02** — Joshi arXiv:2505.10568 v2 update (actors: Joshi)
 - **2026-07-17** — LANA mid-report scheduled (PENDING) (actors: Commelin, Kedlaya, Hoshi, Topaz, Kato Fumiharu)
 

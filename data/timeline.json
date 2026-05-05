@@ -72,11 +72,18 @@
       "actors": ["Yamashita"]
     },
     {
-      "id": "event:2025_joshi_final_report",
+      "id": "event:2025_joshi_final_report_v1",
       "type": "event",
-      "label": "Joshi 'Final Report on Mochizuki-Scholze-Stix Controversy' (arXiv:2505.10568)",
-      "date": "2025-05-15",
+      "label": "Joshi 'Final Report on Mochizuki-Scholze-Stix Controversy' v1 (arXiv:2505.10568v1)",
+      "date": "2025-04-29",
       "actors": ["Joshi"]
+    },
+    {
+      "id": "event:2025_mochizuki_october_report",
+      "type": "event",
+      "label": "Mochizuki IUT progress report (RIMS preprint IUT-report-2025-10.pdf)",
+      "date": "2025-10-28",
+      "actors": ["Mochizuki"]
     },
     {
       "id": "event:2026_lana_announcement",
@@ -86,11 +93,18 @@
       "actors": ["Commelin", "Kedlaya", "Hoshi", "Topaz", "Kato Fumiharu", "ZMC"]
     },
     {
-      "id": "event:2026_mochizuki_formalization_talk",
+      "id": "event:2026_mochizuki_formalization_report",
       "type": "event",
-      "label": "Mochizuki preliminary report on IUT formalization",
-      "date": "2026-04-15",
-      "actors": ["Mochizuki"]
+      "label": "Mochizuki et al. 'On the Formalization of IUT: a preliminary progress report' (PDF Last-Modified 2026-04-07)",
+      "date": "2026-04-07",
+      "actors": ["Mochizuki", "Hoshi", "Yamashita", "Yang"]
+    },
+    {
+      "id": "event:2026_joshi_v2",
+      "type": "event",
+      "label": "Joshi arXiv:2505.10568 v2 update",
+      "date": "2026-05-02",
+      "actors": ["Joshi"]
     },
     {
       "id": "event:2026_lana_midreport_scheduled",
