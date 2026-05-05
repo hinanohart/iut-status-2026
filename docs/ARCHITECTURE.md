@@ -13,7 +13,7 @@ claims / ~15 000 + lines (v1.0). It complements `UNDERSTANDING_LEVELS.md`
 | Schema versioning | `schemas/v0.2/` and `schemas/v0.3/` coexist; loader supports both via `oneOf` |
 | Cross-reference | **on-the-fly dict comprehension in loader** (≤ 5 ms at v0.5 scale); static `_indexes/` deferred to v1.0+ when entities > 500 |
 | Sub-section docs | `docs/section_<n>_<name>/<n><letter>_*.md` + `_verification_log.md` per section |
-| PDF cache | NOT in repository; `cache/` is `.gitignore`-d; `verbatim_short_statement` **≤ 100 chars/record, cumulative ≤ 25 KB across all data/** (JP CL Art. 32 主従比 1:5 制約); PDF SHA-256 in `evidence.json`; `archive_url` (Wayback) mandatory on every Paper/Blog evidence record |
+| PDF cache | NOT in repository; `cache/` is `.gitignore`-d; `verbatim_short_statement` **≤ 200 chars/record (lifted from 100 to admit existing PDF-verified verbatim like the 108-char SS p.6 quotation); cumulative ≤ 30 KB across all data/** (JP CL Art. 32 主従比 1:5 constraint, computed against ≥ 5× larger original prose in `docs/section_*/`); PDF SHA-256 in `evidence.json`; `archive_url` (Wayback) mandatory on every Paper/Blog evidence record from v0.3 onward |
 | LLM context window | `data/manifest.json` + `data/_summary.json` cold-start; details lazy-loaded via MCP tools |
 | Merkle | per-shard Merkle root → top-level Merkle of Merkles; incremental rebuild |
 | Innovation explorer | GitHub Actions CRON daily arXiv / RIMS watch |
@@ -175,10 +175,20 @@ runs the L1 fixture against 3–7 LLM vendors and posts the matrix to
 
 Cost: free GitHub Actions tier; ≤ 60 minutes / month.
 
-## v0.2.3 stress-test refinements (must precede v0.3 work)
+## v0.2.3 / v0.2.4 stress-test refinements (with priority bands)
 
-The round-2 architecture stress-test (2026-05-06) flagged the following
-items as blockers; they are mandated before any v0.3 expansion.
+The round-2 / round-3 architecture stress-tests (2026-05-06) flagged the
+following items. Round-3 reclassified them into **must / should / could**
+bands; only the `must` band blocks v0.3 work.
+
+| # | Item | Band | Reason |
+|---|---|---|---|
+| 1 | Backward-compat contract (v0.2 schemas frozen, loader tolerant) | **must** | Without this, any v0.3 schema change silently breaks v0.2 readers. |
+| 2 | JP CL Art. 32 verbatim caps (≤ 200 chars/record, ≤ 30 KB cumulative) | **must** | Legal posture; non-negotiable. |
+| 3 | shard_id (UUID-like) invariant for Merkle reproducibility | **should** | Helpful for v0.5 + when sharding becomes nontrivial; premature at v0.3 entity = single file. Defer. |
+| 4 | Multi-vendor CI (weekly 3-vendor) + monthly 7-vendor | **should** | L1 evidence; can land as a v0.3.x patch. |
+| 5 | Innovation explorer regex / heartbeat / delta gating | **should** | Operational, not blocking. |
+| 6 | `archive_url` mandatory on Paper / Blog evidence | **could** | Useful for H3 mitigation; can be added per-record as Wayback snapshots are taken. Not gating. |
 
 ### 1. Backward-compat contract (frozen)
 
@@ -194,8 +204,10 @@ items as blockers; they are mandated before any v0.3 expansion.
 
 ### 2. JP Copyright Act Article 32 主従比 (mandatory)
 
-- Per-record `verbatim_short_statement` is **≤ 100 characters**.
-- Cumulative `verbatim_short_statement` total across `data/` is **≤ 25 KB**.
+- Per-record `verbatim_short_statement` is **≤ 200 characters** (revised
+  upward at round-3 stress-test from 100 to admit the PDF-verified
+  108-character SS p.6 quotation that was already in the graph).
+- Cumulative `verbatim_short_statement` total across `data/` is **≤ 30 KB**.
 - `tools/validate.py` enforces both bounds with hard exit codes.
 - The 主 (main) text of `docs/section_*/<n><letter>_*.md` must exceed
   the corresponding section's verbatim total by **5 ×** before that

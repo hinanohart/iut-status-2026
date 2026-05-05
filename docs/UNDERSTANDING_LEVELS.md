@@ -162,6 +162,23 @@ These misreadings have been observed or predicted; they are wrong.
    `Paper`. Papers outside that set (e.g. Hoshi survey, Tan thesis,
    Dupuy–Hilado preprints) are out of denominator until registered.
 
+## Glossary (single source of truth)
+
+To prevent terminology drift identified at round-3:
+
+- **drift-zero (cryptographic)**: deterministic and machine-verifiable
+  at the Merkle / IRI layer. Used only for the physical and IRI levels.
+- **drift-resistant**: best-effort at the claim graph and prose layers;
+  not deterministic.
+- **L1 / L1.5 / L2 / L3**: the level numbers from this document. Always
+  use the level number, never paraphrases such as "navigation" alone.
+- **L1-100**: shorthand for "L1 = 100 % cold-start conformance,
+  multi-vendor evidence on file". Distinct from "100 % understanding"
+  in lay usage.
+- **Cold-start**: an LLM session with no prior memory of this
+  repository. Conformance is verified against the `tests/cold_start/`
+  fixture (chat-context class) plus the multi-vendor CI matrix.
+
 ## What this repository will never promise
 
 - Level 3 (mathematical validity).
