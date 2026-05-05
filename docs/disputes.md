@@ -124,14 +124,41 @@ Each claim is presented with its proponents, position, evidence, and any counter
 
 ### `claim:joshi_2025_alternative`
 
-- label: Arithmetic Teichmüller Spaces yield a corrected framework where abc follows (Joshi 2025)
+- label: Arithmetic Teichmüller Spaces yield a corrected framework where abc follows (Joshi v1 2025-04, v2 2026-05)
 - about: `iut:abc_conjecture`
 - position: **alternative** / stance: **reformulation**
 - proponents: Joshi
 - asserted: 2025-05-15
 - evidence:
   - [Final Report on the Mochizuki-Scholze-Stix Controversy (Joshi 2025)](https://arxiv.org/abs/2505.10568)
-- status: preprint-not-peer-reviewed-as-of-2026-05
+  - [Final Report on the Mochizuki-Scholze-Stix Controversy v2 (Joshi 2026-05-02)](https://arxiv.org/abs/2505.10568v2)
+- status: preprint-not-peer-reviewed-as-of-2026-05; informal third-party objections (Scholze, Sawin) reported but URLs not yet verified for inclusion
+- verified at: 2026-05-06
+
+### `claim:mochizuki_2025_october_report`
+
+- label: Mochizuki 2025-10 IUT progress report continues defense of original framework
+- about: `iut:Cor.3.12`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2025-10-28
+- supports: `claim:mochizuki_2018_response`
+- evidence:
+  - [IUT report (Mochizuki 2025-10)](https://www.kurims.kyoto-u.ac.jp/~motizuki/IUT-report-2025-10.pdf)
+- status: self-published-RIMS-preprint
+- verified at: 2026-05-06
+
+### `claim:woit_blog_2025_skeptical`
+
+- label: Not Even Wrong (Woit) ongoing skeptical commentary on Mochizuki reports (2025-2026)
+- about: `iut:Cor.3.12`
+- position: **gap** / stance: **neutral-observation**
+- proponents: Woit
+- asserted: 2025-11-01
+- supports: `claim:scholze_stix_2018_main`
+- evidence:
+  - [A Report From Mochizuki (Not Even Wrong blog, Peter Woit)](https://www.math.columbia.edu/~woit/wordpress/?p=13895)
+- status: informal-blog-commentary
 - verified at: 2026-05-06
 
 ### `claim:lana_formalization_in_progress`
@@ -143,7 +170,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2026-03-31
 - evidence:
   - [LANA project announcement (ZMC 2026-03-31)](https://zen.ac.jp/en/zmc/topics/jwz-o8xr3v6f)
-  - [On the Formalization of IUT: a preliminary progress report (Mochizuki 2026-04)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Formalization%20of%20IUT%20(2026-04).pdf)
-- status: mid-report-scheduled-2026-07-17
+  - [On the Formalization of IUT: a preliminary progress report (Mochizuki, Hoshi, Yamashita, Yang 2026-04)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Formalization%20of%20IUT%20(2026-04).pdf)
+- status: mid-report-scheduled-2026-07-17; team has articulated a specific contentious point but not yet resolved it (per Mochizuki 2026-04 PDF)
 - verified at: 2026-05-06
 

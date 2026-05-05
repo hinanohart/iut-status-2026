@@ -121,15 +121,15 @@
     {
       "id": "claim:joshi_2025_alternative",
       "type": "Claim",
-      "label": "Arithmetic Teichmüller Spaces yield a corrected framework where abc follows (Joshi 2025)",
+      "label": "Arithmetic Teichmüller Spaces yield a corrected framework where abc follows (Joshi v1 2025-04, v2 2026-05)",
       "about": "iut:abc_conjecture",
       "position": "alternative",
       "stance": "reformulation",
       "proponents": ["Joshi"],
       "asserted_at": "2025-05-15",
-      "evidence": ["evidence:Joshi_arxiv_2505_10568"],
+      "evidence": ["evidence:Joshi_arxiv_2505_10568", "evidence:Joshi_arxiv_2505_10568_v2"],
       "fair_use_note": "Statement-level summary.",
-      "status": "preprint-not-peer-reviewed-as-of-2026-05",
+      "status": "preprint-not-peer-reviewed-as-of-2026-05; informal third-party objections (Scholze, Sawin) reported but URLs not yet verified for inclusion",
       "verified_at": "2026-05-06"
     },
     {
@@ -142,8 +142,38 @@
       "proponents": ["Commelin", "Kedlaya", "Hoshi", "Topaz", "Kato Fumiharu"],
       "asserted_at": "2026-03-31",
       "evidence": ["evidence:LANA_announcement_2026", "evidence:Mochizuki_formalization_2026_04"],
-      "status": "mid-report-scheduled-2026-07-17",
-      "fair_use_note": "Project announcement, no mathematical conclusion yet.",
+      "status": "mid-report-scheduled-2026-07-17; team has articulated a specific contentious point but not yet resolved it (per Mochizuki 2026-04 PDF)",
+      "fair_use_note": "Project announcement and progress report; no mathematical verdict yet.",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "claim:woit_blog_2025_skeptical",
+      "type": "Claim",
+      "label": "Not Even Wrong (Woit) ongoing skeptical commentary on Mochizuki reports (2025-2026)",
+      "about": "iut:Cor.3.12",
+      "position": "gap",
+      "stance": "neutral-observation",
+      "proponents": ["Woit"],
+      "asserted_at": "2025-11-01",
+      "supports": ["claim:scholze_stix_2018_main"],
+      "evidence": ["evidence:Woit_blog_2025"],
+      "status": "informal-blog-commentary",
+      "fair_use_note": "Blog-level commentary; not peer-reviewed.",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "claim:mochizuki_2025_october_report",
+      "type": "Claim",
+      "label": "Mochizuki 2025-10 IUT progress report continues defense of original framework",
+      "about": "iut:Cor.3.12",
+      "position": "valid",
+      "stance": "supportive",
+      "proponents": ["Mochizuki"],
+      "asserted_at": "2025-10-28",
+      "supports": ["claim:mochizuki_2018_response"],
+      "evidence": ["evidence:Mochizuki_IUT_report_2025_10"],
+      "status": "self-published-RIMS-preprint",
+      "fair_use_note": "Statement-level summary based on PDF metadata only; full content not redistributed.",
       "verified_at": "2026-05-06"
     }
   ]
