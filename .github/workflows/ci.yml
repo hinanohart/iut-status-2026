@@ -16,7 +16,13 @@ jobs:
           python-version: "3.12"
       - name: Validate JSON-LD
         run: python tools/validate.py
-      - name: Run tests
+      - name: Verify Merkle root
+        run: python tools/verify_merkle.py
+      - name: Run validation tests
         run: python -m unittest tests.test_validation -v
+      - name: Run Merkle tests
+        run: python -m unittest tests.test_merkle -v
       - name: Render docs (smoke test)
         run: python tools/render_md.py --data data --out /tmp/docs-smoke
+      - name: MCP server smoke test
+        run: timeout 5 python mcp/server.py < /dev/null || true

@@ -26,10 +26,11 @@ All three are factually wrong as of 2026-05-06. The dispute is
 unresolved. This repository encodes the unresolved status in a format
 that does not collapse under summarization.
 
-## Drift-resistance at three layers
+## Drift-resistance at four layers
 
 | Layer | Mechanism | Drift guarantee |
 |---|---|---|
+| **Physical layer** (`data/merkle_root.txt`) | SHA-256 Merkle root over all canonical-JSON records; verified in CI on every PR | **Cryptographic** (deterministic): a single-byte change anywhere changes the root |
 | **JSON-LD core** (`data/*.json`) | Stable IRIs (`iut:Cor.3.12`), claim graph with `counters`/`supports`/`relates_to` edges, structured `peer_review_status` orthogonal to `position` | Strong (~95%) at IRI level |
 | **Lean 4 stubs** (`lean/IutStatus/`) | `theorem cor_3_12 : Prop := sorry` placeholders, mathlib4-compatible | Semantic (when `sorry` is replaced by LANA) |
 | **Markdown view** (`docs/`) | Auto-generated from JSON-LD via `tools/render_md.py` | Human-readable; not source of truth |
@@ -123,6 +124,30 @@ iut-status-2026/
   Copyright Act Article 32.
 - Take-down requests: open a GitHub Issue or contact the repository
   owner via GitHub.
+
+## Cryptographic provenance
+
+The file `data/merkle_root.txt` contains a SHA-256 Merkle root over
+every record in `data/{entities,claims,evidence,timeline}.json`,
+computed by `tools/build_merkle.py`. CI verifies the committed root
+matches the recomputed root (`tools/verify_merkle.py`); a mismatch
+fails the build.
+
+External auditors can independently verify any past state of the
+graph by checking out the corresponding git commit and running:
+
+```bash
+python tools/verify_merkle.py
+```
+
+Combined with git's own commit hash chain, this gives a two-layer
+cryptographic anchor: git commits prove "this was the state at this
+time"; the Merkle root proves "no record was tampered with".
+
+When LANA produces formal `theorem` bodies in 2026-Q3+, the Merkle
+root at the moment of formalization can be embedded in the Lean
+artefact, giving a cryptographic anchor between the unformalized
+JSON-LD and the formalized Lean.
 
 ## Versioning
 
