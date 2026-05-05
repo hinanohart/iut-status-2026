@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hinanohart.github.io/iut-status-2026/schemas/entity.json",
+  "title": "IUT Entity (Concept / Definition / Construction / Theorem / Corollary)",
+  "type": "object",
+  "required": ["id", "type", "label", "section", "verified_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^iut:[A-Za-z][A-Za-z0-9_.]*$"
+    },
+    "type": {"enum": ["Concept", "Definition", "Construction", "Theorem", "Corollary"]},
+    "label": {"type": "string", "minLength": 2},
+    "alt_labels": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "introduced_by": {"type": "string"},
+    "introduced_year": {"type": "string", "pattern": "^[0-9]{4}$"},
+    "definedIn": {"type": "string"},
+    "depends_on": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^iut:"}
+    },
+    "informal_md": {"type": "string"},
+    "lean_stub": {"type": "string"},
+    "lean_module": {"type": "string"},
+    "section": {
+      "enum": [
+        "01_prerequisites",
+        "02_hodge_theater",
+        "03_theta_link",
+        "04_log_link",
+        "05_multiradial",
+        "06_cor_3_12",
+        "07_abc",
+        "08_disputes_timeline"
+      ]
+    },
+    "verified_at": {"type": "string", "format": "date"}
+  },
+  "additionalProperties": false
+}

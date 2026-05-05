@@ -1,0 +1,103 @@
+{
+  "@context": "./context.jsonld",
+  "@graph": [
+    {
+      "id": "event:1985_abc_conjecture",
+      "type": "event",
+      "label": "abc conjecture proposed (Masser, Oesterlé)",
+      "date": "1985-01-01",
+      "actors": ["Masser", "Oesterlé"]
+    },
+    {
+      "id": "event:2008_frobenioids",
+      "type": "event",
+      "label": "Frobenioids I & II published (Mochizuki)",
+      "date": "2008-01-01",
+      "actors": ["Mochizuki"]
+    },
+    {
+      "id": "event:2012_iut_release",
+      "type": "event",
+      "label": "IUTch I-IV released as RIMS preprints (2012-08-30)",
+      "date": "2012-08-30",
+      "actors": ["Mochizuki"]
+    },
+    {
+      "id": "event:2017_calegari_blog",
+      "type": "event",
+      "label": "Calegari blog 'the abc conjecture has still not been proved'",
+      "date": "2017-12-17",
+      "actors": ["Calegari"]
+    },
+    {
+      "id": "event:2018_scholze_stix_visit",
+      "type": "event",
+      "label": "Scholze and Stix visit RIMS for IUT discussions (2018-03)",
+      "date": "2018-03-15",
+      "actors": ["Scholze", "Stix", "Mochizuki"]
+    },
+    {
+      "id": "event:2018_ss_report",
+      "type": "event",
+      "label": "Scholze-Stix 'Why abc is still a conjecture' report (2018-07-16)",
+      "date": "2018-07-16",
+      "actors": ["Scholze", "Stix"]
+    },
+    {
+      "id": "event:2018_mochizuki_response",
+      "type": "event",
+      "label": "Mochizuki 'Report on Discussions' counter-response (2018-09)",
+      "date": "2018-09-01",
+      "actors": ["Mochizuki"]
+    },
+    {
+      "id": "event:2018_quanta_article",
+      "type": "event",
+      "label": "Quanta Magazine 'Titans of Mathematics Clash Over Epic Proof of ABC Conjecture'",
+      "date": "2018-09-20",
+      "actors": ["Hartnett (Quanta)", "Scholze (interviewed)"]
+    },
+    {
+      "id": "event:2021_prims_publication",
+      "type": "event",
+      "label": "IUT four papers published in PRIMS Vol.57 (2021-03-05)",
+      "date": "2021-03-05",
+      "actors": ["PRIMS editorial board"]
+    },
+    {
+      "id": "event:2024_yamashita_survey",
+      "type": "event",
+      "label": "Yamashita survey 'A proof of abc conjecture after Mochizuki' updated (2024-06)",
+      "date": "2024-06-25",
+      "actors": ["Yamashita"]
+    },
+    {
+      "id": "event:2025_joshi_final_report",
+      "type": "event",
+      "label": "Joshi 'Final Report on Mochizuki-Scholze-Stix Controversy' (arXiv:2505.10568)",
+      "date": "2025-05-15",
+      "actors": ["Joshi"]
+    },
+    {
+      "id": "event:2026_lana_announcement",
+      "type": "event",
+      "label": "LANA (Lean for ANabelian geometry) project announced by ZMC",
+      "date": "2026-03-31",
+      "actors": ["Commelin", "Kedlaya", "Hoshi", "Topaz", "Kato Fumiharu", "ZMC"]
+    },
+    {
+      "id": "event:2026_mochizuki_formalization_talk",
+      "type": "event",
+      "label": "Mochizuki preliminary report on IUT formalization",
+      "date": "2026-04-15",
+      "actors": ["Mochizuki"]
+    },
+    {
+      "id": "event:2026_lana_midreport_scheduled",
+      "type": "event",
+      "label": "LANA mid-report scheduled (PENDING)",
+      "date": "2026-07-17",
+      "actors": ["Commelin", "Kedlaya", "Hoshi", "Topaz", "Kato Fumiharu"]
+    }
+  ]
+}
