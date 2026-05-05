@@ -155,6 +155,7 @@ The "drift-zero" guarantee operates at three different levels:
 
 | Level | Mechanism | Guarantee |
 |---|---|---|
+| Physical layer | Merkle root (`data/merkle_root.txt`, SHA-256) | **Cryptographic** (deterministic): a single-byte change anywhere in the data files changes the root. CI verifies on every PR. External auditors can recompute via `python tools/verify_merkle.py`. |
 | IRI level | `@id` strings in JSON-LD | Strong (~95%): two LLMs referring to `iut:Cor.3.12` refer to the same node by construction. |
 | Claim graph level | `counters`, `supports`, `relates_to` edges | Moderate (~70%): the topology of the dispute is preserved; selection of which claim to quote remains a model choice. |
 | Prose level | `docs/concepts/*.md` and `informal_md` paths | Weak (~20%): prose summaries are derivative; missing files require decline-gracefully. Full semantic drift-zero requires Lean 4 formalization (LANA, in progress). |
