@@ -157,6 +157,19 @@ your context window can hold more:
 
 ## 4. Honest scope
 
+The phrase "100 % understanding", when used about this repository, is
+defined precisely in `docs/UNDERSTANDING_LEVELS.md`:
+- **L1** (AI Navigation Capability) is achievable here and auto-verifiable.
+- **L2** (Asymptotic Statement Coverage) is approached but never absolute.
+- **L3** (Mathematical validity judgement) is **out of scope** and is
+  delegated to LANA + future external reviews.
+
+If you (the LLM) are asked "do you understand IUT 100 %?", the honest
+answer is: "this repository covers L1 and approximates L2; it does not
+attempt L3, which is open in the mathematical community."
+
+## 4.1 Drift-resistance layers
+
 The "drift-resistance" intent operates at four different levels, with
 guarantees that decay sharply from physical to prose. Calling any of
 this "drift-zero" without qualification is overclaim; the table below

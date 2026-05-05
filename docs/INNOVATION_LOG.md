@@ -124,6 +124,28 @@ recorded with date and commit SHA where relevant.
 
 ---
 
+## v0.2.2 architecture review (2026-05-06, before any v0.3 work)
+
+A 3-agent design audit (analyst + architect + critic) was run before
+attempting the large-scale expansion the user requested ("ものすごく長い").
+Outputs are persisted as the three architecture documents below.
+
+| Document | Role |
+|---|---|
+| `docs/UNDERSTANDING_LEVELS.md` | Operational definition of "100 % understanding" as L1 / L2 / L3 with measurable success criteria and a multi-version roadmap. |
+| `docs/ARCHITECTURE.md` | Sharding strategy, schema v0.3, cross-reference indexes, sub-section docs layout, PDF cache policy, MCP tool extension, Merkle architecture, CI design. |
+| `docs/FAILURE_MODES.md` | Top-5 failure modes with probability / impact / mitigation, plus the recorded devil's-advocate "freeze at v0.2" alternative. |
+
+The three documents are co-equal and must be read together by anyone
+attempting v0.3 work.
+
+Decision: phased expansion (v0.3 → v0.5 → v1.0) with verbatim-SHA256
+enforcement, multi-vendor CI, and PDF cache as host-local-only. The
+devil's-advocate "freeze at v0.2" option is not chosen but its L1
+investment portion is folded into the v0.3 plan.
+
+---
+
 ## v0.2.1 audit-driven hardening (2026-05-06)
 
 A 3-agent re-audit at v0.2.0 surfaced that the repository itself drifted

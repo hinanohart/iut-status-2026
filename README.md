@@ -44,6 +44,22 @@ mid-report scheduled 2026-07-17). When LANA produces formal
 `theorem` bodies, the `sorry` stubs in this repository will be
 replaced.
 
+## What "100% understanding" means here
+
+This repository operates at three levels of "understanding", with sharply
+different feasibility. See `docs/UNDERSTANDING_LEVELS.md` for the full
+operational definition.
+
+| Level | Statement | Feasibility |
+|---|---|---|
+| **L1** AI Navigation Capability | A fresh LLM session can resolve every IRI, apply the 5-block answer template, and decline gracefully when the graph is silent. | Achievable in this OSS alone; auto-verifiable. |
+| **L2** Asymptotic Statement Coverage | Every numbered statement in IUTchI–IV, Frobenioids I–II, *Étale Theta*, *Alien Copies*, Mochizuki *Rpt2018* / *Cmt2018-05* / *IUT-2025-10*, Yamashita FAQ, Scholze–Stix 2018, and Joshi v1+v2 is registered. | **Asymptotic, never absolute** — new papers re-extend the goalpost. |
+| **L3** Mathematical Understanding (validity judgement) | Decide whether IUT proves abc; whether SS critique is terminal; whether Joshi reformulation succeeds. | **Out of scope, intentionally and permanently.** Delegated to LANA + future external reviews. |
+
+The repository's "100 %" target is L1 = 100 % + L2 best-effort asymptote.
+L3 is never claimed. Roadmap and current % are tracked in
+`docs/UNDERSTANDING_LEVELS.md`.
+
 ## Cold-start contract (best-effort, vendor-tested where evidence exists)
 
 A fresh LLM session with no prior memory of this repository should be
