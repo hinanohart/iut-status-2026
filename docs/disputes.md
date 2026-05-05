@@ -15,6 +15,19 @@ Each claim is presented with its proponents, position, evidence, and any counter
 
 ## All claims
 
+### `claim:cor_3_12_neutral_statement`
+
+- label: Cor.3.12 (IUTchIII) is a Mochizuki-formulated corollary asserting a multiradial bound on log-volume valid up to indeterminacies Ind1, Ind2, Ind3
+- about: `iut:Cor.3.12`
+- position: **factual_statement** / stance: **neutral-statement**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+  - [PRIMS Volume 57, No.1/2 special issue (2021)](https://ems.press/journals/prims/issues/249)
+- status: neutral-existence-statement
+- verified at: 2026-05-06
+
 ### `claim:mochizuki_2012_proves_abc`
 
 - label: IUT proves the abc conjecture (Mochizuki, original 2012)
@@ -23,22 +36,39 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - proponents: Mochizuki, Fesenko, Yamashita, Hoshi, Kato Fumiharu
 - asserted: 2012-08-30
 - evidence:
-  - [Inter-universal Teichmüller Theory IV](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20IV.pdf)
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf)
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+  - [Inter-universal Teichmuller Theory IV (Log-Volume Computations and Set-theoretic Foundations)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20IV.pdf)
   - [PRIMS Volume 57, No.1/2 special issue (2021)](https://ems.press/journals/prims/issues/249)
+  - [A proof of abc conjecture after Mochizuki (Yamashita 2024-06-25 update)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/abc2024Jun25.pdf)
+  - Uchu to Uchu wo Tsunagu Sugaku: IUT Riron no Shogeki (Inter-universal Teichmuller Theory popularization, Kato Fumiharu 2019)
 - status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:nlab_independent_summary`
+
+- label: nLab provides a community-maintained semi-formal summary of the IUT theory and dispute
+- about: `iut:Cor.3.12`
+- position: **factual_statement** / stance: **neutral-observation**
+- proponents: nLab community
+- asserted: 2018-01-01
+- evidence:
+  - [nLab: inter-universal Teichmuller theory](https://ncatlab.org/nlab/show/inter-universal+Teichm%C3%BCller+theory)
+- status: wiki-style-living-document
 - verified at: 2026-05-06
 
 ### `claim:scholze_stix_2018_main`
 
 - label: Cor.3.12 reduces to a trivial inequality under harmless simplification (Scholze-Stix 2018)
 - about: `iut:Cor.3.12`
-- position: **gap** / stance: **critical**
+- position: **alleged_gap** / stance: **critical**
 - proponents: Scholze, Stix
 - asserted: 2018-07-16
 - counters: `claim:mochizuki_2012_proves_abc`
 - evidence:
   - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
-- specific objection: After identifying canonical copies of the theta-link, the multiradial algorithm reduces to a tautology incapable of yielding a height inequality.
+- specific objection: After identifying canonical copies of the theta-link, the multiradial algorithm reduces to a tautology incapable of yielding a height inequality (Scholze-Stix 2018, p.10: 'leads to an empty inequality'; p.9: 'this data is canonically the same on both sides').
 - status: unresolved-as-of-2026-05
 - verified at: 2026-05-06
 
@@ -46,7 +76,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 
 - label: Distinct copies of Hodge Theaters do not exist in the form required (SS sub-claim 1)
 - about: `iut:HodgeTheater`
-- position: **gap** / stance: **critical**
+- position: **alleged_gap** / stance: **critical**
 - proponents: Scholze, Stix
 - asserted: 2018-07-16
 - supports: `claim:scholze_stix_2018_main`
@@ -59,20 +89,21 @@ Each claim is presented with its proponents, position, evidence, and any counter
 
 - label: Anabelian geometry plays no essential role at the disputed step (SS sub-claim 2)
 - about: `iut:Cor.3.12`
-- position: **gap** / stance: **critical**
+- position: **alleged_gap** / stance: **critical**
 - proponents: Scholze, Stix
 - asserted: 2018-07-16
 - supports: `claim:scholze_stix_2018_main`
 - evidence:
   - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: Scholze-Stix 2018, Remark 9, p.5: 'we could not find the point in the proof where it [anabelian geometry] is essential'.
 - status: unresolved-as-of-2026-05
 - verified at: 2026-05-06
 
 ### `claim:scholze_stix_2018_sub_3`
 
-- label: Fundamental groups and geometry are equivalent and commute, making IUT operations trivial (SS sub-claim 3)
+- label: Fundamental groups and geometry are equivalent and commute, making the IUT operations trivial (SS sub-claim 3)
 - about: `iut:multiradial_algorithm`
-- position: **gap** / stance: **critical**
+- position: **alleged_gap** / stance: **critical**
 - proponents: Scholze, Stix
 - asserted: 2018-07-16
 - supports: `claim:scholze_stix_2018_main`
@@ -90,22 +121,23 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2018-09-01
 - counters: `claim:scholze_stix_2018_main`
 - evidence:
-  - [Report on Discussions (Mochizuki 2018)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Rpt2018.pdf)
+  - [Report on Discussions (Mochizuki 2018-09)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Rpt2018.pdf)
   - [Cmt2018-05 (Mochizuki additional comment, 2018-05)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Cmt2018-05.pdf)
 - status: unresolved-as-of-2026-05
 - verified at: 2026-05-06
 
 ### `claim:western_majority_skeptical`
 
-- label: The Western mathematical community majority remains skeptical of the IUT proof (informal consensus)
+- label: A substantial portion of the Western mathematical commentariat publicly remains skeptical of the IUT proof
 - about: `iut:Cor.3.12`
-- position: **gap** / stance: **neutral-observation**
-- proponents: Calegari, Woit, Tao (informal)
+- position: **alleged_gap** / stance: **neutral-observation**
+- proponents: Calegari, Woit
 - asserted: 2018-12-31
 - supports: `claim:scholze_stix_2018_main`
 - evidence:
   - [The ABC conjecture has (still) not been proved (Calegari blog)](https://galoisrepresentations.org/2017/12/17/the-abc-conjecture-has-still-not-been-proved/)
   - [Titans of Mathematics Clash Over Epic Proof of ABC Conjecture (Hartnett, Quanta 2018-09-20)](https://www.quantamagazine.org/titans-of-mathematics-clash-over-epic-proof-of-abc-conjecture-20180920/)
+  - [A Report From Mochizuki (Not Even Wrong blog, Peter Woit)](https://www.math.columbia.edu/~woit/wordpress/?p=13895)
 - status: ongoing-as-of-2026-05
 - verified at: 2026-05-06
 
@@ -113,7 +145,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 
 - label: IUT four papers accepted and published by PRIMS, 2021-03
 - about: `iut:Cor.3.12`
-- position: **valid** / stance: **supportive**
+- position: **factual_publication** / stance: **neutral-observation**
 - proponents: PRIMS editorial board
 - asserted: 2021-03-05
 - supports: `claim:mochizuki_2012_proves_abc`
@@ -122,17 +154,44 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - status: factual-publication-not-verdict
 - verified at: 2026-05-06
 
+### `claim:essential_logical_structure_reference`
+
+- label: Mochizuki's 'Essential Logical Structure of IUT' provides a structured AND/OR logical map of the proof (referenced as background)
+- about: `iut:Cor.3.12`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2024-01-01
+- supports: `claim:mochizuki_2018_response`
+- evidence:
+  - [Essential Logical Structure of Inter-universal Teichmuller Theory (Mochizuki)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Essential%20Logical%20Structure%20of%20Inter-universal%20Teichmuller%20Theory.pdf)
+- status: self-published-RIMS-preprint
+- verified at: 2026-05-06
+
+### `claim:yamashita_2024_independent_exposition`
+
+- label: Yamashita 2024 survey provides an independent exposition of the IUT proof framework
+- about: `iut:Cor.3.12`
+- position: **valid** / stance: **supportive**
+- proponents: Yamashita
+- asserted: 2024-06-25
+- supports: `claim:mochizuki_2012_proves_abc`
+- evidence:
+  - [A proof of abc conjecture after Mochizuki (Yamashita 2024-06-25 update)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/abc2024Jun25.pdf)
+  - [IU-FAQ (Yamashita)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/IUfaq_en2.pdf)
+- status: survey-not-peer-reviewed
+- verified at: 2026-05-06
+
 ### `claim:joshi_2025_alternative`
 
-- label: Arithmetic Teichmüller Spaces yield a corrected framework where abc follows (Joshi v1 2025-04, v2 2026-05)
+- label: Arithmetic Teichmuller Spaces yield a corrected framework where abc follows (Joshi v1 2025-04, v2 2026-05)
 - about: `iut:abc_conjecture`
 - position: **alternative** / stance: **reformulation**
 - proponents: Joshi
-- asserted: 2025-05-15
+- asserted: 2025-04-29
 - evidence:
-  - [Final Report on the Mochizuki-Scholze-Stix Controversy (Joshi 2025)](https://arxiv.org/abs/2505.10568)
+  - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568v1)
   - [Final Report on the Mochizuki-Scholze-Stix Controversy v2 (Joshi 2026-05-02)](https://arxiv.org/abs/2505.10568v2)
-- status: preprint-not-peer-reviewed-as-of-2026-05; informal third-party objections (Scholze, Sawin) reported but URLs not yet verified for inclusion
+- status: preprint-not-peer-reviewed-as-of-2026-05
 - verified at: 2026-05-06
 
 ### `claim:mochizuki_2025_october_report`
@@ -152,7 +211,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 
 - label: Not Even Wrong (Woit) ongoing skeptical commentary on Mochizuki reports (2025-2026)
 - about: `iut:Cor.3.12`
-- position: **gap** / stance: **neutral-observation**
+- position: **alleged_gap** / stance: **neutral-observation**
 - proponents: Woit
 - asserted: 2025-11-01
 - supports: `claim:scholze_stix_2018_main`

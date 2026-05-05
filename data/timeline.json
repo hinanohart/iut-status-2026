@@ -4,15 +4,22 @@
     {
       "id": "event:1985_abc_conjecture",
       "type": "event",
-      "label": "abc conjecture proposed (Masser, Oesterlé)",
+      "label": "abc conjecture proposed (Masser, Oesterle)",
       "date": "1985-01-01",
-      "actors": ["Masser", "Oesterlé"]
+      "actors": ["Masser", "Oesterle"]
     },
     {
       "id": "event:2008_frobenioids",
       "type": "event",
-      "label": "Frobenioids I & II published (Mochizuki)",
+      "label": "Frobenioids I and II published (Mochizuki)",
       "date": "2008-01-01",
+      "actors": ["Mochizuki"]
+    },
+    {
+      "id": "event:2009_etale_theta",
+      "type": "event",
+      "label": "The etale theta function paper published (Mochizuki)",
+      "date": "2009-01-01",
       "actors": ["Mochizuki"]
     },
     {
@@ -32,47 +39,68 @@
     {
       "id": "event:2018_scholze_stix_visit",
       "type": "event",
-      "label": "Scholze and Stix visit RIMS for IUT discussions (2018-03)",
+      "label": "Scholze and Stix visit RIMS for IUT discussions (March 2018, exact day approximate)",
       "date": "2018-03-15",
-      "actors": ["Scholze", "Stix", "Mochizuki"]
+      "actors": ["Scholze", "Stix", "Mochizuki", "Hoshi", "Yamashita"]
     },
     {
-      "id": "event:2018_ss_report",
+      "id": "event:2018_05_mochizuki_cmt",
       "type": "event",
-      "label": "Scholze-Stix 'Why abc is still a conjecture' report (2018-07-16)",
+      "label": "Mochizuki additional comment Cmt2018-05",
+      "date": "2018-05-01",
+      "actors": ["Mochizuki"]
+    },
+    {
+      "id": "event:2018_07_ss_report",
+      "type": "event",
+      "label": "Scholze-Stix 'Why abc is still a conjecture' report",
       "date": "2018-07-16",
       "actors": ["Scholze", "Stix"]
     },
     {
-      "id": "event:2018_mochizuki_response",
+      "id": "event:2018_09_mochizuki_response",
       "type": "event",
-      "label": "Mochizuki 'Report on Discussions' counter-response (2018-09)",
+      "label": "Mochizuki 'Report on Discussions' counter-response",
       "date": "2018-09-01",
       "actors": ["Mochizuki"]
     },
     {
-      "id": "event:2018_quanta_article",
+      "id": "event:2018_09_quanta_article",
       "type": "event",
       "label": "Quanta Magazine 'Titans of Mathematics Clash Over Epic Proof of ABC Conjecture'",
       "date": "2018-09-20",
-      "actors": ["Hartnett (Quanta)", "Scholze (interviewed)"]
+      "actors": ["Hartnett", "Scholze"]
+    },
+    {
+      "id": "event:2019_kato_book",
+      "type": "event",
+      "label": "Kato Fumiharu 'Uchu to Uchu wo Tsunagu Sugaku: IUT Riron no Shogeki' published (KADOKAWA)",
+      "date": "2019-04-26",
+      "actors": ["Kato Fumiharu"]
+    },
+    {
+      "id": "event:2020_prims_acceptance",
+      "type": "event",
+      "label": "PRIMS announces acceptance of IUT four papers (April 2020)",
+      "date": "2020-04-03",
+      "actors": ["PRIMS editorial board"]
     },
     {
       "id": "event:2021_prims_publication",
       "type": "event",
-      "label": "IUT four papers published in PRIMS Vol.57 (2021-03-05)",
+      "label": "IUT four papers published in PRIMS Vol.57",
       "date": "2021-03-05",
       "actors": ["PRIMS editorial board"]
     },
     {
       "id": "event:2024_yamashita_survey",
       "type": "event",
-      "label": "Yamashita survey 'A proof of abc conjecture after Mochizuki' updated (2024-06)",
+      "label": "Yamashita survey 'A proof of abc conjecture after Mochizuki' updated",
       "date": "2024-06-25",
       "actors": ["Yamashita"]
     },
     {
-      "id": "event:2025_joshi_final_report_v1",
+      "id": "event:2025_joshi_v1",
       "type": "event",
       "label": "Joshi 'Final Report on Mochizuki-Scholze-Stix Controversy' v1 (arXiv:2505.10568v1)",
       "date": "2025-04-29",
@@ -95,7 +123,7 @@
     {
       "id": "event:2026_mochizuki_formalization_report",
       "type": "event",
-      "label": "Mochizuki et al. 'On the Formalization of IUT: a preliminary progress report' (PDF Last-Modified 2026-04-07)",
+      "label": "Mochizuki et al. 'On the Formalization of IUT' preliminary progress report",
       "date": "2026-04-07",
       "actors": ["Mochizuki", "Hoshi", "Yamashita", "Yang"]
     },

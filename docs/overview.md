@@ -8,7 +8,7 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 ### `iut:Frobenioid` — Frobenioid
 
 - type: `Definition`
-- introduced by: iut:Mochizuki
+- introduced by: person:Mochizuki
 - year: 2008
 - depends on: `iut:anabelian_geometry`
 - Lean module: `IutStatus.Frobenioid`
@@ -17,40 +17,109 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 
 - type: `Concept`
 - aliases: 遠アーベル幾何, anabelian
-- introduced by: iut:Grothendieck
+- introduced by: person:Grothendieck
 - year: 1983
 - Lean module: `IutStatus.Anabelian`
 
-### `iut:etale_theta` — étale theta function
+### `iut:etale_like_vs_frobenius_like` — etale-like vs Frobenius-like dichotomy
+
+- type: `Concept`
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:Frobenioid`
+
+### `iut:etale_theta` — etale theta function
 
 - type: `Definition`
-- introduced by: iut:Mochizuki
+- introduced by: person:Mochizuki
 - year: 2009
 - depends on: `iut:anabelian_geometry`
 - Lean module: `IutStatus.EtaleTheta`
 
+### `iut:mono_theta_environment` — mono-theta environment
+
+- type: `Definition`
+- introduced by: person:Mochizuki
+- year: 2009
+- depends on: `iut:etale_theta`
+- Lean module: `IutStatus.MonoTheta`
+
+### `paper:EtaleTheta` — The etale theta function and its Frobenioid-theoretic manifestations
+
+- type: `Paper`
+
+### `paper:Frobenioids_I` — The Geometry of Frobenioids I
+
+- type: `Paper`
+
+### `person:Grothendieck` — Alexander Grothendieck
+
+- type: `Person`
+
+### `person:Hoshi` — Yuichiro Hoshi
+
+- type: `Person`
+- aliases: 星裕一郎
+
+### `person:Kato_Fumiharu` — Fumiharu Kato
+
+- type: `Person`
+- aliases: 加藤文元
+
+### `person:Mochizuki` — Shinichi Mochizuki
+
+- type: `Person`
+- aliases: 望月新一
+
+### `person:Yamashita` — Go Yamashita
+
+- type: `Person`
+- aliases: 山下剛
+
 ## 02_hodge_theater
 
-### `iut:HodgeTheater` — Θ±ellNF-Hodge theater
+### `iut:F_modulus_prime_strip` — F-modulus-prime-strip (F^⊩×µ)
 
 - type: `Construction`
-- aliases: Hodge theater, ホッジ・シアター
-- introduced by: iut:Mochizuki
+- introduced by: person:Mochizuki
 - year: 2012
-- depends on: `iut:Frobenioid`, `iut:etale_theta`
+- depends on: `iut:F_prime_strip`
+
+### `iut:F_prime_strip` — F-prime-strip
+
+- type: `Construction`
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Frobenioid`
+
+### `iut:HodgeTheater` — Theta-pm-ellNF Hodge theater
+
+- type: `Construction`
+- aliases: Hodge theater, ホッジ・シアター, Θ±ellNF-Hodge theater
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Frobenioid`, `iut:etale_theta`, `iut:F_prime_strip`
 - Lean module: `IutStatus.HodgeTheater`
 - claims about: 1
 
+### `paper:IUTchI` — Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)
+
+- type: `Paper`
+
 ## 03_theta_link
 
-### `iut:theta_link` — θ-link
+### `iut:theta_link` — theta-link
 
 - type: `Construction`
-- aliases: theta-link, Θリンク, multiplicative link
-- introduced by: iut:Mochizuki
+- aliases: theta-link, Theta-link, multiplicative link
+- introduced by: person:Mochizuki
 - year: 2012
-- depends on: `iut:HodgeTheater`
+- depends on: `iut:HodgeTheater`, `iut:F_modulus_prime_strip`, `iut:mono_theta_environment`
 - Lean module: `IutStatus.ThetaLink`
+
+### `paper:IUTchII` — Inter-universal Teichmuller Theory II (Hodge-Arakelov-Theoretic Evaluation)
+
+- type: `Paper`
 
 ## 04_log_link
 
@@ -58,33 +127,44 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 
 - type: `Construction`
 - aliases: additive link
-- introduced by: iut:Mochizuki
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:HodgeTheater`, `iut:log_shell`
+- Lean module: `IutStatus.LogLink`
+
+### `iut:log_shell` — log-shell I_v
+
+- type: `Definition`
+- introduced by: person:Mochizuki
 - year: 2012
 - depends on: `iut:HodgeTheater`
-- Lean module: `IutStatus.LogLink`
+
+### `paper:IUTchIII` — Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)
+
+- type: `Paper`
 
 ## 05_multiradial
 
-### `iut:Ind1` — indeterminacy Ind1
+### `iut:Ind1` — indeterminacy Ind1 (etale-theoretic)
 
 - type: `Definition`
 - depends on: `iut:multiradial_algorithm`
 
-### `iut:Ind2` — indeterminacy Ind2
+### `iut:Ind2` — indeterminacy Ind2 (Frobenius-theoretic)
 
 - type: `Definition`
 - depends on: `iut:multiradial_algorithm`
 
-### `iut:Ind3` — indeterminacy Ind3
+### `iut:Ind3` — indeterminacy Ind3 (log-volume)
 
 - type: `Definition`
-- depends on: `iut:multiradial_algorithm`
+- depends on: `iut:multiradial_algorithm`, `iut:log_shell`
 
 ### `iut:multiradial_algorithm` — multiradial algorithm
 
 - type: `Construction`
 - aliases: multiradial representation, 多輻的アルゴリズム
-- introduced by: iut:Mochizuki
+- introduced by: person:Mochizuki
 - year: 2012
 - depends on: `iut:theta_link`, `iut:log_link`
 - Lean module: `IutStatus.Multiradial`
@@ -95,16 +175,24 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 ### `iut:Cor.3.12` — Corollary 3.12
 
 - type: `Corollary`
-- aliases: IUTch-III Cor.3.12, the disputed corollary
-- introduced by: iut:Mochizuki
+- aliases: IUTchIII Cor.3.12, the disputed corollary
+- introduced by: person:Mochizuki
 - year: 2012
 - depends on: `iut:multiradial_algorithm`, `iut:Ind1`, `iut:Ind2`, `iut:Ind3`
 - Lean module: `IutStatus.Cor312`
-- claims about: 8
+- claims about: 12
+
+### `person:Scholze` — Peter Scholze
+
+- type: `Person`
+
+### `person:Stix` — Jakob Stix
+
+- type: `Person`
 
 ## 07_abc
 
-### `iut:abc_conjecture` — abc conjecture (Masser-Oesterlé 1985)
+### `iut:abc_conjecture` — abc conjecture (Masser-Oesterle 1985)
 
 - type: `Theorem`
 - aliases: abc予想
@@ -112,9 +200,25 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - Lean module: `IutStatus.ABC`
 - claims about: 2
 
+### `iut:diophantine_inequality` — Diophantine inequality (IUTchIV final)
+
+- type: `Theorem`
+- depends on: `iut:height_inequality`
+- Lean module: `IutStatus.Diophantine`
+
 ### `iut:height_inequality` — Vojta-style height inequality
 
 - type: `Theorem`
 - depends on: `iut:Cor.3.12`
 - Lean module: `IutStatus.HeightInequality`
+
+### `paper:IUTchIV` — Inter-universal Teichmuller Theory IV (Log-Volume Computations and Set-theoretic Foundations)
+
+- type: `Paper`
+
+## 08_disputes_timeline
+
+### `person:Joshi` — Kirti Joshi
+
+- type: `Person`
 

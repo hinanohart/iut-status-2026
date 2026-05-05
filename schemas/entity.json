@@ -1,28 +1,48 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hinanohart.github.io/iut-status-2026/schemas/entity.json",
-  "title": "IUT Entity (Concept / Definition / Construction / Theorem / Corollary)",
+  "title": "IUT Entity (Concept / Definition / Construction / Theorem / Corollary / Person / Paper)",
+  "description": "Records anything that can be referenced by stable IRI in the iut: or person: or paper: namespaces.",
   "type": "object",
   "required": ["id", "type", "label", "section", "verified_at"],
   "properties": {
     "id": {
       "type": "string",
-      "pattern": "^iut:[A-Za-z][A-Za-z0-9_.]*$"
+      "pattern": "^(iut|person|paper):[A-Za-z][A-Za-z0-9_.]*$"
     },
-    "type": {"enum": ["Concept", "Definition", "Construction", "Theorem", "Corollary"]},
+    "type": {
+      "enum": [
+        "Concept",
+        "Definition",
+        "Construction",
+        "Theorem",
+        "Corollary",
+        "Person",
+        "Paper"
+      ]
+    },
     "label": {"type": "string", "minLength": 2},
     "alt_labels": {
       "type": "array",
       "items": {"type": "string"}
     },
-    "introduced_by": {"type": "string"},
+    "introduced_by": {
+      "type": "string",
+      "pattern": "^(iut|person):[A-Za-z][A-Za-z0-9_.]*$"
+    },
     "introduced_year": {"type": "string", "pattern": "^[0-9]{4}$"},
-    "definedIn": {"type": "string"},
+    "definedIn": {
+      "type": "string",
+      "pattern": "^(iut|paper):[A-Za-z][A-Za-z0-9_.]*$"
+    },
     "depends_on": {
       "type": "array",
       "items": {"type": "string", "pattern": "^iut:"}
     },
-    "informal_md": {"type": "string"},
+    "informal_md": {
+      "type": ["string", "null"],
+      "description": "Path to human-readable prose (relative to repo root). Null = no prose document yet; LLMs MUST follow LLM_CONTEXT.md decline-gracefully protocol when null."
+    },
     "lean_stub": {"type": "string"},
     "lean_module": {"type": "string"},
     "section": {
