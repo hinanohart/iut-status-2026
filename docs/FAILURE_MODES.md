@@ -32,7 +32,9 @@ Copyright Act Article 32's necessity test, even if each individual
 quotation is a single sentence.
 
 **Mitigation.**
-- `verbatim_short_statement` is ≤ 200 characters by schema constraint.
+- `verbatim_short_statement` is ≤ 200 characters by schema constraint
+  (cap unified across all three architecture documents at round-3
+  stress-test).
 - Quotation **bodies** are NOT redistributed; only locators
   (`(paper_iri, page, line, sha256)`) and short snippets are in the repo.
 - Full PDF content lives in the host-local `cache/` (gitignored).

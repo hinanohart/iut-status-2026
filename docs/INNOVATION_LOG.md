@@ -175,6 +175,46 @@ These updates are normative; the architecture is now considered frozen
 at the document layer for the duration of v0.3 work. Any subsequent
 revision opens a new round-3 stress-test entry.
 
+## v0.2.4 stress-test (round 3, 2026-05-06)
+
+A third-round 3-agent stress-test (architect + analyst + critic) was
+run to assess whether v0.3 implementation is ready and whether the
+documentation has over-specified itself.
+
+Round 3 found:
+
+- The Round-2 hour estimate of 25-40 h for v0.3 was 2-3x too low; the
+  honest range is 63-113 h. v0.3 will not finish before the LANA
+  mid-report (2026-07-17), so part of v0.3 expansion may be partially
+  sunk-cost; the schema's `superseded_by_lana_2026_07` field exists to
+  recover from this.
+- The verbatim length cap was internally inconsistent (100 / 200 / 200
+  characters across the three architecture documents). Unified to
+  ≤ 200 chars per record / ≤ 30 KB cumulative, which admits the
+  PDF-verified 108-character SS p.6 quotation already in the graph.
+- The v0.2.3 mandatory pre-v0.3 refinements (six items) were
+  reclassified into must / should / could bands. Only two are
+  blocking: backward-compat contract and JP CL Art. 32 caps. The
+  remaining four are deferred to v0.3.x patches.
+- A glossary section was added to UNDERSTANDING_LEVELS.md to prevent
+  the "drift-zero / drift-resistant / 100% understanding / L1-100"
+  terminology drift identified by analyst.
+- A new `docs/AUDIT_PROVENANCE.md` was created to honestly record that
+  all three audit rounds were produced inside a single Claude family
+  session, with **no LLM-vendor independence**. The
+  `docs/cold_start_evidence.md` (when populated) is the only legitimate
+  source of multi-vendor independence claims, not these audit
+  documents.
+- Future audit rounds are **paused indefinitely** until at least one
+  of: (a) an actual non-Claude vendor cold-start run, (b) an external
+  (non-Anthropic-family) reviewer report, (c) a v0.3 schema-changing
+  PR merged. Re-opening requires a public Issue documenting which
+  condition fired.
+
+The architecture is now considered frozen at the document layer with
+priority-banded refinements. v0.3 implementation can begin against the
+two `must` items.
+
 ---
 
 ## v0.2.1 audit-driven hardening (2026-05-06)
