@@ -49,6 +49,8 @@ BACKGROUND_EVIDENCE_ALLOWLIST: set[str] = {
     "evidence:Frobenioids_I",
     "evidence:EtaleTheta_2009",
     "evidence:Alien_Copies_Survey",
+    "evidence:TopicsAnabelianIII",
+    "evidence:Cuspidalizations2007",
 }
 
 

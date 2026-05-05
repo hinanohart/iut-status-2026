@@ -1,0 +1,60 @@
+{
+  "@context": "./context.jsonld",
+  "@graph": [
+    {
+      "id": "paper:FrdI",
+      "type": "Paper",
+      "label": "The Geometry of Frobenioids I: The General Theory (Mochizuki, 2008)",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:frobenioid_axioms",
+      "type": "Definition",
+      "label": "Frobenioid axioms (Frd I Def 1.3, 7 conditions)",
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2008",
+      "definedIn": "paper:FrdI",
+      "depends_on": ["iut:Frobenioid"],
+      "informal_md": "docs/section_1_prerequisites/section_1b_merged.md",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:factorization_theorem",
+      "type": "Theorem",
+      "label": "Factorization theorem for Frobenioid morphisms (Frd I Def 1.3(iv) + Cor 4.11)",
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2008",
+      "definedIn": "paper:FrdI",
+      "depends_on": ["iut:frobenioid_axioms"],
+      "informal_md": "docs/section_1_prerequisites/section_1b_merged.md",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:base_category_of_Frobenioid",
+      "type": "Definition",
+      "label": "Base category of a Frobenioid (connected totally epimorphic category D)",
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2008",
+      "definedIn": "paper:FrdI",
+      "depends_on": ["iut:Frobenioid", "iut:etale_like_vs_frobenius_like"],
+      "informal_md": "docs/section_1_prerequisites/section_1b_merged.md",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:degree_function",
+      "type": "Definition",
+      "label": "Frobenius degree function deg_Fr on Frobenioid morphisms (Frd I Def 1.1(iii), Prop 1.5(ii))",
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2008",
+      "definedIn": "paper:FrdI",
+      "depends_on": ["iut:frobenioid_axioms"],
+      "informal_md": "docs/section_1_prerequisites/section_1b_merged.md",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    }
+  ]
+}

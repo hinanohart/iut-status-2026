@@ -175,6 +175,30 @@
       "type": "Blog",
       "label": "nLab: inter-universal Teichmuller theory",
       "url": "https://ncatlab.org/nlab/show/inter-universal+Teichm%C3%BCller+theory"
+    },
+    {
+      "id": "evidence:TopicsAnabelianI",
+      "type": "Paper",
+      "label": "Topics in Absolute Anabelian Geometry I: Generalities (Mochizuki)",
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Topics%20in%20Absolute%20Anabelian%20Geometry%20I.pdf",
+      "asserted_at": "2012-01-01",
+      "publisher": "PRIMS"
+    },
+    {
+      "id": "evidence:TopicsAnabelianIII",
+      "type": "Paper",
+      "label": "Topics in Absolute Anabelian Geometry III: Global Reconstruction Algorithms (Mochizuki)",
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Topics%20in%20Absolute%20Anabelian%20Geometry%20III.pdf",
+      "asserted_at": "2015-01-01",
+      "publisher": "PRIMS"
+    },
+    {
+      "id": "evidence:Cuspidalizations2007",
+      "type": "Paper",
+      "label": "Absolute Anabelian Cuspidalizations of Proper Hyperbolic Curves (Mochizuki)",
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Absolute%20Anabelian%20Cuspidalizations.pdf",
+      "asserted_at": "2007-01-01",
+      "publisher": "Publ. RIMS"
     }
   ]
 }

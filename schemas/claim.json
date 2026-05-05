@@ -62,6 +62,10 @@
       "minItems": 1
     },
     "specific_objection": {"type": "string"},
+    "specific_support": {
+      "type": "string",
+      "description": "Statement-level rationale for a supportive claim (parallel to specific_objection on critical claims)."
+    },
     "fair_use_note": {"type": "string"},
     "status": {"type": "string"},
     "peer_review_status": {

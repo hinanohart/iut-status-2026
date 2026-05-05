@@ -345,6 +345,87 @@
       "label": "The etale theta function and its Frobenioid-theoretic manifestations",
       "section": "01_prerequisites",
       "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:absolute_anabelian",
+      "type": "Concept",
+      "label": "absolute anabelian framework",
+      "alt_labels": ["absolute anabelian geometry", "group-theoretic software approach"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:TopicsAnabelianI",
+      "depends_on": ["iut:anabelian_geometry"],
+      "informal_md": "docs/section_1_prerequisites/section_1a_merged.md",
+      "lean_stub": "axiom absolute_anabelian_algorithm : Prop",
+      "lean_module": "IutStatus.AbsoluteAnabelian",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:tempered_rigidity",
+      "type": "Theorem",
+      "label": "tempered anabelian rigidity (EtTh Thm 1.6)",
+      "alt_labels": ["etale theta rigidity", "tempered fundamental group rigidity"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2009",
+      "definedIn": "paper:EtaleTheta",
+      "depends_on": ["iut:anabelian_geometry", "iut:etale_theta"],
+      "informal_md": "docs/section_1_prerequisites/section_1a_merged.md",
+      "lean_stub": "axiom tempered_rigidity : Prop",
+      "lean_module": "IutStatus.TemperedRigidity",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:mono_anabelian",
+      "type": "Concept",
+      "label": "mono-anabelian reconstruction",
+      "alt_labels": ["mono-anabelian geometry", "mono-anabelian algorithm", "log-Frobenius compatible anabelian framework"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2015",
+      "definedIn": "paper:TopicsAnabelianIII",
+      "depends_on": ["iut:absolute_anabelian", "iut:anabelian_geometry"],
+      "informal_md": "docs/section_1_prerequisites/section_1a_merged.md",
+      "lean_stub": "axiom mono_anabelian_reconstruction : Prop",
+      "lean_module": "IutStatus.MonoAnabelian",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:cuspidalization",
+      "type": "Theorem",
+      "label": "absolute anabelian cuspidalization (Cusp. Thm 1.16)",
+      "alt_labels": ["Mochizuki cuspidalization", "maximal cuspidally abelian quotient reconstruction"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2007",
+      "definedIn": "paper:Cuspidalizations2007",
+      "depends_on": ["iut:anabelian_geometry"],
+      "informal_md": "docs/section_1_prerequisites/section_1a_merged.md",
+      "lean_stub": "axiom cuspidalization_thm : Prop",
+      "lean_module": "IutStatus.Cuspidalization",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "paper:TopicsAnabelianI",
+      "type": "Paper",
+      "label": "Topics in Absolute Anabelian Geometry I: Generalities",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "paper:TopicsAnabelianIII",
+      "type": "Paper",
+      "label": "Topics in Absolute Anabelian Geometry III: Global Reconstruction Algorithms",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "paper:Cuspidalizations2007",
+      "type": "Paper",
+      "label": "Absolute Anabelian Cuspidalizations of Proper Hyperbolic Curves",
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
     }
   ]
 }
