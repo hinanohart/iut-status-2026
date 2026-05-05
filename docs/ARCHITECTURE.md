@@ -253,6 +253,25 @@ bands; only the `must` band blocks v0.3 work.
 - `tools/archive_evidence.py` is the canonical helper that submits the
   URL to the Wayback Machine and stores the snapshot URL.
 
+## Numeric milestones (operational anchors, added at round-3 monitor v0.2.4)
+
+These are **floor / soft-cap** ranges, not single targets. Floor =
+minimum to tag the version. Soft-cap = beyond which scope creep is
+flagged by the monitor agent.
+
+| Version | Entities (floor / soft-cap) | Claims (floor / soft-cap) | Section coverage |
+|---|---|---|---|
+| v0.2.x (current) | 33 (achieved) | 16 (achieved) | sections 1-8 summarized |
+| v0.3 | **70 / 90** | **35 / 50** | sections 1 deep + section 2 deep + section 3 partial |
+| v0.4 | 130 / 160 | 60 / 80 | + section 4 (log-link deep) + section 5 (multiradial deep) |
+| v0.5 | 180 / 220 | 80 / 110 | + section 6 (Cor.3.12 deep) + section 7 (abc) deep |
+| v1.0 (gated on LANA) | 220+ / 280 | 100+ / 140 | + Yamashita FAQ partial + Joshi v2 deep + section 8 expanded |
+
+Single-target numbers ("80 entities") are forbidden as scope drivers;
+overshoot or undershoot of a single number is undecidable. The
+floor/soft-cap pair is decidable: undershooting floor blocks the tag,
+overshooting soft-cap triggers a monitor review.
+
 ## Migration plan (v0.2.x → v0.3)
 
 1. `tools/migrate_v0_2_to_v0_3.py` reads v0.2 monolithic JSON, writes
