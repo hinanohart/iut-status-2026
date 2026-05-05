@@ -197,9 +197,25 @@ def handle_tools_list(request_id: Any) -> dict[str, Any]:
 def handle_tools_call(
     request_id: Any, params: dict[str, Any], graph: IutGraph
 ) -> dict[str, Any]:
+    """Dispatch a tools/call. Wraps every tool body in try/except so that
+    malformed parameters (missing IRI, wrong type, unknown tool) become
+    JSON-RPC error responses rather than process-killing exceptions.
+    """
     name = params.get("name")
     args = params.get("arguments", {}) or {}
 
+    try:
+        return _dispatch_tool(request_id, name, args, graph)
+    except KeyError as exc:
+        return _make_error(request_id, -32602, f"missing required argument: {exc}")
+    except Exception as exc:  # noqa: BLE001 — JSON-RPC server must not crash
+        logger.exception("tools/call failed: %s", name)
+        return _make_error(request_id, -32603, f"internal error: {exc}")
+
+
+def _dispatch_tool(
+    request_id: Any, name: Any, args: dict[str, Any], graph: IutGraph
+) -> dict[str, Any]:
     if name == "iut_entity":
         record = _entity_to_json(graph, args["iri"])
         return _make_response(

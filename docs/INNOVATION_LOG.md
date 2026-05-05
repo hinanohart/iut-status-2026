@@ -25,7 +25,8 @@ recorded with date and commit SHA where relevant.
   tamper-detection independent of git history.
 - **Status**: **Implemented** (v0.1.2, commit `04b3fc4`).
 - **Files**: `tools/build_merkle.py`, `tools/verify_merkle.py`, `data/merkle_root.txt`, `tests/test_merkle.py`.
-- **Current root**: `ff8cdef62ad9386f8eab037613c3364e2eb996bdee6a5b1f48e14ba6f8691b34` (entities=33 / claims=16 / evidence=24 / timeline=20).
+- **Current root**: see `data/merkle_root.txt` (canonical source). Update this entry only as a history marker; never let the two diverge.
+- **Audit fix 2026-05-06**: A v0.1.2 root (`ff8cdef6...8691b34`) was inadvertently embedded in this log; the v0.2.1 audit caught the divergence and replaced this line with a pointer to `data/merkle_root.txt`. Rationale: `data/` is the source of truth for graph state; this log is advisory and must reference the canonical root by file path, not by literal value.
 
 ### C. Verifiable LLM response (signed-IRI manifest)
 - **Idea**: LLM appends `{touched_iris: [...], graph_root: <hash>}` to
@@ -120,6 +121,32 @@ recorded with date and commit SHA where relevant.
   research.
 
 ### Q. (open slot for future innovation-explorer findings)
+
+---
+
+## v0.2.1 audit-driven hardening (2026-05-06)
+
+A 3-agent re-audit at v0.2.0 surfaced that the repository itself drifted
+in two ways. Both are now closed.
+
+| Drift | Where | Resolution |
+|---|---|---|
+| Merkle root literal embedded in this log diverged from `data/merkle_root.txt` after the v0.1.1 audit fixes | `docs/INNOVATION_LOG.md` candidate B | Replaced with a pointer to `data/merkle_root.txt`; no literal in this log |
+| `CLAUDE.md` instructed "4-block answer template" while every other doc enforces 5-block | `CLAUDE.md` | Updated to "5-block answer template" with the canonical block names |
+| "100% understanding" / "guarantee" wording in `LLM_CONTEXT.md` and `README.md` overstated what an LLM-readable spec can deliver | both | Downgraded to "best-effort cold-start contract"; level-by-level guarantee table preserved |
+| `lakefile.lean` required mathlib4 unpinned, breaking reproducibility | `lean/lakefile.lean` | Pinned to `v4.10.0` |
+| `schemas/claim.json#about` allowed `.` in claim IRIs while `claim:` self-pattern did not | `schemas/claim.json` | Pattern split: `iut:` allows `.`, `claim:` does not |
+| `data/context.jsonld` missing `@context` mappings for `isbn` / `publisher` / `peer_review_status` / `relates_to` | `data/context.jsonld` | Four mappings added (schema.org + iut: namespaces) |
+| `mcp/server.py` raised `KeyError` on missing arguments instead of returning a JSON-RPC error response | `mcp/server.py` | Wrapped tool dispatch in try/except → `_make_error -32602/-32603` |
+| `multiradial_ss_view.md` cited footnote 12 as "p.10" while the PDF (verified 2026-05-06) has it on p.9 | `docs/concepts/multiradial_ss_view.md` | Corrected to "p.9 fn.12 (PDF-verified 2026-05-06)" |
+| `claim:scholze_stix_2018_sub_1` verbatim diverged from the SS PDF | `data/claims.json` | Replaced with the PDF-verified literal: "up to equivalence of categories, choosing a Hodge theater is equivalent to choosing a once-punctured elliptic curve abstractly isomorphic to X" |
+| `claim:scholze_stix_2018_sub_3` verbatim diverged | `data/claims.json` | Replaced with PDF-verified: "the critical [IUTT-3, Theorem 3.11] does not become false, but trivial" |
+| `claim:joshi_2025_alternative.status` field had implementation TODOs (URL not verified) | `data/claims.json` | Moved TODO to `fair_use_note`, `status` is now a clean state value |
+
+This entry is itself an example of the standing innovation-explorer
+agent's contract: discoveries that the repository has drifted from its
+own invariants are surfaced, recorded with file-line evidence, and
+closed by a small fix rather than a redesign.
 
 ---
 
