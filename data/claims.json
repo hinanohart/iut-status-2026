@@ -264,6 +264,39 @@
       "peer_review_status": "informal_blog",
       "fair_use_note": "External wiki reference, not redistributed.",
       "verified_at": "2026-05-06"
+    },
+    {
+      "id": "claim:mochizuki_anabelian_essential",
+      "type": "Claim",
+      "label": "Anabelian geometry (mono-anabelian framework) is essential at Cor.3.12 (Mochizuki)",
+      "about": "iut:absolute_anabelian",
+      "position": "valid",
+      "stance": "supportive",
+      "proponents": ["Mochizuki", "Hoshi"],
+      "asserted_at": "2012-08-30",
+      "evidence": ["evidence:TopicsAnabelianI", "evidence:IUTchI_2012"],
+      "counters": ["claim:scholze_stix_2018_sub_2"],
+      "specific_support": "IUTchI §I3 pp.21-22: the absolute anabelian / mono-anabelian framework allows IUT to look inside one Hodge theater from another; without it, the log-link dismantles ring structure irreversibly.",
+      "fair_use_note": "Statement-level claim attribution; no prose redistribution.",
+      "status": "unresolved-as-of-2026-05",
+      "peer_review_status": "peer_reviewed",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "claim:tempered_rigidity_acknowledged",
+      "type": "Claim",
+      "label": "Tempered anabelian rigidity (EtTh Thm 1.6) is an ingenious and correct algorithm (SS acknowledgment)",
+      "about": "iut:tempered_rigidity",
+      "position": "valid",
+      "stance": "supportive",
+      "proponents": ["Scholze", "Stix"],
+      "asserted_at": "2018-07-16",
+      "evidence": ["evidence:WhyABCisStillaConjecture_2018"],
+      "specific_support": "SS p.8 §2.1.8 (PDF-verified 2026-05-06): Mochizuki's algorithm to recover theta-data from pi_1(X) acting on tempered-cover divisors is described as 'ingenious'. No objection to EtTh Thm 1.6 itself.",
+      "fair_use_note": "Statement-level claim attribution; verbatim short quotation from SS 2018 p.8.",
+      "status": "acknowledged-by-critics",
+      "peer_review_status": "preprint_not_peer_reviewed",
+      "verified_at": "2026-05-06"
     }
   ]
 }
