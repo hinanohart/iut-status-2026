@@ -813,6 +813,117 @@
       "informal_md": "docs/section_2_hodge_theater/section_2d_merged.md",
       "section": "02_hodge_theater",
       "verified_at": "2026-05-06"
+    },
+    {
+      "id": "paper:AlienCopies",
+      "type": "Paper",
+      "label": "The Mathematics of Mutually Alien Copies: from Gaussian integrals to inter-universal Teichmuller theory (Mochizuki survey)",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:theta_link_full_poly_iso",
+      "type": "Construction",
+      "label": "full poly-isomorphism constituting the Theta-link (IUTchI Cor.3.7-i)",
+      "alt_labels": ["Theta-link full poly-iso"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchI",
+      "depends_on": ["iut:theta_link", "iut:F_circ_theta_strip", "iut:F_circ_q_strip"],
+      "informal_md": "docs/section_3_theta_link/section_3a_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:theta_link_preserved_data",
+      "type": "Theorem",
+      "label": "preserved data across the Theta-link: D-vdash and O-times (IUTchI Cor.3.7 ii-iii)",
+      "alt_labels": ["D-prime preservation", "O-times preservation"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchI",
+      "depends_on": ["iut:theta_link_full_poly_iso", "iut:D_prime_strip"],
+      "informal_md": "docs/section_3_theta_link/section_3a_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:Frobenius_picture",
+      "type": "Construction",
+      "label": "Frobenius-picture (infinite chain of Theta-linked Hodge theaters, IUTchI Cor.3.8)",
+      "alt_labels": ["log-theta-lattice horizontal slice"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchI",
+      "depends_on": ["iut:theta_hodge_theater", "iut:theta_link"],
+      "informal_md": "docs/section_3_theta_link/section_3a_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:alien_arithmetic_holomorphic_structure",
+      "type": "Concept",
+      "label": "alien arithmetic holomorphic structure (Mutually Alien Copies §3.3)",
+      "alt_labels": ["mutually alien copies", "inter-universal wall"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2019",
+      "definedIn": "paper:AlienCopies",
+      "depends_on": ["iut:theta_link"],
+      "informal_md": "docs/section_3_theta_link/section_3a_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:F_vdash_times_mu_prime_strip",
+      "type": "Definition",
+      "label": "F-vdash-times-mu-prime-strip (IUTchII Def 4.9-vi/vii/viii refinement of F-modulus-prime-strip)",
+      "alt_labels": ["F-circ-times-mu-prime-strip refined"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchII",
+      "depends_on": ["iut:F_modulus_prime_strip"],
+      "informal_md": "docs/section_3_theta_link/section_3b_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:hodge_arakelov_evaluation",
+      "type": "Construction",
+      "label": "Hodge-Arakelov-theoretic evaluation isomorphism (IUTchII Cor 4.10-ii)",
+      "alt_labels": ["evaluation isomorphism", "Galois evaluation"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchII",
+      "depends_on": ["iut:F_vdash_times_mu_prime_strip", "iut:etale_theta_class"],
+      "informal_md": "docs/section_3_theta_link/section_3b_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:theta_times_mu_link",
+      "type": "Construction",
+      "label": "Theta-times-mu-link (IUTchII Cor 4.10-iii pt 1)",
+      "alt_labels": ["Theta-times-mu-link"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchII",
+      "depends_on": ["iut:theta_link", "iut:F_vdash_times_mu_prime_strip"],
+      "informal_md": "docs/section_3_theta_link/section_3b_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:theta_gau_link",
+      "type": "Construction",
+      "label": "Theta-gau-link (Theta-times-mu Gauss link, IUTchII Cor 4.10-iii pt 2)",
+      "alt_labels": ["Gaussian link"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchII",
+      "depends_on": ["iut:theta_times_mu_link", "iut:hodge_arakelov_evaluation"],
+      "informal_md": "docs/section_3_theta_link/section_3b_merged.md",
+      "section": "03_theta_link",
+      "verified_at": "2026-05-06"
     }
   ]
 }
