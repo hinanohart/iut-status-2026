@@ -46,7 +46,7 @@ updates). The asymptote can be approached but not reached; "100 %" is a
 limit, not an achievable state.
 
 **Auto-verifiable success criteria.**
-- L2a: `scripts/coverage_report.py --paper IUTchI` prints registered fraction (target ≥ 80 % at v0.5, ≥ 95 % at v1.0).
+- L2a: `scripts/coverage_report.py --paper IUTchI` prints registered fraction (target ≥ 80 % at v0.5, ≥ 95 % at v1.0). **As of v0.7.7 the script does not yet exist; the figures in the Roadmap table are self-graded estimates and Round 8 audit recorded that gap. Implementation tracked under v0.8.**
 - L2b: every Yamashita FAQ "Q" has a corresponding `claim:yamashita_faq_q###`.
 - L2c: every section of SS 2018 (10 pp.), Mochizuki Rpt 2018, and Joshi FAQ 2025-11 has at least one anchored entity or claim.
 
@@ -97,7 +97,7 @@ to where Level 3 is being pursued externally:
 | Version | L1 target | L2 target | scale (entities / claims / evidence / timeline) |
 |---|---|---|---|
 | v0.2.x (closed 2026-05-06) | ~30 % (Claude-only) | ~5 % | 33 / 16 / 24 / 20 |
-| **v0.7.x (current, 2026-05-07)** | **~30 %** (still Claude-only — see `cold_start_evidence.md`; cold-start CI scaffolding shipped v0.7.4 awaiting `ANTHROPIC_API_KEY` secret) | **~10 %** | **104 / 53 / 34 / 25** |
+| **v0.7.x (current, 2026-05-07)** | **~30 %** (still Claude-only — see `cold_start_evidence.md`; cold-start CI scaffolding shipped v0.7.4 awaiting `ANTHROPIC_API_KEY` secret) | **~10 % (self-graded; `scripts/coverage_report.py` not yet implemented)** | **104 / 53 / 34 / 25** |
 | v0.8 (cold-start 3-vendor matrix) | 50 % (3 vendors, symmetry CI) | 30 % | 130 / 70 / 50 / 35 |
 | v0.9 (5-vendor matrix + full L1 CI) | 80 % | 60 % | 150 / 80 / 60 / 40 |
 | v1.0 (gated on LANA mid-report 2026-07-17 + 6 mo) | 95 % (7 vendors) | 80 % | 200 + / 100 + / 80 + / 50 + |

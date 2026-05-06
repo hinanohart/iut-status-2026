@@ -17,7 +17,7 @@ Person role invariant. v0.2.4 priority-band status updated in §
 | Concern | Decision |
 |---|---|
 | JSON sharding | **`entities/all.json` single file** (per-type sharding deferred to v1.0+ when entities > 500); per-section for `claims/by_section/` (≤ 8 shards); `data/manifest.json` lists shards |
-| Schema versioning | `schemas/v0.2/` and `schemas/v0.3/` coexist; loader supports both via `oneOf` |
+| Schema versioning | **target**: `schemas/v0.2/` and `schemas/v0.3/` coexist; loader supports both via `oneOf`. **as of v0.7.x**: `schemas/` is still flat (`{entity,claim,evidence,timeline}.json`) with v0.7-additive optional fields (`archive_url` v0.7.0, `role` v0.7.2); subdir split deferred to v0.8 with explicit `oneOf`. |
 | Cross-reference | **on-the-fly dict comprehension in loader** (≤ 5 ms at v0.5 scale); static `_indexes/` deferred to v1.0+ when entities > 500 |
 | Sub-section docs | `docs/section_<n>_<name>/<n><letter>_*.md` + `_verification_log.md` per section |
 | PDF cache | NOT in repository; `cache/` is `.gitignore`-d; `specific_support` / `specific_objection` field **≤ 1200 chars/record (lifted from 200 at v0.3.1 because v0.2 schema reuses these fields for descriptive prose + short verbatim, not pure quotation); cumulative ≤ 30 KB across all data/** (JP CL Art. 32 主従比 1:5 constraint, computed against ≥ 5× larger original prose in `docs/section_*/`); PDF SHA-256 in `evidence.json`; `archive_url` (Wayback) mandatory on every Paper/Blog evidence record from v0.3 onward |
@@ -55,10 +55,15 @@ iut-status-2026/
 │   ├── evidence.json
 │   ├── timeline.json
 │   └── merkle_root.txt
-├── schemas/
-│   ├── v0.2/                       # frozen
-│   ├── v0.3/                       # current
-│   └── latest -> v0.3
+├── schemas/                       # v0.7.x flat layout (subdir split target for v0.8)
+│   ├── entity.json                 # current; v0.7-additive optional `role`
+│   ├── claim.json                  # current
+│   ├── evidence.json               # current; v0.7-additive optional `archive_url`
+│   └── timeline.json               # current; v0.7-additive optional `archive_url`
+# v0.8 target (NOT YET):
+# ├── schemas/v0.2/                 # frozen
+# ├── schemas/v0.3/                 # current
+# └── schemas/latest -> v0.3
 ├── docs/
 │   ├── section_1_prerequisites/
 │   │   ├── README.md

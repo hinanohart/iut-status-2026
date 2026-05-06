@@ -18,11 +18,17 @@ of independence behind the design.
 
 ## Round table
 
-| Round | Date | Trigger | Agents | Same conversation? | Independence claim |
-|---|---|---|---|---|---|
-| 1 | 2026-05-06 | initial design | analyst + architect + critic + premise-monitor + tracer + 10-trial verifier (4–6 agents) | Same Claude session | None — single LLM family |
-| 2 | 2026-05-06 | "ここさらに固めて" (further harden) | analyst + architect + critic | Same Claude session | None — same family |
-| 3 | 2026-05-06 | "ここさらに固めて" (further harden) | architect + analyst + critic | Same Claude session | None — same family. Round 3 explicitly identified the independence gap. |
+| Round | Date | Trigger | Agents | Same conversation? | Independence claim | Critical defect found |
+|---|---|---|---|---|---|---|
+| 1 | 2026-05-06 | initial design | analyst + architect + critic + premise-monitor + tracer + 10-trial verifier (4–6 agents) | Same Claude session | None — single LLM family | structural foundations |
+| 2 | 2026-05-06 | "ここさらに固めて" (further harden) | analyst + architect + critic | Same Claude session | None — same family | 5 hidden failure modes |
+| 3 | 2026-05-06 | "ここさらに固めて" (further harden) | architect + analyst + critic | Same Claude session | None — same family. Round 3 explicitly identified the independence gap. | 3 internal inconsistencies + 1 numerical-premise drift |
+| 4 | 2026-05-06 | user override「欠陥や漏れがないか徹底的にチェック前提すら疑って」 | analyst + architect + critic | Same Claude session | None — same family | tempered_rigidity misattribution / paper duplication / SS silent error / verbatim cap mismatch |
+| 5 | 2026-05-06 | user override (same phrase) | analyst + architect + critic | Same Claude session | None — same family | **Joshi v2 (2026-05-02) fictional evidence** + §1.4 verbatim mis-quote + 6 ATS arXiv IRI drift |
+| 6 | 2026-05-07 | user override (same phrase) | analyst + architect + critic | Same Claude session | None — same family | **Woit blog dating drift (1.5y)** + timeline url gap + Joshi URL canonical + verbatim cap doc sync |
+| 6.5 | 2026-05-07 | systemic root-cause repair | architect + analyst | Same Claude session | None — same family | URL liveness verifier added (closes round 4-6 systemic gap: validate.py never compared graph URLs to external reality) |
+| 7 | 2026-05-07 | user override (same phrase) | analyst + architect + critic | Same Claude session | None — same family | **Kato ISBN fabrication (978-4-04-110262-7 → 978-4-04-400417-0)** + PRIMS issue ID drift (/249→/1507, 2 records) + Frobenioids_I URL filename typo + 2018 SS visit actors over-listed (Yamashita removed) + governance gate honest revision |
+| 8 | 2026-05-07 | user override (same phrase, after Round 7 analyst recommended skip) | analyst + architect + critic | Same Claude session | None — same family | **fabricated ISBN scrub miss in `docs/section_8_disputes_timeline.md`** (R7 thought it was closed; data/ was repaired but docs/ prose retained the fabrication) + placeholder model id `claude-opus-4-5` (not real) + JSON-LD context.jsonld missing v0.7.0/v0.7.2 mappings + cold-start IRI check structurally false-fails + Wayback URL scheme drift + 6 minor pattern-matching gaps |
 
 ## Numerical premises and their verification status
 

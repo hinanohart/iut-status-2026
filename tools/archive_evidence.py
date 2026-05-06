@@ -192,6 +192,13 @@ def lookup_one(url: str) -> tuple[str | None, str]:
     snapshot_url = closest.get("url")
     if not isinstance(snapshot_url, str) or not snapshot_url:
         return None, "snapshot url missing in API response"
+    # Round 8 audit (v0.7.7): Availability API may return http-scheme
+    # URLs (e.g. http://web.archive.org/web/...). Normalise to https
+    # so downstream consumers do not encounter mixed-content issues
+    # and so a future content-vs-metadata diff has a stable scheme to
+    # compare. Wayback Machine serves https for every snapshot.
+    if snapshot_url.startswith("http://web.archive.org/"):
+        snapshot_url = "https://" + snapshot_url[len("http://"):]
     return snapshot_url, f"snapshot {closest.get('timestamp', '?')}"
 
 
@@ -272,7 +279,12 @@ def run_submit(
 ) -> list[ArchiveOutcome]:
     """Submit missing URLs to Wayback Save Page Now."""
     updated: list[ArchiveOutcome] = []
-    for o in outcomes:
+    # Round 8 audit (v0.7.7): use enumerate for exact positional
+    # bookkeeping instead of list.index(o), which on a frozen
+    # dataclass with eq=True returns the first matching element —
+    # so duplicates ahead of the current index would shift the
+    # remaining slice and silently drop or double-process records.
+    for idx, o in enumerate(outcomes):
         if o.action != "missing" or o.url is None:
             updated.append(o)
             continue
@@ -290,7 +302,7 @@ def run_submit(
                 )
             )
             logger.error("aborting batch: %s", exc)
-            updated.extend(outcomes[outcomes.index(o) + 1:])
+            updated.extend(outcomes[idx + 1:])
             return updated
         if snapshot is not None:
             updated.append(

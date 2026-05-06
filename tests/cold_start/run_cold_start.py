@@ -66,9 +66,15 @@ ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
 
 # Default model is the highest-capacity Claude as of January 2026.
-# Override via ``--model``.
+# Override via ``--model``. The default is treated as a hint, not a
+# hard contract: the runner accepts any model id Anthropic exposes via
+# /v1/messages, including dated aliases (e.g. claude-opus-4-7-20260101).
+# When this default no longer resolves, the workflow surfaces a clear
+# 404 ``error`` row in cold_start_evidence.md rather than silent
+# success — caught by Round 8 audit (placeholder model id was
+# fabrication-class drift).
 DEFAULT_MODELS = {
-    "claude": "claude-opus-4-5",  # placeholder; runner accepts any model id
+    "claude": "claude-opus-4-7",
 }
 
 SEED_ENTITIES = (
@@ -80,12 +86,39 @@ SEED_ENTITIES = (
     "iut:log_theta_lattice",
 )
 
+# Round 8 audit (v0.7.7): block-header constraint added so that prose
+# mentioning "Joshi" or "alternative" in passing inside one block does
+# NOT silently mark the Alternative block as present. Each pattern
+# now requires either a leading numeric/heading marker (e.g.
+# "3. Alternative", "(3) Alternative", "## Alternative") OR an
+# explicit "block"/"position"/"side"/"view" qualifier. This is
+# stricter than the prior bare-keyword match and reduces the
+# false-positive rate that the architect's verification experiment
+# observed (3/3 false positives with the old pattern).
+_HEADER = r"(?:^|\n)\s*(?:[#*\-]+\s*)?(?:\(?\d+[.)]\s*)?"
+_QUALIFIER = r"(?:\s+(?:block|position|side|view|interpretation|framework))"
 BLOCK_LABEL_PATTERNS = (
-    ("mochizuki", re.compile(r"mochizuki", re.IGNORECASE)),
-    ("scholze-stix", re.compile(r"scholze[-\s]*stix|scholze and stix", re.IGNORECASE)),
-    ("alternative", re.compile(r"alternative|joshi", re.IGNORECASE)),
-    ("pending", re.compile(r"pending", re.IGNORECASE)),
-    ("unresolved", re.compile(r"unresolved", re.IGNORECASE)),
+    ("mochizuki", re.compile(
+        rf"{_HEADER}mochizuki(?:{_QUALIFIER}|\s*[:\-—])", re.IGNORECASE | re.MULTILINE,
+    )),
+    ("scholze-stix", re.compile(
+        rf"{_HEADER}scholze[-\s]*stix(?:{_QUALIFIER}|\s*[:\-—])"
+        r"|scholze and stix",
+        re.IGNORECASE | re.MULTILINE,
+    )),
+    ("alternative", re.compile(
+        rf"{_HEADER}(?:alternative|joshi(?:'s)?\s+(?:alternative|reformulation|approach|interpretation|framework|ats))(?:{_QUALIFIER}|\s*[:\-—])"
+        rf"|{_HEADER}alternative\s*[:\-—]",
+        re.IGNORECASE | re.MULTILINE,
+    )),
+    ("pending", re.compile(
+        rf"{_HEADER}pending(?:{_QUALIFIER}|\s+investigation|\s*[:\-—])",
+        re.IGNORECASE | re.MULTILINE,
+    )),
+    ("unresolved", re.compile(
+        rf"{_HEADER}unresolved(?:{_QUALIFIER}|\s+(?:flag|residue)|\s*[:\-—])",
+        re.IGNORECASE | re.MULTILINE,
+    )),
 )
 
 IRI_PATTERN = re.compile(
@@ -117,7 +150,7 @@ class StructuralResult:
     detail: str
 
 
-def load_excerpt(data_dir: Path) -> str:
+def load_excerpt(data_dir: Path, *, include_llm_context: bool = True) -> str:
     """Build the deterministic context excerpt for cold-start.
 
     Returns a single string containing LLM_CONTEXT.md + entity records
@@ -125,10 +158,20 @@ def load_excerpt(data_dir: Path) -> str:
     relevant timeline events. Selection is documented in
     expected_5_block_structure.md so reruns at the same commit are
     reproducible across vendors.
+
+    Round 8 (v0.7.7): when ``include_llm_context=False`` the protocol
+    document is omitted from the excerpt because the caller is going
+    to inject it through the Messages API ``system`` parameter
+    instead. This is the recommended path for Claude / GPT vendors;
+    Llama (no system slot) keeps the concatenation default.
     """
     parts: list[str] = []
-    llm_context_path = REPO_ROOT / "LLM_CONTEXT.md"
-    parts.append(f"<!-- LLM_CONTEXT.md -->\n{llm_context_path.read_text(encoding='utf-8')}")
+    if include_llm_context:
+        llm_context_path = REPO_ROOT / "LLM_CONTEXT.md"
+        parts.append(
+            f"<!-- LLM_CONTEXT.md -->\n"
+            f"{llm_context_path.read_text(encoding='utf-8')}"
+        )
 
     with (data_dir / "entities.json").open("r", encoding="utf-8") as fh:
         entities = json.load(fh)["@graph"]
@@ -172,25 +215,44 @@ def load_excerpt(data_dir: Path) -> str:
 
 
 def call_claude(
-    prompt: str, context: str, *, api_key: str, model: str, max_tokens: int
+    prompt: str, context: str, *, api_key: str, model: str, max_tokens: int,
+    system_text: str | None = None,
 ) -> str:
     """Issue an Anthropic Messages API call and return the raw text reply.
+
+    Round 8 audit (v0.7.7): the protocol contract from
+    ``LLM_CONTEXT.md`` is moved to the ``system`` parameter of the
+    Messages API. Vendors that honour a system slot (Claude / GPT)
+    treat protocol-level instructions with higher steerability there
+    than inside the user message; vendors that have only a user slot
+    can fall back to concatenation. ``system_text=None`` preserves
+    the v0.7.4 concatenation behaviour for back-compat.
 
     Raises RuntimeError on transport / API errors so the workflow can
     classify them.
     """
-    body = {
-        "model": model,
-        "max_tokens": max_tokens,
-        "messages": [
-            {
-                "role": "user",
-                "content": (
-                    f"{context}\n\n---\n\n{prompt}"
-                ),
-            },
-        ],
-    }
+    if system_text is not None:
+        body: dict[str, Any] = {
+            "model": model,
+            "max_tokens": max_tokens,
+            "system": system_text,
+            "messages": [
+                {"role": "user", "content": f"{context}\n\n---\n\n{prompt}"},
+            ],
+        }
+    else:
+        body = {
+            "model": model,
+            "max_tokens": max_tokens,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": (
+                        f"{context}\n\n---\n\n{prompt}"
+                    ),
+                },
+            ],
+        }
     request = Request(
         ANTHROPIC_API_URL,
         method="POST",
@@ -221,13 +283,43 @@ def call_claude(
     return "\n".join(text_parts)
 
 
-def collect_known_iris(context: str) -> set[str]:
-    """Return every IRI literally present in the context excerpt.
+def collect_known_iris(context: str, data_dir: Path | None = None) -> set[str]:
+    """Return every IRI legitimately reachable in this graph.
 
-    Used to validate that the vendor response did not invent IRIs.
-    Trailing sentence punctuation is stripped via _normalise_iri.
+    Round 8 audit (v0.7.7) flagged that the previous implementation
+    only saw IRIs literally present in the truncated *context*
+    excerpt — with 6 seed entities, that left 80+ legitimate IRIs
+    out of the known set, so any vendor response citing a real
+    entity outside the seed list registered as a fabrication and
+    the cold-start CI structurally false-failed.
+
+    The repaired contract: known IRIs come from the *full* on-disk
+    graph (`data/entities.json` + `claims.json` + `evidence.json` +
+    `timeline.json`), regardless of what slice the LLM was given as
+    context. The structural guard becomes "did the LLM cite a real
+    IRI that exists in the graph?" rather than "did the LLM cite
+    only IRIs we showed it?". The latter is too strict — an LLM
+    that retrieved an IRI from the graph it sampled in another tool
+    call would otherwise fail.
     """
-    return {_normalise_iri(raw) for raw in IRI_PATTERN.findall(context)}
+    iris = {_normalise_iri(raw) for raw in IRI_PATTERN.findall(context)}
+    if data_dir is None:
+        data_dir = DATA_DIR
+    if not data_dir.exists():
+        return {iri for iri in iris if iri}
+    for fname in ("entities.json", "claims.json", "evidence.json", "timeline.json"):
+        path = data_dir / fname
+        if not path.exists():
+            continue
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        for record in doc.get("@graph", []):
+            rid = record.get("id")
+            if isinstance(rid, str) and rid:
+                iris.add(rid)
+    return {iri for iri in iris if iri}
 
 
 def verify_structure(response_text: str, context: str) -> StructuralResult:
@@ -310,12 +402,21 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     model = args.model or DEFAULT_MODELS[args.vendor]
-    excerpt = load_excerpt(args.data)
+    # v0.7.7: protocol goes to system slot for Claude; data excerpt
+    # stays in user message. This keeps the L1 contract identical
+    # across vendors (LLM_CONTEXT.md is the protocol; data is the
+    # graph slice the question is grounded in).
+    excerpt = load_excerpt(args.data, include_llm_context=False)
     prompt_text = args.prompt_file.read_text(encoding="utf-8")
+    system_text = (REPO_ROOT / "LLM_CONTEXT.md").read_text(encoding="utf-8")
 
     if args.dry_run:
         print(f"vendor={args.vendor} model={model}")
-        print(f"context_chars={len(excerpt)} prompt_chars={len(prompt_text)}")
+        print(
+            f"system_chars={len(system_text)} "
+            f"context_chars={len(excerpt)} "
+            f"prompt_chars={len(prompt_text)}"
+        )
         return 0
 
     if args.vendor == "claude":
@@ -332,6 +433,7 @@ def main(argv: list[str] | None = None) -> int:
             response_text = call_claude(
                 prompt_text, excerpt,
                 api_key=api_key, model=model, max_tokens=args.max_tokens,
+                system_text=system_text,
             )
         except RuntimeError as exc:
             logger.error("claude transport: %s", exc)

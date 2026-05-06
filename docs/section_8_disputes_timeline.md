@@ -121,7 +121,7 @@ Key concepts established: `iut:Frobenioid`, `iut:etale_theta`, `iut:mono_theta_e
 
 ## 8.5 Publication and re-exposition (2019–2024)
 
-- **2019-04-26** — Kato Fumiharu book published (KADOKAWA, ISBN 978-4-04-110262-7).
+- **2019-04-26** — Kato Fumiharu book published (KADOKAWA, ISBN 978-4-04-400417-0).
   `event:2019_kato_book` / `evidence:Kato_book_2019`
 
 - **2020-04-03** — PRIMS editorial board announces acceptance of IUT I–IV.

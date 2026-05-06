@@ -174,6 +174,58 @@ class GenericityTests(unittest.TestCase):
         orphans = all_evidence - referenced - BACKGROUND_EVIDENCE_ALLOWLIST
         self.assertEqual(orphans, set(), f"orphan evidence: {orphans}")
 
+    def test_every_schema_property_has_context_mapping(self) -> None:
+        # Round 8 audit (v0.7.7): archive_url (added v0.7.0) and role
+        # (added v0.7.2) were defined in schemas but missing from
+        # data/context.jsonld → JSON-LD processors silently dropped
+        # the values on expansion. This test pins down that every
+        # property declared in any schemas/*.json has a context entry.
+        import json
+        ctx = json.loads(
+            (REPO_ROOT / "data" / "context.jsonld").read_text(encoding="utf-8")
+        )["@context"]
+        ctx_keys = set(ctx.keys())
+        # Schema-only synthetic JSON-Schema vocabulary terms that don't
+        # belong in the JSON-LD context.
+        EXEMPT = {"id", "type"}
+        for schema_file in ("entity.json", "claim.json", "evidence.json", "timeline.json"):
+            schema = json.loads(
+                (REPO_ROOT / "schemas" / schema_file).read_text(encoding="utf-8")
+            )
+            properties = set(schema.get("properties", {}).keys())
+            missing = properties - ctx_keys - EXEMPT
+            self.assertEqual(
+                missing, set(),
+                f"schemas/{schema_file}: properties {missing} have no "
+                f"data/context.jsonld mapping (JSON-LD processors will "
+                f"drop them on expansion)",
+            )
+
+    def test_round_7_fabricated_isbn_not_in_docs(self) -> None:
+        # Regression: Round 7 (v0.6.1) replaced fabricated Kato-book
+        # ISBN 978-4-04-110262-7 with verified 978-4-04-400417-0 in
+        # data/*.json, but Round 8 found the fabricated value still
+        # live in docs/section_8_disputes_timeline.md (scrub miss).
+        # Allowlist: INNOVATION_LOG.md and AUDIT_PROVENANCE.md may
+        # reference the fabrication explicitly as a documented
+        # fabrication-class defect; nowhere else may carry it.
+        FABRICATED = "978-4-04-110262-7"
+        ALLOWED = {
+            REPO_ROOT / "docs" / "INNOVATION_LOG.md",
+            REPO_ROOT / "docs" / "AUDIT_PROVENANCE.md",
+        }
+        offenders: list[Path] = []
+        for path in (REPO_ROOT / "docs").rglob("*.md"):
+            if path in ALLOWED:
+                continue
+            if FABRICATED in path.read_text(encoding="utf-8"):
+                offenders.append(path)
+        self.assertEqual(
+            offenders, [],
+            f"Round-7 fabricated ISBN {FABRICATED} retained in: "
+            f"{[str(p.relative_to(REPO_ROOT)) for p in offenders]}",
+        )
+
 
 class LeanModuleTests(unittest.TestCase):
     """v0.7.5 invariant: every entity referencing a Lean module path must
@@ -195,17 +247,37 @@ class LeanModuleTests(unittest.TestCase):
             )
 
     def test_basic_imports_every_per_section_module(self) -> None:
+        # Round 8 audit (v0.7.7): substring match was vulnerable to
+        # comment / docstring text accidentally containing
+        # `import IutStatus.X` — that would let a per-section file be
+        # silently deleted while the test still passed. Now we strip
+        # Lean comments first and match `^import\s+IutStatus\.\w+$`
+        # only on code lines.
+        import re
         basic = (REPO_ROOT / "lean" / "IutStatus" / "Basic.lean").read_text(
             encoding="utf-8"
         )
+        # Strip /- ... -/ block comments (non-greedy, multi-line).
+        basic_no_block = re.sub(r"/-.*?-/", "", basic, flags=re.DOTALL)
+        # Strip `--` line comments.
+        code_lines: list[str] = []
+        for raw in basic_no_block.splitlines():
+            stripped = raw.split("--", 1)[0].rstrip()
+            if stripped:
+                code_lines.append(stripped)
+        actually_imported: set[str] = set()
+        for line in code_lines:
+            match = re.match(r"^import\s+(IutStatus\.\w+)\s*$", line)
+            if match:
+                actually_imported.add(match.group(1))
         for entity in self.graph.entities.values():
             if entity.lean_module is None:
                 continue
-            short = entity.lean_module.split(".")[-1]
             self.assertIn(
-                f"import IutStatus.{short}",
-                basic,
-                f"Basic.lean missing import IutStatus.{short} for {entity.id}",
+                entity.lean_module,
+                actually_imported,
+                f"Basic.lean missing import {entity.lean_module} for "
+                f"{entity.id} (or import is inside a comment / docstring)",
             )
 
 

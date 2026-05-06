@@ -42,12 +42,10 @@ jobs:
       - name: Count Surveyed candidates in INNOVATION_LOG.md
         id: scan
         run: |
-          count=$(grep -c '^\*\*Status\*\*: Surveyed' docs/INNOVATION_LOG.md || true)
-          # The bullet pattern in the file is "**Status**: Surveyed" (in inline form);
-          # also accept the alternative "- **Status**: Surveyed" prefix.
-          if [ -z "$count" ] || [ "$count" = "0" ]; then
-            count=$(grep -cE '\*\*Status\*\*:[[:space:]]*Surveyed' docs/INNOVATION_LOG.md || true)
-          fi
+          # Round 8 audit (v0.7.7): file uses bullet form "- **Status**: Surveyed".
+          # Single regex matches both bullet-prefix and bare forms; previous
+          # primary pattern with leading anchor "^\*\*" was dead code.
+          count=$(grep -cE '^[[:space:]]*-?[[:space:]]*\*\*Status\*\*:[[:space:]]*Surveyed' docs/INNOVATION_LOG.md || true)
           echo "count=${count:-0}" >> "$GITHUB_OUTPUT"
       - name: Ensure labels exist
         env:

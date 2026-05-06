@@ -106,10 +106,26 @@ iut-status-2026/
 │   ├── claim.json
 │   ├── evidence.json
 │   └── timeline.json
-├── lean/                  # Lean 4 theorem stubs (mathlib4-compatible)
+├── lean/                  # Lean 4 theorem stubs (mathlib4-compatible, v0.7.5 per-section split)
 │   ├── lakefile.lean
 │   └── IutStatus/
-│       └── Basic.lean
+│       ├── Basic.lean              # orchestrator — imports every per-section module
+│       ├── Anabelian.lean          # iut:anabelian_geometry
+│       ├── AbsoluteAnabelian.lean  # iut:absolute_anabelian
+│       ├── MonoAnabelian.lean      # iut:mono_anabelian
+│       ├── Frobenioid.lean         # iut:Frobenioid
+│       ├── EtaleTheta.lean         # iut:etale_theta
+│       ├── MonoTheta.lean          # iut:mono_theta_environment
+│       ├── TemperedRigidity.lean   # iut:tempered_rigidity
+│       ├── Cuspidalization.lean    # iut:cuspidalization
+│       ├── HodgeTheater.lean       # iut:HodgeTheater
+│       ├── ThetaLink.lean          # iut:theta_link
+│       ├── LogLink.lean            # iut:log_link
+│       ├── Multiradial.lean        # iut:multiradial_algorithm + Ind1/Ind2/Ind3
+│       ├── Cor312.lean             # iut:Cor.3.12
+│       ├── HeightInequality.lean   # iut:height_inequality
+│       ├── Diophantine.lean        # iut:diophantine_inequality
+│       └── ABC.lean                # iut:abc_conjecture + iut:abc_special_case_via_iut
 ├── mcp/                   # MCP server for any MCP-compatible LLM client
 │   ├── server.py
 │   └── README.md
