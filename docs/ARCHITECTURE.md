@@ -7,7 +7,7 @@ complements `UNDERSTANDING_LEVELS.md` (what we are scaling toward) and
 `FAILURE_MODES.md` (what to avoid).
 
 **v0.7 progress (2026-05-07)**: 104 entities / 53 claims / 34 evidence /
-25 timeline events / 79 unittest cases / Lean per-section split (16
+25 timeline events / 91 unittest cases / Lean per-section split (16
 modules) / cold-start CI scaffolding / Wayback + DOI/ISBN verification /
 Person role invariant. v0.2.4 priority-band status updated in §
 "v0.2.3 / v0.2.4 stress-test refinements" below.
@@ -89,9 +89,16 @@ iut-status-2026/
 └── …
 ```
 
-## Schema v0.3 additions
+## Schema v0.3 additions (planned, not yet on disk — see Round 9 audit)
 
-`schemas/v0.3/entity.json`:
+These fields are planned for the eventual v0.3 schema migration. As
+of v0.7.8 they have **not** been added to `schemas/*.json`; the
+section is preserved as a forward-looking design spec, not as an
+"already-implemented" claim. Round 9 architect Sec 7 surfaced this
+drift (commit message of v0.7.7 said "6 dead refs eliminated", in
+fact only 3 were repaired).
+
+For the planned `entity.json` additions (under future `schemas/v0.3/`):
 - `verbatim_short_statement` — string, ≤ 200 chars, fair-use snippet, optional
 - `verbatim_sha256` — string, SHA-256 hex of `verbatim_short_statement`, optional but required when `verbatim_short_statement` is present
 - `definition_locator` — string, e.g. `"IUTchI Def 3.6, p.87 (PDF SHA-256 prefix abc123…)"`, optional
@@ -100,16 +107,21 @@ iut-status-2026/
 - `subsection` — string, e.g. `"2a"`, optional
 - `schema_version` — const `"0.3"`, required
 
-`schemas/v0.3/claim.json`:
+For the planned `claim.json` additions:
 - `verbatim_short_statement` — same form as above
 - `verbatim_sha256` — same
 - `depends_on_section` — array of section enum, optional
 - `schema_version` — const `"0.3"`, required
 
-`schemas/v0.3/evidence.json`:
+For the planned `evidence.json` additions:
 - `pdf_sha256` — string, hex SHA-256 of the canonical PDF as fetched on a recorded date
 - `pdf_fetched_at` — date, when the SHA-256 was recorded
 - `pymupdf_version_used` — string, pinned version for reproducible extraction
+
+What v0.7.x **has** added to the current flat `schemas/`:
+- `evidence.archive_url` (v0.7.0) — Wayback Machine snapshot URL
+- `timeline.archive_url` (v0.7.0) — same for timeline events
+- `entity.role` (v0.7.2) — Person role qualifier (`primary_actor` / `background_reference` / `historical_foundation`)
 
 Backward compatibility: `loaders/python_minimal.py` reads either v0.2 or
 v0.3 records (uses `record.get(field)` with safe defaults). Validators
@@ -206,14 +218,16 @@ bands; only the `must` band blocks v0.3 work.
 | 9 | Lean stub per-section split (G8 close from v0.7 architect) | _new_ | enforced | 16 per-section `.lean` files v0.7.5; `tools/validate.py` rejects unresolved `lean_module` references. |
 | 10 | `cold_start_evidence.md` source-of-truth file (G1 close) | _new_ | created | v0.7.0 stub created (was 5-way dead reference); v0.7.4 weekly run-log table appended. |
 
-### 1. Backward-compat contract (frozen)
+### 1. Backward-compat contract (planned for v0.8 schema migration)
 
-- v0.2 schemas under `schemas/v0.2/` are **frozen**; no edits.
-- v0.3 schemas under `schemas/v0.3/` add fields with explicit
+- v0.2 schemas under `schemas/v0.2/` will be **frozen** when the subdir
+  split lands (v0.8 target). As of v0.7.8 the schemas live flat in
+  `schemas/{entity,claim,evidence,timeline}.json`.
+- v0.3 schemas under `schemas/v0.3/` will add fields with explicit
   `dependentRequired` (Draft 2020-12): `verbatim_short_statement` →
-  requires `verbatim_sha256`.
+  requires `verbatim_sha256`. Not yet on disk.
 - The loader (`loaders/python_minimal.py`) is **tolerant** — it reads
-  v0.2 records by ignoring v0.3-only fields and reads v0.3 records by
+  v0.2 records by ignoring v0.3-only fields and will read v0.3 records by
   treating new fields as optional with `record.get(field)`. v0.2 *schema*
   validation will fail-fast on a v0.3 record by design; this is intentional
   to prevent silent downgrade.
@@ -293,8 +307,7 @@ overshooting soft-cap triggers a monitor review.
 1. `tools/migrate_v0_2_to_v0_3.py` reads v0.2 monolithic JSON, writes
    per-type / per-section shards, generates `manifest.json`, computes new
    Merkle root.
-2. `schemas/v0.2/` is preserved; `schemas/v0.3/` is added.
+2. `schemas/v0.2/` will preserve the current flat schema set; `schemas/v0.3/` will be added (NOT YET).
 3. Loader becomes shard-aware in the same commit.
-4. Tests are adapted; existing 26 unit tests must continue to pass.
-5. Tagged as `v0.3.0`. Subsequent commits add new entities / claims at the
-   target rate (cap at 80 entities / 40 claims for the v0.3 milestone).
+4. Tests are adapted; existing unit tests must continue to pass (current count 81 → 91+ after Round 9 v0.7.8 additions).
+5. Tagged as `v0.3.0` once subdir split + sharding both land. Subsequent commits add new entities / claims at the target rate.

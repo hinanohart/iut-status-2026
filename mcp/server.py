@@ -72,6 +72,11 @@ def _entity_to_json(graph: IutGraph, iri: str) -> dict[str, Any] | None:
     entity = graph.entity(iri)
     if entity is None:
         return None
+    # Round 9 audit (v0.7.8): role / lean_stub were silently dropped
+    # by the MCP serializer even though the schema and loader carry
+    # them. drift-zero contract requires every dataclass field to be
+    # exposed (or explicitly excluded with rationale) — see Round 9
+    # architect Sec 1.
     return {
         "id": entity.id,
         "type": entity.type,
@@ -83,7 +88,9 @@ def _entity_to_json(graph: IutGraph, iri: str) -> dict[str, Any] | None:
         "defined_in": entity.defined_in,
         "depends_on": list(entity.depends_on),
         "informal_md": entity.informal_md,
+        "lean_stub": entity.lean_stub,
         "lean_module": entity.lean_module,
+        "role": entity.role,
         "verified_at": entity.verified_at,
     }
 
@@ -92,6 +99,10 @@ def _claim_to_json(graph: IutGraph, claim_iri: str) -> dict[str, Any] | None:
     claim = graph.claim(claim_iri)
     if claim is None:
         return None
+    # Round 9 audit (v0.7.8): specific_support was silently dropped
+    # by the loader (Claim dataclass) and the MCP serializer. With
+    # 8+ active records carrying the field in data/claims.json,
+    # downstream LLMs were missing supportive context entirely.
     return {
         "id": claim.id,
         "label": claim.label,
@@ -104,6 +115,7 @@ def _claim_to_json(graph: IutGraph, claim_iri: str) -> dict[str, Any] | None:
         "counters": list(claim.counters),
         "supports": list(claim.supports),
         "relates_to": list(claim.relates_to),
+        "specific_support": claim.specific_support,
         "specific_objection": claim.specific_objection,
         "fair_use_note": claim.fair_use_note,
         "status": claim.status,
@@ -236,11 +248,13 @@ def _dispatch_tool(
         if ev is None:
             payload: Any = None
         else:
+            # Round 9 audit (v0.7.8): archive_url was silently dropped.
             payload = {
                 "id": ev.id,
                 "type": ev.type,
                 "label": ev.label,
                 "url": ev.url,
+                "archive_url": ev.archive_url,
                 "doi": ev.doi,
                 "isbn": ev.isbn,
                 "publisher": ev.publisher,
@@ -253,12 +267,17 @@ def _dispatch_tool(
 
     if name == "iut_timeline":
         events = sorted(graph.timeline.values(), key=lambda e: e.date)
+        # Round 9 audit (v0.7.8): url + archive_url were silently
+        # dropped; LLM consumers asking "where can I read about this
+        # event?" got nothing back.
         payload_list = [
             {
                 "id": e.id,
                 "label": e.label,
                 "date": e.date,
                 "actors": list(e.actors),
+                "url": e.url,
+                "archive_url": e.archive_url,
             }
             for e in events
         ]

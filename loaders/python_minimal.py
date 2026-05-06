@@ -70,6 +70,7 @@ class Claim:
     counters: tuple[str, ...] = ()
     supports: tuple[str, ...] = ()
     relates_to: tuple[str, ...] = ()
+    specific_support: str | None = None
     specific_objection: str | None = None
     fair_use_note: str | None = None
     status: str | None = None
@@ -213,6 +214,7 @@ class IutGraph:
                 counters=tuple(record.get("counters", ())),
                 supports=tuple(record.get("supports", ())),
                 relates_to=tuple(record.get("relates_to", ())),
+                specific_support=record.get("specific_support"),
                 specific_objection=record.get("specific_objection"),
                 fair_use_note=record.get("fair_use_note"),
                 status=record.get("status"),

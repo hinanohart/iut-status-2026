@@ -149,7 +149,7 @@ iut-status-2026/
 │   ├── INNOVATION_LOG.md        # candidate A-X catalogue (B/R/S/T/U/V/W/X implemented)
 │   ├── AUDIT_PROVENANCE.md      # round 1-7 disclosure + governance honest revision
 │   └── cold_start_evidence.md   # multi-vendor cold-start run log (v0.7.4 weekly auto-append)
-├── tests/                 # CI validation (79 cases as of v0.7.5)
+├── tests/                 # CI validation (91 cases as of v0.7.8)
 │   ├── test_validation.py / test_merkle.py
 │   ├── test_verify_urls.py / test_verify_identifiers.py
 │   ├── test_archive_evidence.py / test_cold_start_runner.py
@@ -177,6 +177,8 @@ iut-status-2026/
 | v0.7.4 | `tests/cold_start/run_cold_start.py` (Anthropic API) + `cold_start_weekly.yml` | begins multi-vendor L1 evidence; previously 0 real runs |
 | v0.7.5 | 16 `lean/IutStatus/<Module>.lean` per-section files + Basic.lean orchestrator + `lean_module` resolution rule | closes architect-flagged G8 module-file drift |
 | v0.7.6 | ARCHITECTURE.md band table updated with v0.7 status; UNDERSTANDING_LEVELS.md roadmap row sync; this README block | documentation coherence after 6 incremental releases |
+| v0.7.7 | Round 8 user-override audit close (1 CRITICAL + 5 HIGH + 4 MEDIUM): docs prose-scrub class identified; `docs/section_8_disputes_timeline.md` ISBN scrub miss; `data/context.jsonld` archive_url + role mapping; cold_start runner repairs (model id + system role + IRI check + BLOCK pattern); validate.py surname full-name match; verify_identifiers Unicode dash | systemic prose-retention class surfaced |
+| v0.7.8 | Round 9 user-override audit close (4 CRITICAL + 9 HIGH + 6 MEDIUM): 6-release stale auto-gen `docs/disputes.md` + `timeline.md` + `overview.md` regenerated + CI diff gate; BLOCK_LABEL_PATTERNS 2-tier (header + proximity) repaired natural-prose regression introduced by v0.7.7; `mcp/server.py` exposes `archive_url` / `role` / `specific_support` / `lean_stub` (was silently dropping 5 fields); `loaders/python_minimal.py` Claim dataclass `specific_support`; `LICENSE` short-form → Apache-2.0 official 11264-byte text; `tools/render_md.py` surfaces archive_url + specific_support; CI gains MCP initialize handshake + lake build advisory + render-diff gate; ISBN regression generalised to PROSE_SCRUB_INVARIANTS; ARCHITECTURE.md schemas/v0.{2,3} 6 dead refs honestly repositioned as planned-not-yet | drift-zero contract repaired across consumer chain (loader → MCP → render); audit-process meta-finding: per-release mini-audit recommendation |
 
 ## Citation policy
 

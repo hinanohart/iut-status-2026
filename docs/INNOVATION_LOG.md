@@ -182,6 +182,26 @@ recorded with date and commit SHA where relevant.
 - **Validate.py repairs**: surname-only heuristic dropped (now full-name match required); ISBN separator stripping now handles Unicode dashes (en-dash, em-dash, figure-dash, NBSP) via NFKC normalisation + `unicodedata` Pd category.
 - **Doc coherence repairs**: `docs/AUDIT_PROVENANCE.md` round table extended with Rounds 4–8 (was Round 1–3 only despite governance honest revision referencing 4–7); `docs/ARCHITECTURE.md` schemas/v0.{2,3}/ subdir target marked NOT YET (was 6 places asserting it as current); `docs/UNDERSTANDING_LEVELS.md` L2 % marked self-graded with `scripts/coverage_report.py` not-yet-implemented note; `README.md` lean/ block enumerates 16 per-section files; `innovation_heartbeat.yml` grep primary pattern unified with bullet-prefix form (fallback was carrying the load).
 
+### Z. Round 9 user-override audit (consumer-chain drift repair + per-release mini-audit recommendation)
+- **Idea**: Round 9 launched after Round 8 critic recommended switching to per-release mini-audit; instead the user override fired the standard 3-agent batch audit. Round 9 found a class of defect Round 8 missed: **the consumer chain** (loader → MCP → render → committed docs) was diverging from the **schema chain** Round 8 had repaired. Schemas had `archive_url` and `role`; loaders, MCP serializers, render_md, and even the auto-generated docs/disputes.md / timeline.md / overview.md had not propagated the changes. v0.7.6 "documentation coherence pass" was self-undermined: the auto-gen files were 6 release boundaries stale (last commit v0.5.1).
+- **Status**: **Implemented** (v0.7.8, commit pending). 4 CRITICAL + 9 HIGH + 6 MEDIUM closed.
+- **Files**:
+  - `docs/disputes.md` / `timeline.md` / `overview.md`: regenerated; CI now `git diff --exit-code` after `render_md.py` to fail-loud on future stale-state.
+  - `mcp/server.py`: `_entity_to_json` exposes `lean_stub` + `role`; `_claim_to_json` exposes `specific_support`; evidence + timeline dispatch expose `archive_url` and `url`. Regression suite `tests/test_mcp_server.py` (6 cases) pins serializer parity vs dataclass fields.
+  - `loaders/python_minimal.py`: `Claim` dataclass gains `specific_support: str | None`; `_to_claim` reads it.
+  - `tests/cold_start/run_cold_start.py`: BLOCK_LABEL_PATTERNS 2-tier (header strict tier-1 + keyword + 200-char proximity tier-2) repairs natural-prose regression introduced by v0.7.7. New `BlockSpec` dataclass + `_block_is_present`. Test cases: pass on natural-prose response (regression), bare-keyword still fails (invariant).
+  - `LICENSE`: short-form → Apache-2.0 official 11264-byte text (Section 1-9 + APPENDIX). SPDX-Apache-2.0 detection now legally precise.
+  - `tools/render_md.py`: `_render_claim` surfaces `specific_support` and `(archive_url)` link alongside `url`.
+  - `docs/section_6_cor_3_12.md:421`: Joshi `v1+v2` retention → `v1 + Joshi FAQ 2025-11`.
+  - `docs/section_8_disputes_timeline.md:64`: 2018 SS visit actor list reduced to Round-7 4 actors with audit attribution.
+  - `docs/ARCHITECTURE.md`: 6 dead schemas/v0.{2,3}/ references repositioned as "planned, not yet on disk" with Round 9 audit attribution.
+  - `tests/test_validation.py::test_audit_known_corrections_not_in_docs`: generalises Round 8's single-needle ISBN guard to a list of `FABRICATIONS = [(needle, label)]` + `ALLOWED` set. Adding a future fabrication is a 1-line PROSE_SCRUB_INVARIANTS extension.
+  - `tests/test_verify_identifiers.py::test_unicode_dash_isbn_strip` regression for v0.7.7 NFKC + Pd category.
+  - `tests/test_archive_evidence.py::test_apply_handles_duplicate_url_records_correctly` regression for v0.7.7 outcomes.index → enumerate fix.
+  - `.github/workflows/ci.yml`: render diff gate, MCP initialize handshake (was `|| true`), Lean lake build advisory step.
+- **Drift-zero contract restoration**: 5 fields silently dropped at MCP layer for 1+ releases. Consumer chain now sweeps every dataclass field via the parity test.
+- **Process meta-finding**: 8 connected releases (v0.7.0 → v0.7.7) in 1 day exceeded the cadence at which prose-layer + consumer-chain drift can be sanity-checked. Round 8 critic's recommendation "per-release mini-audit instead of batch-end audit" stands; Round 9 going batch-style was an audit-process drift in itself. Round 10 (if user-override fires) should be 1-agent per-release form, or accept that further batch audits will continue surfacing 1-2 CRITICAL each round at decreasing marginal cost.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---

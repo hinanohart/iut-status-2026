@@ -7,7 +7,7 @@
 - **2009-01-01** — The etale theta function paper published (Mochizuki) (actors: Mochizuki)
 - **2012-08-30** — IUTch I-IV released as RIMS preprints (2012-08-30) (actors: Mochizuki)
 - **2017-12-17** — Calegari blog 'the abc conjecture has still not been proved' (actors: Calegari)
-- **2018-03-15** — Scholze and Stix visit RIMS for IUT discussions (March 2018, exact day approximate) (actors: Scholze, Stix, Mochizuki, Hoshi, Yamashita)
+- **2018-03-15** — Scholze and Stix visit RIMS for IUT discussions (March 15-20, 2018; primary sources Wikipedia + ncatlab confirm Scholze/Stix/Mochizuki/Hoshi only; Yamashita not corroborated, removed at round 7) (actors: Scholze, Stix, Mochizuki, Hoshi)
 - **2018-05-01** — Mochizuki additional comment Cmt2018-05 (actors: Mochizuki)
 - **2018-07-16** — Scholze-Stix 'Why abc is still a conjecture' report (actors: Scholze, Stix)
 - **2018-09-01** — Mochizuki 'Report on Discussions' counter-response (actors: Mochizuki)

@@ -201,29 +201,38 @@ class GenericityTests(unittest.TestCase):
                 f"drop them on expansion)",
             )
 
-    def test_round_7_fabricated_isbn_not_in_docs(self) -> None:
-        # Regression: Round 7 (v0.6.1) replaced fabricated Kato-book
-        # ISBN 978-4-04-110262-7 with verified 978-4-04-400417-0 in
-        # data/*.json, but Round 8 found the fabricated value still
-        # live in docs/section_8_disputes_timeline.md (scrub miss).
-        # Allowlist: INNOVATION_LOG.md and AUDIT_PROVENANCE.md may
-        # reference the fabrication explicitly as a documented
-        # fabrication-class defect; nowhere else may carry it.
-        FABRICATED = "978-4-04-110262-7"
+    def test_audit_known_corrections_not_in_docs(self) -> None:
+        # Round 9 audit (v0.7.8): generalised the Round 8 single-needle
+        # ISBN regression to a list of "known corrections" — strings
+        # that were once cited but proven fabricated / drifted, and
+        # must therefore not survive in any docs/*.md outside the
+        # explicit fabrication-record allowlist. Adding a new entry
+        # here closes a future drift class in one line.
+        FABRICATIONS: list[tuple[str, str]] = [
+            # (needle, round-where-fixed)
+            ("978-4-04-110262-7", "R7 Kato ISBN"),
+            ("ems.press/journals/prims/issues/249", "R7 PRIMS issue ID"),
+        ]
         ALLOWED = {
             REPO_ROOT / "docs" / "INNOVATION_LOG.md",
             REPO_ROOT / "docs" / "AUDIT_PROVENANCE.md",
         }
-        offenders: list[Path] = []
-        for path in (REPO_ROOT / "docs").rglob("*.md"):
+        offenders: list[tuple[Path, str]] = []
+        md_files = list((REPO_ROOT / "docs").rglob("*.md"))
+        for path in md_files:
             if path in ALLOWED:
                 continue
-            if FABRICATED in path.read_text(encoding="utf-8"):
-                offenders.append(path)
+            text = path.read_text(encoding="utf-8")
+            for needle, label in FABRICATIONS:
+                if needle in text:
+                    offenders.append((path, label))
         self.assertEqual(
             offenders, [],
-            f"Round-7 fabricated ISBN {FABRICATED} retained in: "
-            f"{[str(p.relative_to(REPO_ROOT)) for p in offenders]}",
+            "fabricated / drifted strings retained in docs/: "
+            + ", ".join(
+                f"{p.relative_to(REPO_ROOT)} ({label})"
+                for p, label in offenders
+            ),
         )
 
 
