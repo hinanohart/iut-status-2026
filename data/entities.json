@@ -21,7 +21,7 @@
       "label": "Frobenioid",
       "introduced_by": "person:Mochizuki",
       "introduced_year": "2008",
-      "definedIn": "paper:Frobenioids_I",
+      "definedIn": "paper:FrdI",
       "depends_on": ["iut:anabelian_geometry"],
       "informal_md": "docs/concepts/frobenioid.md",
       "lean_stub": "structure Frobenioid : Type where carrier : Type",
@@ -330,13 +330,6 @@
       "type": "Paper",
       "label": "Inter-universal Teichmuller Theory IV (Log-Volume Computations and Set-theoretic Foundations)",
       "section": "07_abc",
-      "verified_at": "2026-05-06"
-    },
-    {
-      "id": "paper:Frobenioids_I",
-      "type": "Paper",
-      "label": "The Geometry of Frobenioids I",
-      "section": "01_prerequisites",
       "verified_at": "2026-05-06"
     },
     {
