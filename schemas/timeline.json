@@ -15,6 +15,10 @@
     "actors": {
       "type": "array",
       "items": {"type": "string"}
+    },
+    "url": {
+      "type": "string",
+      "description": "Source URL for the event (kurims news entry, arXiv abstract page, conference program page, etc.) — added at v0.5.2 to prevent fabrication-class drift surfaced by round-6 audit."
     }
   },
   "additionalProperties": false

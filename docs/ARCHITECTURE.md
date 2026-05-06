@@ -13,7 +13,7 @@ claims / ~15 000 + lines (v1.0). It complements `UNDERSTANDING_LEVELS.md`
 | Schema versioning | `schemas/v0.2/` and `schemas/v0.3/` coexist; loader supports both via `oneOf` |
 | Cross-reference | **on-the-fly dict comprehension in loader** (≤ 5 ms at v0.5 scale); static `_indexes/` deferred to v1.0+ when entities > 500 |
 | Sub-section docs | `docs/section_<n>_<name>/<n><letter>_*.md` + `_verification_log.md` per section |
-| PDF cache | NOT in repository; `cache/` is `.gitignore`-d; `verbatim_short_statement` **≤ 200 chars/record (lifted from 100 to admit existing PDF-verified verbatim like the 108-char SS p.6 quotation); cumulative ≤ 30 KB across all data/** (JP CL Art. 32 主従比 1:5 constraint, computed against ≥ 5× larger original prose in `docs/section_*/`); PDF SHA-256 in `evidence.json`; `archive_url` (Wayback) mandatory on every Paper/Blog evidence record from v0.3 onward |
+| PDF cache | NOT in repository; `cache/` is `.gitignore`-d; `specific_support` / `specific_objection` field **≤ 1200 chars/record (lifted from 200 at v0.3.1 because v0.2 schema reuses these fields for descriptive prose + short verbatim, not pure quotation); cumulative ≤ 30 KB across all data/** (JP CL Art. 32 主従比 1:5 constraint, computed against ≥ 5× larger original prose in `docs/section_*/`); PDF SHA-256 in `evidence.json`; `archive_url` (Wayback) mandatory on every Paper/Blog evidence record from v0.3 onward |
 | LLM context window | `data/manifest.json` + `data/_summary.json` cold-start; details lazy-loaded via MCP tools |
 | Merkle | per-shard Merkle root → top-level Merkle of Merkles; incremental rebuild |
 | Innovation explorer | GitHub Actions CRON daily arXiv / RIMS watch |

@@ -18,7 +18,8 @@
       "date": "2008-01-01",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/papers-english.html"
     },
     {
       "id": "event:2009_etale_theta",
@@ -27,7 +28,8 @@
       "date": "2009-01-01",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/papers-english.html"
     },
     {
       "id": "event:2012_iut_release",
@@ -36,7 +38,8 @@
       "date": "2012-08-30",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/papers-english.html"
     },
     {
       "id": "event:2017_calegari_blog",
@@ -45,7 +48,8 @@
       "date": "2017-12-17",
       "actors": [
         "Calegari"
-      ]
+      ],
+      "url": "https://galoisrepresentations.org/2017/12/17/the-abc-conjecture-has-still-not-been-proved/"
     },
     {
       "id": "event:2018_scholze_stix_visit",
@@ -67,7 +71,8 @@
       "date": "2018-05-01",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Cmt2018-05.pdf"
     },
     {
       "id": "event:2018_07_ss_report",
@@ -77,7 +82,8 @@
       "actors": [
         "Scholze",
         "Stix"
-      ]
+      ],
+      "url": "https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf"
     },
     {
       "id": "event:2018_09_mochizuki_response",
@@ -86,7 +92,8 @@
       "date": "2018-09-01",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Rpt2018.pdf"
     },
     {
       "id": "event:2018_09_quanta_article",
@@ -96,7 +103,8 @@
       "actors": [
         "Hartnett",
         "Scholze"
-      ]
+      ],
+      "url": "https://www.quantamagazine.org/titans-of-mathematics-clash-over-epic-proof-of-abc-conjecture-20180920/"
     },
     {
       "id": "event:2019_kato_book",
@@ -123,7 +131,8 @@
       "date": "2021-03-05",
       "actors": [
         "PRIMS editorial board"
-      ]
+      ],
+      "url": "https://ems.press/journals/prims/issues/249"
     },
     {
       "id": "event:2024_03_essential_logical_structure_update",
@@ -132,7 +141,8 @@
       "date": "2024-03-24",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/news-english.html"
     },
     {
       "id": "event:2024_03_mochizuki_report_on_joshi",
@@ -141,7 +151,8 @@
       "date": "2024-03-30",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/news-english.html"
     },
     {
       "id": "event:2024_yamashita_survey",
@@ -150,7 +161,8 @@
       "date": "2024-06-25",
       "actors": [
         "Yamashita"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/abc2024Jun25.pdf"
     },
     {
       "id": "event:2025_03_iut_summit",
@@ -165,7 +177,8 @@
         "Minamide",
         "Kedlaya",
         "Collas"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/IUT_Summit_2025/program.html"
     },
     {
       "id": "event:2025_04_icms_scotland_talk",
@@ -174,7 +187,8 @@
       "date": "2025-04-27",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/news-english.html"
     },
     {
       "id": "event:2025_joshi_v1",
@@ -183,7 +197,8 @@
       "date": "2025-04-29",
       "actors": [
         "Joshi"
-      ]
+      ],
+      "url": "https://arxiv.org/abs/2505.10568"
     },
     {
       "id": "event:2025_mochizuki_october_report",
@@ -192,7 +207,8 @@
       "date": "2025-10-28",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/IUT-report-2025-10.pdf"
     },
     {
       "id": "event:2026_lana_announcement",
@@ -206,7 +222,8 @@
         "Topaz",
         "Kato Fumiharu",
         "ZMC"
-      ]
+      ],
+      "url": "https://zen.ac.jp/en/zmc/topics/jwz-o8xr3v6f"
     },
     {
       "id": "event:2026_mochizuki_formalization_report",
@@ -218,7 +235,8 @@
         "Hoshi",
         "Yamashita",
         "Yang"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Formalization%20of%20IUT%20(2026-04).pdf"
     },
     {
       "id": "event:2026_04_formalization_ai_workshop_slides",
@@ -227,7 +245,8 @@
       "date": "2026-04-08",
       "actors": [
         "Mochizuki"
-      ]
+      ],
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/news-english.html"
     },
     {
       "id": "event:2025_11_joshi_faq",
@@ -236,7 +255,8 @@
       "date": "2025-11-01",
       "actors": [
         "Joshi"
-      ]
+      ],
+      "url": "https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf"
     },
     {
       "id": "event:2026_lana_midreport_scheduled",
@@ -249,7 +269,8 @@
         "Hoshi",
         "Topaz",
         "Kato Fumiharu"
-      ]
+      ],
+      "url": "https://zen.ac.jp/en/zmc/topics/jwz-o8xr3v6f"
     }
   ]
 }
