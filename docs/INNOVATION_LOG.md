@@ -165,6 +165,13 @@ recorded with date and commit SHA where relevant.
 - **Drift-zero contract**: excerpt is a deterministic subset (6 seed entities, all `about: iut:Cor.3.12` claims, transitive evidence, 2018–2026 timeline window). No git history, branch state, or unrelated docs leak into the prompt.
 - **Advisory only**: structural failures exit 0 with `fail` row; transport / API errors exit 1 but workflow uses `continue-on-error: true`. The maintainer review of the row is the gate, not the workflow exit code.
 
+### X. Lean stub per-section split (`lean/IutStatus/<Module>.lean` × 16)
+- **Idea**: 17 entities in `data/entities.json` carry a `lean_module` field pointing at `IutStatus.Anabelian` / `Frobenioid` / `EtaleTheta` / etc., yet `lean/IutStatus/Basic.lean` was the only file. Validate.py never enforced the existence of those module files — a Round-7-class drift between graph metadata and on-disk reality. Closes Phase 1 must-band #2 by splitting Basic.lean into 16 per-section files (one per unique `lean_module` value), turning Basic.lean into a pure orchestrator that imports every module, and adding a validator rule that fails CI if any `lean_module` reference does not resolve to a file.
+- **Status**: **Implemented** (v0.7.5, commit pending).
+- **Files**: 16 new `lean/IutStatus/<Module>.lean` files (Anabelian / AbsoluteAnabelian / MonoAnabelian / Frobenioid / EtaleTheta / MonoTheta / TemperedRigidity / Cuspidalization / HodgeTheater / ThetaLink / LogLink / Multiradial / Cor312 / HeightInequality / Diophantine / ABC); rewritten `lean/IutStatus/Basic.lean` (orchestrator with explicit imports); `tools/validate.py` (lean_module resolution rule); `tests/test_validation.py` LeanModuleTests (2 cases: every-module-resolves + Basic-imports-every-module).
+- **Drift-zero contract preserved**: every identifier in every per-section file maps 1:1 to an `iut:*` IRI in entities.json. Module dependencies are encoded via `import` statements following the mathematical hierarchy (Anabelian → AbsoluteAnabelian → MonoAnabelian; Frobenioid → EtaleTheta → MonoTheta + TemperedRigidity + Cuspidalization; HodgeTheater → ThetaLink + LogLink → Multiradial → Cor312 → HeightInequality → Diophantine + ABC).
+- **MonoTheta exception**: the `iut:mono_theta_environment` entity carries `lean_module=IutStatus.MonoTheta` but no `lean_stub`. The new module file ships a minimal `axiom mono_theta_environment : Prop` so the file exists and Basic.lean imports cleanly; the data record itself is not modified.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---
