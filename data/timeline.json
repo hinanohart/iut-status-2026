@@ -54,14 +54,13 @@
     {
       "id": "event:2018_scholze_stix_visit",
       "type": "event",
-      "label": "Scholze and Stix visit RIMS for IUT discussions (March 2018, exact day approximate)",
+      "label": "Scholze and Stix visit RIMS for IUT discussions (March 15-20, 2018; primary sources Wikipedia + ncatlab confirm Scholze/Stix/Mochizuki/Hoshi only; Yamashita not corroborated, removed at round 7)",
       "date": "2018-03-15",
       "actors": [
         "Scholze",
         "Stix",
         "Mochizuki",
-        "Hoshi",
-        "Yamashita"
+        "Hoshi"
       ]
     },
     {
@@ -132,7 +131,7 @@
       "actors": [
         "PRIMS editorial board"
       ],
-      "url": "https://ems.press/journals/prims/issues/249"
+      "url": "https://ems.press/journals/prims/issues/1507"
     },
     {
       "id": "event:2024_03_essential_logical_structure_update",
