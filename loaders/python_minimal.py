@@ -94,6 +94,7 @@ class TimelineEvent:
     label: str
     date: str
     actors: tuple[str, ...] = ()
+    url: str | None = None
 
 
 @dataclass
@@ -241,6 +242,7 @@ class IutGraph:
                 label=record["label"],
                 date=record["date"],
                 actors=tuple(record.get("actors", ())),
+                url=record.get("url"),
             )
         except KeyError as exc:
             raise ValueError(f"timeline missing required field {exc}: {record}") from exc
