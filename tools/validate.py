@@ -255,6 +255,19 @@ def validate_all() -> list[str]:
                     errors.append(
                         f"entity {eid}: informal_md '{informal_md}' file not found"
                     )
+
+            lean_module = entity.get("lean_module")
+            if lean_module is not None:
+                # Convert IutStatus.Foo -> lean/IutStatus/Foo.lean
+                module_path = REPO_ROOT / "lean" / (
+                    lean_module.replace(".", "/") + ".lean"
+                )
+                if not module_path.exists():
+                    errors.append(
+                        f"entity {eid}: lean_module '{lean_module}' resolves "
+                        f"to {module_path.relative_to(REPO_ROOT)} which does "
+                        f"not exist"
+                    )
         except ValidationError as exc:
             errors.append(str(exc))
 

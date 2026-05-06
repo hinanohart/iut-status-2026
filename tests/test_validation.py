@@ -175,6 +175,40 @@ class GenericityTests(unittest.TestCase):
         self.assertEqual(orphans, set(), f"orphan evidence: {orphans}")
 
 
+class LeanModuleTests(unittest.TestCase):
+    """v0.7.5 invariant: every entity referencing a Lean module path must
+    resolve to an existing .lean file under lean/."""
+
+    def setUp(self) -> None:
+        self.graph = IutGraph.load(DATA_DIR)
+
+    def test_every_lean_module_resolves(self) -> None:
+        for entity in self.graph.entities.values():
+            module = entity.lean_module
+            if module is None:
+                continue
+            path = REPO_ROOT / "lean" / (module.replace(".", "/") + ".lean")
+            self.assertTrue(
+                path.exists(),
+                f"{entity.id}: lean_module {module!r} -> "
+                f"{path.relative_to(REPO_ROOT)} does not exist",
+            )
+
+    def test_basic_imports_every_per_section_module(self) -> None:
+        basic = (REPO_ROOT / "lean" / "IutStatus" / "Basic.lean").read_text(
+            encoding="utf-8"
+        )
+        for entity in self.graph.entities.values():
+            if entity.lean_module is None:
+                continue
+            short = entity.lean_module.split(".")[-1]
+            self.assertIn(
+                f"import IutStatus.{short}",
+                basic,
+                f"Basic.lean missing import IutStatus.{short} for {entity.id}",
+            )
+
+
 class PersonRoleTests(unittest.TestCase):
     """v0.7.2 invariant: every Person record either connects via the claim
     graph (proponent or introduced_by) OR carries a role qualifier
