@@ -1127,6 +1127,90 @@
       "lean_module": "IutStatus.ABC",
       "section": "07_abc",
       "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:ArithmeticTeichmullerSpaces",
+      "type": "Construction",
+      "label": "Arithmetic Teichmuller Spaces (Joshi 2021-2024 ATS series, alternative framework)",
+      "alt_labels": ["ATS", "Joshi ATS framework"],
+      "introduced_by": "person:Joshi",
+      "introduced_year": "2021",
+      "depends_on": ["iut:abc_conjecture"],
+      "informal_md": null,
+      "section": "08_disputes_timeline",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Calegari",
+      "type": "Person",
+      "label": "Frank Calegari",
+      "alt_labels": ["F. Calegari"],
+      "informal_md": null,
+      "section": "08_disputes_timeline",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Woit",
+      "type": "Person",
+      "label": "Peter Woit",
+      "alt_labels": ["P. Woit"],
+      "informal_md": null,
+      "section": "08_disputes_timeline",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Fesenko",
+      "type": "Person",
+      "label": "Ivan Fesenko",
+      "alt_labels": ["I. B. Fesenko"],
+      "informal_md": null,
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Commelin",
+      "type": "Person",
+      "label": "Johan Commelin",
+      "alt_labels": ["J. Commelin"],
+      "informal_md": null,
+      "section": "08_disputes_timeline",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Kedlaya",
+      "type": "Person",
+      "label": "Kiran S. Kedlaya",
+      "alt_labels": ["K. S. Kedlaya"],
+      "informal_md": null,
+      "section": "08_disputes_timeline",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Topaz",
+      "type": "Person",
+      "label": "Adam Topaz",
+      "alt_labels": ["A. Topaz"],
+      "informal_md": null,
+      "section": "08_disputes_timeline",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Pop",
+      "type": "Person",
+      "label": "Florian Pop",
+      "alt_labels": ["F. Pop"],
+      "informal_md": null,
+      "section": "01_prerequisites",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "person:Sawin",
+      "type": "Person",
+      "label": "Will Sawin",
+      "alt_labels": ["W. Sawin"],
+      "informal_md": null,
+      "section": "08_disputes_timeline",
+      "verified_at": "2026-05-06"
     }
   ]
 }
