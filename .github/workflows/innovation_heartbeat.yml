@@ -1,0 +1,93 @@
+name: innovation-heartbeat
+
+# Phase 1 must-band #5 (v0.7.3).
+#
+# The standing innovation-explorer protocol (docs/INNOVATION_LOG.md) is a
+# document, not a process. Without a heartbeat, "the explorer is silent"
+# becomes indistinguishable from "the explorer found nothing", and
+# Surveyed candidates can sit forgotten for months while the world
+# moves on (mathlib4 / LANA / Wayback Machine API surface all change
+# faster than a quarterly review).
+#
+# This workflow is the simplest possible heartbeat: once a month an
+# issue is auto-opened reminding the maintainer to review every
+# candidate marked ``Surveyed`` and either promote / reject / defer
+# with a dated rationale. It carries no analysis logic; the *signal*
+# is the act of opening the issue. Silent failure is loud (the issue
+# does not appear) and detection is one calendar lookup away.
+#
+# Future v0.7.x may extend this with regex-driven candidate scanning
+# (arXiv / RIMS / ems.press / openalex), but the silent-death class
+# is closed by the heartbeat alone.
+
+on:
+  schedule:
+    # 02:30 UTC on the 1st of every month — early morning JST = 11:30
+    - cron: "30 2 1 * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  open-monthly-heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute calendar tag
+        id: cal
+        run: |
+          echo "ym=$(date -u +'%Y-%m')" >> "$GITHUB_OUTPUT"
+      - name: Count Surveyed candidates in INNOVATION_LOG.md
+        id: scan
+        run: |
+          count=$(grep -c '^\*\*Status\*\*: Surveyed' docs/INNOVATION_LOG.md || true)
+          # The bullet pattern in the file is "**Status**: Surveyed" (in inline form);
+          # also accept the alternative "- **Status**: Surveyed" prefix.
+          if [ -z "$count" ] || [ "$count" = "0" ]; then
+            count=$(grep -cE '\*\*Status\*\*:[[:space:]]*Surveyed' docs/INNOVATION_LOG.md || true)
+          fi
+          echo "count=${count:-0}" >> "$GITHUB_OUTPUT"
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # gh label create is non-idempotent (errors if exists); guard.
+          for label in heartbeat innovation-log; do
+            if ! gh label list --json name --jq '.[].name' | grep -qx "$label"; then
+              gh label create "$label" --description "Auto-managed by innovation_heartbeat.yml" --color "ededed"
+            fi
+          done
+      - name: Open heartbeat issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ym='${{ steps.cal.outputs.ym }}'
+          count='${{ steps.scan.outputs.count }}'
+          title="Innovation log monthly heartbeat (${ym})"
+          body=$(cat <<EOF
+          Standing reminder to review **docs/INNOVATION_LOG.md** candidates.
+
+          Auto-detected this month: **${count}** candidate(s) marked \`Surveyed\`.
+
+          Action items:
+          1. For each \`Surveyed\` candidate, decide *promote → Implemented* / *reject* / *defer with dated rationale*.
+          2. If a candidate has been \`Surveyed\` for more than 90 days without a status change, treat it as a stalled signal: either close it or restart investigation.
+          3. Add new candidates discovered since last heartbeat. The slot \`Q\` in the file is the open append target.
+          4. Close this issue when review is done; the next heartbeat will fire on the 1st of next month.
+
+          This issue was opened automatically by \`.github/workflows/innovation_heartbeat.yml\`. Silent absence of this issue indicates the workflow itself has died and should be repaired before assuming the innovation log is current.
+          EOF
+          )
+          # Avoid duplicate issues if the workflow re-runs in the same month.
+          existing=$(gh issue list \
+            --search "${title} in:title" \
+            --state open \
+            --json number \
+            --jq '.[0].number' || true)
+          if [ -n "$existing" ]; then
+            echo "heartbeat issue #${existing} already open for ${ym}"
+          else
+            gh issue create --title "${title}" --body "${body}" --label "heartbeat,innovation-log"
+          fi
