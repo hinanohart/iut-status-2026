@@ -77,3 +77,10 @@ Round-3 "10 / 10" overstatement that ``AUDIT_PROVENANCE.md`` records.
 - ``docs/FAILURE_MODES.md`` VC-1 vendor-class collapse
 - ``LLM_CONTEXT.md`` §3.2 cold-start protocol
 - ``README.md`` "Roadmap (revised v0.2.2, post-architecture review)"
+- ``tests/cold_start/`` runner + fixtures (v0.7.4)
+- ``.github/workflows/cold_start_weekly.yml`` weekly schedule (v0.7.4)
+
+## Weekly run log (auto-appended by `tests/cold_start/run_cold_start.py`)
+
+| date | vendor | model | overall | detail |
+|---|---|---|---|---|
