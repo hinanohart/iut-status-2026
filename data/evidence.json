@@ -38,7 +38,7 @@
       "type": "Paper",
       "label": "PRIMS Volume 57, No.1/2 special issue (2021)",
       "doi": "10.4171/PRIMS/57-1",
-      "url": "https://ems.press/journals/prims/issues/249",
+      "url": "https://ems.press/journals/prims/issues/1507",
       "asserted_at": "2021-03-05",
       "publisher": "EMS Press"
     },
@@ -46,7 +46,7 @@
       "id": "evidence:Frobenioids_I",
       "type": "Paper",
       "label": "The Geometry of Frobenioids I (Mochizuki 2008)",
-      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/Geometry%20of%20Frobenioids%20I.pdf",
+      "url": "https://www.kurims.kyoto-u.ac.jp/~motizuki/The%20Geometry%20of%20Frobenioids%20I.pdf",
       "asserted_at": "2008-01-01"
     },
     {
@@ -111,7 +111,8 @@
       "type": "Book",
       "label": "Uchu to Uchu wo Tsunagu Sugaku: IUT Riron no Shogeki (Inter-universal Teichmuller Theory popularization, Kato Fumiharu 2019)",
       "publisher": "KADOKAWA",
-      "isbn": "978-4-04-110262-7",
+      "isbn": "978-4-04-400417-0",
+      "url": "https://www.kadokawa.co.jp/product/321802000140/",
       "asserted_at": "2019-04-26"
     },
     {

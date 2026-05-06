@@ -43,21 +43,37 @@ quote unverified numbers.
 
 ## Re-opening conditions for additional audit rounds
 
-Audit rounds are **paused indefinitely** until at least one of the
-following triggers fires:
+Original gate (v0.2.4 — formally maintained but **functionally bypassed
+by user override in rounds 4 / 5 / 6 / 7**):
 
-- (a) An actual cold-start fixture run completes against a non-Claude
-  vendor (Gemini, GPT, Llama, Qwen, DeepSeek, Mistral, …), with results
-  recorded in `docs/cold_start_evidence.md`.
-- (b) An external (non-Anthropic-family) reviewer publishes a report on
-  the repository, even informally (blog post, GitHub Issue, conference
-  abstract).
-- (c) A v0.3 schema-changing PR is merged, requiring a fresh design
-  review.
+> Audit rounds are paused indefinitely until at least one of the
+> following triggers fires:
+> (a) actual non-Claude vendor cold-start run; (b) external reviewer
+> report; (c) v0.3 schema-changing PR.
 
-Re-opening requires a public GitHub Issue documenting which condition
-fired, before the new round may begin. Audit rounds outside this gate
-are NO-OP; their output is not merged.
+**Honest revision (v0.6.1, after round 7 analyst critique)**: the gate
+above is preserved as the long-term ideal but does NOT actually block
+audit rounds in practice. The de-facto governance is:
+
+- **User override is the operative gate**: when the maintainer types
+  「欠陥や漏れがないか徹底的にチェック前提すら疑って」 or equivalent,
+  a new audit round runs.
+- Each user-override round is recorded in the corresponding patch
+  commit message ("Round N was permitted by user override of the
+  indefinite pause set at v0.2.4").
+- Rounds 4-7 each found at least one CRITICAL fabrication-class
+  defect that prior rounds missed; the gate, if strictly enforced,
+  would have shipped those defects.
+
+The right reading: the original gate was a hedge against audit fatigue,
+but in practice external-reality verification gaps surface faster than
+multi-vendor evidence accrues. The user-override mechanism produces
+healthier outcomes and is the documented operative protocol going
+forward.
+
+Original triggers (a) (b) (c) are still desirable — they raise the
+quality of audits beyond Claude-family bias — but they are
+**aspirations**, not gates.
 
 ## Why this gate exists
 
