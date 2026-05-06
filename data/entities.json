@@ -917,6 +917,97 @@
       "informal_md": "docs/section_3_theta_link/section_3b_merged.md",
       "section": "03_theta_link",
       "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:log_link_construction",
+      "type": "Construction",
+      "label": "log-link construction (tautological + full poly-iso, IUTchIII Def 1.1-iii)",
+      "alt_labels": ["tautological log-link", "full log-link"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIII",
+      "depends_on": ["iut:log_link"],
+      "informal_md": "docs/section_4_log_link/section_4a_merged.md",
+      "section": "04_log_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:log_link_compatibility",
+      "type": "Definition",
+      "label": "log-link compatibility with HT structure (IUTchIII Prop 1.2 i-x)",
+      "alt_labels": ["coricity of D-prime-strips", "log-Kummer correspondence basis", "log-wall"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIII",
+      "depends_on": ["iut:log_link_construction", "iut:HodgeTheater"],
+      "informal_md": "docs/section_4_log_link/section_4a_merged.md",
+      "section": "04_log_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:log_shell_containment",
+      "type": "Definition",
+      "label": "log-shell containment (O-sharp-K-v subset I_v, IUTchIII Prop 1.2-v + Rem 1.2.2-i/ii)",
+      "alt_labels": ["holomorphic log-shell containment"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIII",
+      "depends_on": ["iut:log_shell"],
+      "informal_md": "docs/section_4_log_link/section_4b_merged.md",
+      "section": "04_log_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:log_volume_integration",
+      "type": "Theorem",
+      "label": "log-volume integration foundation (IUTchIII Prop 1.2-iii + Rem 1.2.2-v + Prop 3.9-iv)",
+      "alt_labels": ["log-volume commutativity across log-link"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIII",
+      "depends_on": ["iut:log_shell", "iut:log_link_construction"],
+      "informal_md": "docs/section_4_log_link/section_4b_merged.md",
+      "section": "04_log_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:upper_semi_compatibility",
+      "type": "Theorem",
+      "label": "upper semi-compatibility of log-shells (IUTchIII Rem 1.2.2-iii, Kummer upper semi-commutativity)",
+      "alt_labels": ["upper semi-commutativity", "Remark 1.2.2 (iii)"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIII",
+      "depends_on": ["iut:log_shell"],
+      "informal_md": "docs/section_4_log_link/section_4b_merged.md",
+      "section": "04_log_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:log_Kummer_correspondence",
+      "type": "Theorem",
+      "label": "log-Kummer correspondence on log-shells (IUTchIII Thm 3.11-ii)",
+      "alt_labels": ["log-Kummer Correspondence", "Kummer isomorphism system across vertical log-theta-lattice"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIII",
+      "depends_on": ["iut:log_link_compatibility", "iut:log_shell"],
+      "informal_md": "docs/section_4_log_link/4c_log_kummer_deep.md",
+      "section": "04_log_link",
+      "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:log_theta_lattice",
+      "type": "Construction",
+      "label": "log-theta-lattice (IUTchIII Def 1.4, vertical log-link + horizontal Theta-times-mu non-commutative)",
+      "alt_labels": ["Gaussian log-theta-lattice", "non-Gaussian log-theta-lattice"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIII",
+      "depends_on": ["iut:log_link_construction", "iut:theta_times_mu_link", "iut:HodgeTheater"],
+      "informal_md": "docs/section_4_log_link/4d_log_theta_lattice_deep.md",
+      "section": "04_log_link",
+      "verified_at": "2026-05-06"
     }
   ]
 }
