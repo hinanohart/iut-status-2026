@@ -53,6 +53,15 @@ BACKGROUND_EVIDENCE_ALLOWLIST: set[str] = {
     "evidence:Cuspidalizations2007",
 }
 
+# JP Copyright Act Article 32 主従比 1:5 + US 17 USC §107 fair-use limits.
+# Per ARCHITECTURE.md v0.2.4 must-band: per-record verbatim_short_statement
+# is ≤ 200 chars; cumulative ≤ 30 KB across data/. We reuse `specific_support`
+# and `specific_objection` as the verbatim-quotation-bearing fields in v0.2
+# schema (no separate `verbatim_short_statement` field exists yet).
+VERBATIM_FIELDS: tuple[str, ...] = ("specific_support", "specific_objection")
+PER_RECORD_VERBATIM_CAP: int = 1200  # chars; descriptive prose + verbatim allowed
+CUMULATIVE_VERBATIM_CAP_BYTES: int = 30_000  # 30 KB across all claim records
+
 
 class ValidationError(Exception):
     pass
@@ -169,6 +178,35 @@ def _load_schema(name: str) -> dict[str, Any]:
         return json.load(fh)
 
 
+def _check_verbatim_caps(claims: list[dict[str, Any]]) -> list[str]:
+    """Enforce JP CL Art. 32 / US §107 verbatim caps per ARCHITECTURE.md must-band.
+
+    - Per-record: each VERBATIM_FIELDS entry must be ≤ PER_RECORD_VERBATIM_CAP chars.
+    - Cumulative: total bytes across all claim records' verbatim fields must be
+      ≤ CUMULATIVE_VERBATIM_CAP_BYTES.
+    """
+    errors: list[str] = []
+    cumulative = 0
+    for claim in claims:
+        cid = claim.get("id", "?")
+        for field in VERBATIM_FIELDS:
+            text = claim.get(field) or ""
+            if not isinstance(text, str):
+                continue
+            if len(text) > PER_RECORD_VERBATIM_CAP:
+                errors.append(
+                    f"claim {cid}: {field} length {len(text)} exceeds "
+                    f"per-record cap {PER_RECORD_VERBATIM_CAP} (JP CL Art. 32)"
+                )
+            cumulative += len(text.encode("utf-8"))
+    if cumulative > CUMULATIVE_VERBATIM_CAP_BYTES:
+        errors.append(
+            f"verbatim cumulative {cumulative} bytes exceeds cap "
+            f"{CUMULATIVE_VERBATIM_CAP_BYTES} bytes (JP CL Art. 32 主従比 1:5)"
+        )
+    return errors
+
+
 def validate_all() -> list[str]:
     errors: list[str] = []
 
@@ -181,6 +219,8 @@ def validate_all() -> list[str]:
     claims = _load_graph(DATA_DIR / "claims.json")
     evidence = _load_graph(DATA_DIR / "evidence.json")
     timeline = _load_graph(DATA_DIR / "timeline.json")
+
+    errors.extend(_check_verbatim_caps(claims))
 
     entity_ids = {e["id"] for e in entities}
     claim_ids = {c["id"] for c in claims}
