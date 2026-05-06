@@ -70,8 +70,26 @@ class IdOutcome:
 
 
 def _strip_isbn_separators(isbn: str) -> str:
-    """Remove hyphens and spaces from an ISBN string."""
-    return isbn.replace("-", "").replace(" ", "")
+    """Remove hyphens, spaces, and Unicode dashes / non-breaking spaces.
+
+    Round 8 audit (v0.7.7): Japanese-language bibliographic data may
+    paste en-dash (U+2013), em-dash (U+2014), figure-dash (U+2012),
+    NBSP (U+00A0), or other Unicode hyphens. Plain ``str.replace`` for
+    ASCII ``-`` / `` `` only would leave length 17 ISBNs and silently
+    fail length validation.
+    """
+    import unicodedata
+    normalised = unicodedata.normalize("NFKC", isbn)
+    out: list[str] = []
+    for ch in normalised:
+        if ch in {"-", " ", " "}:
+            continue
+        if unicodedata.category(ch) == "Pd":  # any Unicode dash punctuation
+            continue
+        if ch.isspace():
+            continue
+        out.append(ch)
+    return "".join(out)
 
 
 def validate_isbn10(digits: str) -> tuple[bool, str]:
