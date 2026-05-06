@@ -1,0 +1,70 @@
+name: cold-start-weekly
+
+# Phase 1 must-band #4 (v0.7.4).
+#
+# The L1 contract in docs/UNDERSTANDING_LEVELS.md says: a fresh LLM
+# session, given only LLM_CONTEXT.md + a sample of data/*.json, must
+# answer the IUT-status question via the 5-block protocol. Until this
+# workflow runs against real vendors, "L1 ~30 % (Claude-only)" in the
+# Roadmap is a self-graded estimate, not evidence.
+#
+# v0.7.4 lands the workflow with the Claude path implemented and other
+# vendors as TODO. Runs are advisory — failures DO NOT block PR
+# merges; the row appended to docs/cold_start_evidence.md is the
+# audit trail. Per-commit guards live in ci.yml.
+#
+# To enable: add ANTHROPIC_API_KEY (and later OPENAI_API_KEY,
+# GOOGLE_API_KEY) under repository → Settings → Secrets and variables
+# → Actions. Without the secret, the job exits 0 and writes
+# "skipped: secret not configured" so missing secrets do not break
+# the schedule.
+
+on:
+  schedule:
+    # Sundays 03:00 UTC (12:00 JST) — weekend slot to reduce
+    # interleaving with workday API rate budgets.
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      vendor:
+        description: vendor to run (currently only "claude")
+        required: false
+        default: claude
+      model:
+        description: vendor-specific model id (overrides default)
+        required: false
+        default: ""
+
+permissions:
+  contents: write  # to commit cold_start_evidence.md updates
+  pull-requests: write
+
+jobs:
+  cold-start-claude:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run cold-start (Claude)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          model_arg=""
+          if [ -n "${{ inputs.model }}" ]; then
+            model_arg="--model ${{ inputs.model }}"
+          fi
+          python tests/cold_start/run_cold_start.py --vendor claude $model_arg
+      - name: Commit evidence row if changed
+        run: |
+          if ! git diff --quiet docs/cold_start_evidence.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add docs/cold_start_evidence.md
+            git commit -m "chore(cold-start): append weekly result row $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "no change to docs/cold_start_evidence.md"
+          fi

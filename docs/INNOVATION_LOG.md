@@ -158,6 +158,13 @@ recorded with date and commit SHA where relevant.
 - **Body**: lists the count of `Surveyed` candidates auto-detected via grep over the file, and the standing 90-day stalled-candidate review rule.
 - **Why a heartbeat is enough**: silent failure is now loud (issue does not appear → workflow died → fix it). No analysis logic is needed for the silent-death class; that is a separate candidate (regex-driven candidate scanning over arXiv / RIMS / ems.press / openalex) which v0.7.x may add.
 
+### W. Multi-vendor cold-start CI (`tests/cold_start/` + `cold_start_weekly.yml`)
+- **Idea**: The L1 contract in `docs/UNDERSTANDING_LEVELS.md` is "a fresh LLM session, given only `LLM_CONTEXT.md` + sample data, answers via the 5-block protocol". Until that runs against real vendors the "L1 ~30 % (Claude-only)" Roadmap figure is self-graded, not evidence. v0.7.4 lands the runner + workflow with Claude implemented; other vendors are stubs.
+- **Status**: **Implemented (Claude only)** (v0.7.4, commit pending). Other vendors planned v0.7.x.
+- **Files**: `tests/cold_start/README.md` + `prompt.txt` + `expected_5_block_structure.md` + `run_cold_start.py` (stdlib-only Anthropic Messages API client; deterministic excerpt selection over `entities.json` / `claims.json` / `evidence.json` / `timeline.json`); `tests/test_cold_start_runner.py` (5 cases, no network); `.github/workflows/cold_start_weekly.yml` (Sunday 03:00 UTC, secret-gated, allow-fail, auto-commits result row); `docs/cold_start_evidence.md` table header + run log appended by runner.
+- **Drift-zero contract**: excerpt is a deterministic subset (6 seed entities, all `about: iut:Cor.3.12` claims, transitive evidence, 2018–2026 timeline window). No git history, branch state, or unrelated docs leak into the prompt.
+- **Advisory only**: structural failures exit 0 with `fail` row; transport / API errors exit 1 but workflow uses `continue-on-error: true`. The maintainer review of the row is the gate, not the workflow exit code.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---

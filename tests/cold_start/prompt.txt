@@ -1,0 +1,10 @@
+A new mathematician asks: "What is the current status of Mochizuki's
+proof of Inter-universal Teichmüller theory Corollary 3.12, and how do
+the Scholze-Stix 2018 objections, the Joshi 2025 ATS series, and the
+LANA Lean formalization project relate to it?"
+
+Answer using the 5-block protocol from LLM_CONTEXT.md exactly as
+specified. Do not invent quotations. Cite only IRIs from the supplied
+``data/*.json`` excerpts and the timeline events resolvable in the
+loaded graph. If a block has no supporting record in the graph, decline
+gracefully per the protocol's decline-gracefully rule.
