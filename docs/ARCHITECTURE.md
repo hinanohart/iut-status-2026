@@ -1,9 +1,16 @@
 # ARCHITECTURE.md — scaling design (v0.3 → v1.0)
 
-This document specifies the architecture for scaling `iut-status-2026` from
-33 entities / 16 claims / ~2 500 lines (v0.2.x) to ~200 entities / ~80
-claims / ~15 000 + lines (v1.0). It complements `UNDERSTANDING_LEVELS.md`
-(what we are scaling toward) and `FAILURE_MODES.md` (what to avoid).
+This document specifies the architecture for scaling `iut-status-2026`
+from 33 entities / 16 claims / ~2 500 lines (v0.2.x baseline, frozen
+2026-05-06) to ~200 entities / ~80 claims / ~15 000 + lines (v1.0). It
+complements `UNDERSTANDING_LEVELS.md` (what we are scaling toward) and
+`FAILURE_MODES.md` (what to avoid).
+
+**v0.7 progress (2026-05-07)**: 104 entities / 53 claims / 34 evidence /
+25 timeline events / 79 unittest cases / Lean per-section split (16
+modules) / cold-start CI scaffolding / Wayback + DOI/ISBN verification /
+Person role invariant. v0.2.4 priority-band status updated in §
+"v0.2.3 / v0.2.4 stress-test refinements" below.
 
 ## Decision summary
 
@@ -181,14 +188,18 @@ The round-2 / round-3 architecture stress-tests (2026-05-06) flagged the
 following items. Round-3 reclassified them into **must / should / could**
 bands; only the `must` band blocks v0.3 work.
 
-| # | Item | Band | Reason |
-|---|---|---|---|
-| 1 | Backward-compat contract (v0.2 schemas frozen, loader tolerant) | **must** | Without this, any v0.3 schema change silently breaks v0.2 readers. |
-| 2 | JP CL Art. 32 verbatim caps (≤ 200 chars/record, ≤ 30 KB cumulative) | **must** | Legal posture; non-negotiable. |
-| 3 | shard_id (UUID-like) invariant for Merkle reproducibility | **should** | Helpful for v0.5 + when sharding becomes nontrivial; premature at v0.3 entity = single file. Defer. |
-| 4 | Multi-vendor CI (weekly 3-vendor) + monthly 7-vendor | **should** | L1 evidence; can land as a v0.3.x patch. |
-| 5 | Innovation explorer regex / heartbeat / delta gating | **should** | Operational, not blocking. |
-| 6 | `archive_url` mandatory on Paper / Blog evidence | **could** | Useful for H3 mitigation; can be added per-record as Wayback snapshots are taken. Not gating. |
+| # | Item | Band | v0.7 status (2026-05-07) | Reason / pointer |
+|---|---|---|---|---|
+| 1 | Backward-compat contract (v0.2 schemas frozen, loader tolerant) | **must** | partial | additive optional fields (`archive_url` v0.7.0, `role` v0.7.2) preserve forward-read compatibility; `schemas/v0.2/` subdir freeze deferred to v0.8. |
+| 2 | JP CL Art. 32 verbatim caps (≤ 200 chars/record, ≤ 30 KB cumulative) | **must** | enforced | `tools/validate.py` `_check_verbatim_caps` since v0.2.4. v0.3 hard cap of 200 chars deferred until `verbatim_short_statement` field migration. |
+| 3 | shard_id (UUID-like) invariant for Merkle reproducibility | **should** | deferred | premature at 104-entity scale; reconsider when entities > 500 (v0.8+ trigger). |
+| 4 | Multi-vendor CI (weekly 3-vendor) + monthly 7-vendor | **should** | partial (Claude only) | `cold_start_weekly.yml` v0.7.4 ships Claude path; GPT / Gemini / Llama vendors planned v0.7.x. Result rows append to `cold_start_evidence.md`. |
+| 5 | Innovation explorer regex / heartbeat / delta gating | **should** | partial (heartbeat only) | `innovation_heartbeat.yml` v0.7.3 closes silent-death class; regex / delta gating planned v0.7.x. |
+| 6 | `archive_url` mandatory on Paper / Blog evidence | **could** | partial (schema field) | `schemas/{evidence,timeline}.json` field added v0.7.0; `tools/archive_evidence.py` ready for population; mandatory enforcement deferred until `--network --lookup --apply` run. |
+| 7 | DOI / ISBN identifier verification (v0.7 architect addition) | _new_ | enforced | `tools/verify_identifiers.py` v0.7.1 closes Round-7 ISBN-fabrication root cause structurally; CI runs offline path. |
+| 8 | Person edge-or-role invariant (v0.7 architect addition) | _new_ | enforced | `role` enum on entity schema v0.7.2; `tools/validate.py` rejects un-tagged orphan Person records. |
+| 9 | Lean stub per-section split (G8 close from v0.7 architect) | _new_ | enforced | 16 per-section `.lean` files v0.7.5; `tools/validate.py` rejects unresolved `lean_module` references. |
+| 10 | `cold_start_evidence.md` source-of-truth file (G1 close) | _new_ | created | v0.7.0 stub created (was 5-way dead reference); v0.7.4 weekly run-log table appended. |
 
 ### 1. Backward-compat contract (frozen)
 

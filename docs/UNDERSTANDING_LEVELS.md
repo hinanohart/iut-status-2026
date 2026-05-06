@@ -97,7 +97,7 @@ to where Level 3 is being pursued externally:
 | Version | L1 target | L2 target | scale (entities / claims / evidence / timeline) |
 |---|---|---|---|
 | v0.2.x (closed 2026-05-06) | ~30 % (Claude-only) | ~5 % | 33 / 16 / 24 / 20 |
-| **v0.7.x (current)** | **~30 %** (still Claude-only — see `cold_start_evidence.md`) | **~10 %** | **104 / 53 / 34 / 25** |
+| **v0.7.x (current, 2026-05-07)** | **~30 %** (still Claude-only — see `cold_start_evidence.md`; cold-start CI scaffolding shipped v0.7.4 awaiting `ANTHROPIC_API_KEY` secret) | **~10 %** | **104 / 53 / 34 / 25** |
 | v0.8 (cold-start 3-vendor matrix) | 50 % (3 vendors, symmetry CI) | 30 % | 130 / 70 / 50 / 35 |
 | v0.9 (5-vendor matrix + full L1 CI) | 80 % | 60 % | 150 / 80 / 60 / 40 |
 | v1.0 (gated on LANA mid-report 2026-07-17 + 6 mo) | 95 % (7 vendors) | 80 % | 200 + / 100 + / 80 + / 50 + |
