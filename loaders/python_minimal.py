@@ -52,6 +52,7 @@ class Entity:
     informal_md: str | None = None
     lean_stub: str | None = None
     lean_module: str | None = None
+    role: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -190,6 +191,7 @@ class IutGraph:
                 informal_md=record.get("informal_md"),
                 lean_stub=record.get("lean_stub"),
                 lean_module=record.get("lean_module"),
+                role=record.get("role"),
             )
         except KeyError as exc:
             raise ValueError(f"entity missing required field {exc}: {record}") from exc

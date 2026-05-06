@@ -258,6 +258,43 @@ def validate_all() -> list[str]:
         except ValidationError as exc:
             errors.append(str(exc))
 
+    # Build proponent name set (free-form strings) for Person edge-or-role check.
+    # Persons enter the claim graph either as proponent (last-name match) or via
+    # an introduced_by edge from another entity. Persons with role=
+    # background_reference / historical_foundation are exempt because their
+    # disconnection is intentional (e.g. Grothendieck = deceased anabelian
+    # foundation; Pop / Sawin = alive but no documented public IUT-dispute
+    # claim). v0.7.2 adds this rule to surface future Person additions that
+    # are neither connected nor explicitly role-tagged.
+    proponent_strings: set[str] = set()
+    for claim in claims:
+        proponent_strings.update(claim.get("proponents", []))
+    introduced_by_targets: set[str] = set()
+    for entity in entities:
+        ib = entity.get("introduced_by")
+        if ib is not None:
+            introduced_by_targets.add(ib)
+
+    EXEMPT_ROLES = {"background_reference", "historical_foundation"}
+    for entity in entities:
+        if entity.get("type") != "Person":
+            continue
+        eid = entity.get("id", "?")
+        if entity.get("role") in EXEMPT_ROLES:
+            continue
+        # surname-match heuristic: 'person:Foo_Bar' → 'Foo' or 'Foo Bar'
+        suffix = eid.split(":", 1)[1] if ":" in eid else eid
+        candidates = {suffix, suffix.replace("_", " "), suffix.split("_")[0]}
+        appears_in_proponents = bool(candidates & proponent_strings)
+        appears_as_introduced_by = eid in introduced_by_targets
+        if not (appears_in_proponents or appears_as_introduced_by):
+            errors.append(
+                f"entity {eid}: Person record has no proponent edge and no "
+                f"introduced_by edge; tag with role='background_reference' or "
+                f"'historical_foundation' if intentional, otherwise connect "
+                f"into the claim graph"
+            )
+
     referenced_evidence: set[str] = set()
     for claim in claims:
         cid = claim.get("id", "?")

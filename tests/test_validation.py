@@ -175,5 +175,56 @@ class GenericityTests(unittest.TestCase):
         self.assertEqual(orphans, set(), f"orphan evidence: {orphans}")
 
 
+class PersonRoleTests(unittest.TestCase):
+    """v0.7.2 invariant: every Person record either connects via the claim
+    graph (proponent or introduced_by) OR carries a role qualifier
+    documenting why disconnection is intentional."""
+
+    def setUp(self) -> None:
+        self.graph = IutGraph.load(DATA_DIR)
+
+    def test_zero_edge_persons_carry_role(self) -> None:
+        proponent_strings: set[str] = set()
+        for claim in self.graph.claims.values():
+            proponent_strings.update(claim.proponents)
+        introduced_by_targets = {
+            e.introduced_by for e in self.graph.entities.values()
+            if e.introduced_by is not None
+        }
+        exempt = {"background_reference", "historical_foundation"}
+        for entity in self.graph.entities.values():
+            if entity.type != "Person":
+                continue
+            if entity.role in exempt:
+                continue
+            suffix = entity.id.split(":", 1)[1]
+            candidates = {suffix, suffix.replace("_", " "), suffix.split("_")[0]}
+            connected = bool(candidates & proponent_strings) or (
+                entity.id in introduced_by_targets
+            )
+            self.assertTrue(
+                connected,
+                f"{entity.id}: Person without role and without claim-graph "
+                f"edge — tag with role or connect",
+            )
+
+    def test_known_zero_edge_persons_have_expected_roles(self) -> None:
+        # Pin the v0.7.2 decisions so future audits cannot silently
+        # drop the role tags and re-introduce orphans.
+        expected = {
+            "person:Grothendieck": "historical_foundation",
+            "person:Pop": "background_reference",
+            "person:Sawin": "background_reference",
+        }
+        for pid, role in expected.items():
+            entity = self.graph.entity(pid)
+            self.assertIsNotNone(entity, f"{pid} missing")
+            assert entity is not None
+            self.assertEqual(
+                entity.role, role,
+                f"{pid}: expected role={role!r}, got {entity.role!r}",
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
