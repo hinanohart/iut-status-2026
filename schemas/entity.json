@@ -45,6 +45,10 @@
     },
     "lean_stub": {"type": "string"},
     "lean_module": {"type": "string"},
+    "role": {
+      "enum": ["primary_actor", "background_reference", "historical_foundation"],
+      "description": "Optional role qualifier, primarily for Person entities. primary_actor (default-implicit) = appears as proponent or introduced_by edge in claim graph; background_reference = alive expert with no documented public IUT-dispute claim (e.g. Pop, Sawin); historical_foundation = foundational figure (e.g. Grothendieck, who introduced anabelian geometry but predates the IUT dispute and is deceased). Validate.py uses role to exempt intentional orphans from the proponent/introduced_by edge requirement; without role, Person records must connect."
+    },
     "section": {
       "enum": [
         "01_prerequisites",

@@ -145,6 +145,12 @@ recorded with date and commit SHA where relevant.
 - **Happy finding**: the Round-7 fabricated ISBN `978-4-04-110262-7` actually **fails** the ISBN-13 checksum (sum 91 mod 10 = 1 ≠ 0). Cross-source verification was the gold standard for Round 7, but this tool would have caught it structurally; pinned by `test_isbn13_round7_fabricated_fails_checksum` so the regression cannot recur silently.
 - **Limitation**: Open Library Japanese-language coverage is partial — a 404 is mapped to `unresolved` rather than `invalid` to avoid CI failures on legitimately-rare titles. Future v0.7.x may add NDL Search API for stronger JP coverage.
 
+### U. Person edge-or-role invariant (`role` field + `validate.py` rule)
+- **Idea**: v0.7 architect audit flagged Pop / Sawin as "0-edge" Person entities (no claim proponent, no introduced_by edge). Naïvely "fixing" by adding fabricated proponent edges would be a Round-7-class defect (Sawin's locality critique URL is explicitly flagged unverified in `claim:joshi_ss_all_claims_false`). Better: make the orphan-status data-driven via a `role` field documenting *why* the disconnection is intentional, and let validate.py reject future un-tagged orphans.
+- **Status**: **Implemented** (v0.7.2, commit pending).
+- **Files**: `schemas/entity.json` (`role` enum optional), `data/entities.json` (Grothendieck=historical_foundation, Pop=background_reference, Sawin=background_reference), `tools/validate.py` (Person-edge-or-role-required rule), `loaders/python_minimal.py` (Entity.role field).
+- **Architect false-positive recorded**: the same audit listed `IUTchIII Def 1.4` as missing, but the entity exists under the descriptive IRI `iut:log_theta_lattice` (label-search miss; IRI-search would have found it). Future audits should scan IUTch reference-strings inside `informal_md` paths and `definedIn` chains, not only entity labels, before declaring missing.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---

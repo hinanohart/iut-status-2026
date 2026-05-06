@@ -248,8 +248,9 @@
       "id": "person:Grothendieck",
       "type": "Person",
       "label": "Alexander Grothendieck",
+      "role": "historical_foundation",
       "section": "01_prerequisites",
-      "verified_at": "2026-05-06"
+      "verified_at": "2026-05-07"
     },
     {
       "id": "person:Mochizuki",
@@ -1199,18 +1200,20 @@
       "type": "Person",
       "label": "Florian Pop",
       "alt_labels": ["F. Pop"],
+      "role": "background_reference",
       "informal_md": null,
       "section": "01_prerequisites",
-      "verified_at": "2026-05-06"
+      "verified_at": "2026-05-07"
     },
     {
       "id": "person:Sawin",
       "type": "Person",
       "label": "Will Sawin",
       "alt_labels": ["W. Sawin"],
+      "role": "background_reference",
       "informal_md": null,
       "section": "08_disputes_timeline",
-      "verified_at": "2026-05-06"
+      "verified_at": "2026-05-07"
     }
   ]
 }
