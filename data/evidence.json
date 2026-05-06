@@ -118,7 +118,7 @@
       "id": "evidence:Joshi_arxiv_2505_10568",
       "type": "Paper",
       "label": "Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)",
-      "url": "https://arxiv.org/abs/2505.10568v1",
+      "url": "https://arxiv.org/abs/2505.10568",
       "asserted_at": "2025-04-29"
     },
     {
@@ -178,11 +178,11 @@
       "asserted_at": "2025-10-28"
     },
     {
-      "id": "evidence:Woit_blog_2025",
+      "id": "evidence:Woit_blog_2024_mochizuki_on_joshi",
       "type": "Blog",
-      "label": "A Report From Mochizuki (Not Even Wrong blog, Peter Woit)",
+      "label": "A Report From Mochizuki - Mochizuki critical report on Joshi preprints (Not Even Wrong, Peter Woit, 2024-03-25)",
       "url": "https://www.math.columbia.edu/~woit/wordpress/?p=13895",
-      "asserted_at": "2025-11-01"
+      "asserted_at": "2024-03-25"
     },
     {
       "id": "evidence:LANA_announcement_2026",

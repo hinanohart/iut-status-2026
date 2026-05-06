@@ -210,7 +210,7 @@
       "evidence": [
         "evidence:Calegari_blog_2017",
         "evidence:Quanta_2018",
-        "evidence:Woit_blog_2025"
+        "evidence:Woit_blog_2024_mochizuki_on_joshi"
       ],
       "fair_use_note": "Informal community commentary; not a peer-reviewed consensus statement. Word 'majority' avoided as no formal poll exists.",
       "status": "ongoing-as-of-2026-05",
@@ -273,21 +273,21 @@
       "verified_at": "2026-05-06"
     },
     {
-      "id": "claim:woit_blog_2025_skeptical",
+      "id": "claim:woit_blog_2024_mochizuki_on_joshi_skeptical",
       "type": "Claim",
-      "label": "Not Even Wrong (Woit) ongoing skeptical commentary on Mochizuki reports (2025-2026)",
+      "label": "Not Even Wrong (Woit) reports Mochizuki harsh critique of Joshi preprints + ongoing skeptical commentary (Woit 2024-03-25)",
       "about": "iut:Cor.3.12",
       "position": "alleged_gap",
       "stance": "neutral-observation",
       "proponents": [
         "Woit"
       ],
-      "asserted_at": "2025-11-01",
+      "asserted_at": "2024-03-25",
       "supports": [
         "claim:scholze_stix_2018_main"
       ],
       "evidence": [
-        "evidence:Woit_blog_2025"
+        "evidence:Woit_blog_2024_mochizuki_on_joshi"
       ],
       "status": "informal-blog-commentary",
       "peer_review_status": "informal_blog",
