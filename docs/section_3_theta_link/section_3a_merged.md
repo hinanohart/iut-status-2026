@@ -39,7 +39,7 @@ SS does not engage Alien Copies §3.3 (vi)–(vii) or the Frobenius-picture stru
 in the 10-page report (0 occurrences of "alien", "Frobenius-picture", "Rem 3.9.4").
 
 ### Alternative / Third-party
-Joshi (arXiv:2505.10568v2): Arithmetic Teichmüller Spaces reframe the
+Joshi (arXiv:2505.10568v1 + Joshi FAQ 2025-11): Arithmetic Teichmüller Spaces reframe the
 separation of arithmetic holomorphic structures; claims the gap identified by SS
 can be repaired within ATS. Neither accepts SS canonical identification nor
 reproduces original IUT as-is. Status: preprint, not peer-reviewed as of 2026-05.

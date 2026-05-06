@@ -265,7 +265,7 @@ flagged by the monitor agent.
 | v0.3 | **70 / 90** | **35 / 50** | sections 1 deep + section 2 deep + section 3 partial |
 | v0.4 | 130 / 160 | 60 / 80 | + section 4 (log-link deep) + section 5 (multiradial deep) |
 | v0.5 | 180 / 220 | 80 / 110 | + section 6 (Cor.3.12 deep) + section 7 (abc) deep |
-| v1.0 (gated on LANA) | 220+ / 280 | 100+ / 140 | + Yamashita FAQ partial + Joshi v2 deep + section 8 expanded |
+| v1.0 (gated on LANA) | 220+ / 280 | 100+ / 140 | + Yamashita FAQ partial + Joshi FAQ deep + section 8 expanded |
 
 Single-target numbers ("80 entities") are forbidden as scope drivers;
 overshoot or undershoot of a single number is undecidable. The
