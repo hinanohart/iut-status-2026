@@ -122,11 +122,53 @@
       "asserted_at": "2025-04-29"
     },
     {
-      "id": "evidence:Joshi_arxiv_2505_10568_v2",
+      "id": "evidence:Joshi_FAQ_2025_11",
       "type": "Paper",
-      "label": "Final Report on the Mochizuki-Scholze-Stix Controversy v2 (Joshi 2026-05-02)",
-      "url": "https://arxiv.org/abs/2505.10568v2",
-      "asserted_at": "2026-05-02"
+      "label": "Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)",
+      "url": "https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf",
+      "asserted_at": "2025-11-01"
+    },
+    {
+      "id": "evidence:Joshi_ATS_I_2021",
+      "type": "Paper",
+      "label": "Arithmetic Teichmuller Spaces I (Joshi 2021, arXiv:2106.11452)",
+      "url": "https://arxiv.org/abs/2106.11452",
+      "asserted_at": "2021-06-21"
+    },
+    {
+      "id": "evidence:Joshi_Untilts_2022",
+      "type": "Paper",
+      "label": "Untilts of fundamental groups (Joshi 2022, arXiv:2210.11635)",
+      "url": "https://arxiv.org/abs/2210.11635",
+      "asserted_at": "2022-10-20"
+    },
+    {
+      "id": "evidence:Joshi_ATS_II_2023",
+      "type": "Paper",
+      "label": "Arithmetic Teichmuller Spaces II (Joshi 2023, arXiv:2303.01662)",
+      "url": "https://arxiv.org/abs/2303.01662",
+      "asserted_at": "2023-03-02"
+    },
+    {
+      "id": "evidence:Joshi_ATS_IIhalf_2023",
+      "type": "Paper",
+      "label": "Arithmetic Teichmuller Spaces II.5 deformations of number fields (Joshi 2023, arXiv:2305.10398)",
+      "url": "https://arxiv.org/abs/2305.10398",
+      "asserted_at": "2023-05-17"
+    },
+    {
+      "id": "evidence:Joshi_ATS_III_2024",
+      "type": "Paper",
+      "label": "Arithmetic Teichmuller Spaces III: Joshi Cor.3.12 proof + Rosetta Stone (Joshi 2024, arXiv:2401.13508)",
+      "url": "https://arxiv.org/abs/2401.13508",
+      "asserted_at": "2024-01-24"
+    },
+    {
+      "id": "evidence:Joshi_ATS_IV_2024",
+      "type": "Paper",
+      "label": "Arithmetic Teichmuller Spaces IV: abc from ATS (Joshi 2024, arXiv:2403.10430)",
+      "url": "https://arxiv.org/abs/2403.10430",
+      "asserted_at": "2024-03-15"
     },
     {
       "id": "evidence:Mochizuki_IUT_report_2025_10",

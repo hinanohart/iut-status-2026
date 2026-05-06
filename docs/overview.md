@@ -13,6 +13,25 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - depends on: `iut:anabelian_geometry`
 - Lean module: `IutStatus.Frobenioid`
 
+### `iut:absolute_anabelian` — absolute anabelian framework
+
+- type: `Concept`
+- aliases: absolute anabelian geometry, group-theoretic software approach
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:anabelian_geometry`
+- Lean module: `IutStatus.AbsoluteAnabelian`
+- claims about: 1
+
+### `iut:absolute_anabelian_theta` — constant multiple rigidity of the etale theta function (EtTh Thm 1.10)
+
+- type: `Theorem`
+- aliases: EtTh Thm 1.10
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:etale_theta_class`
+- claims about: 1
+
 ### `iut:anabelian_geometry` — anabelian geometry
 
 - type: `Concept`
@@ -20,6 +39,46 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - introduced by: person:Grothendieck
 - year: 1983
 - Lean module: `IutStatus.Anabelian`
+
+### `iut:angular_region` — angular region (FrdII Def 3.1-iii)
+
+- type: `Definition`
+- aliases: angular structure
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:archimedean_frobenioid_component`
+
+### `iut:archimedean_frobenioid_component` — archimedean Frobenioid component (FrdII Example 3.3, Thm 3.6)
+
+- type: `Definition`
+- aliases: archimedean Frobenioid
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:Frobenioid`
+
+### `iut:base_category_of_Frobenioid` — Base category of a Frobenioid (connected totally epimorphic category D)
+
+- type: `Definition`
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:Frobenioid`, `iut:etale_like_vs_frobenius_like`
+
+### `iut:cuspidalization` — absolute anabelian cuspidalization (Cusp. Thm 1.16)
+
+- type: `Theorem`
+- aliases: Mochizuki cuspidalization, maximal cuspidally abelian quotient reconstruction
+- introduced by: person:Mochizuki
+- year: 2007
+- depends on: `iut:anabelian_geometry`
+- Lean module: `IutStatus.Cuspidalization`
+
+### `iut:degree_function` — Frobenius degree function deg_Fr on Frobenioid morphisms
+
+- type: `Definition`
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:frobenioid_axioms`
+- claims about: 1
 
 ### `iut:etale_like_vs_frobenius_like` — etale-like vs Frobenius-like dichotomy
 
@@ -36,6 +95,81 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - depends on: `iut:anabelian_geometry`
 - Lean module: `IutStatus.EtaleTheta`
 
+### `iut:etale_theta_class` — etale theta class (eta-Theta, EtTh Prop 1.3)
+
+- type: `Definition`
+- aliases: etale theta class
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:anabelian_geometry`, `iut:Frobenioid`, `iut:etale_theta`
+
+### `iut:factorization_theorem` — Factorization theorem for Frobenioid morphisms (Frd I Def 1.3(iv) + Cor 4.11)
+
+- type: `Theorem`
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:frobenioid_axioms`
+
+### `iut:frobenioid_axioms` — Frobenioid axioms (Frd I Def 1.3, 7 conditions)
+
+- type: `Definition`
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:Frobenioid`
+- claims about: 1
+
+### `iut:frobenioid_theoretic_theta` — category-theoreticity of Frobenioid-theoretic theta environments (EtTh Thm 5.10)
+
+- type: `Theorem`
+- aliases: EtTh Thm 5.10, mono-theta extraction
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:etale_theta_class`, `iut:Frobenioid`
+- claims about: 1
+
+### `iut:global_realified_frobenioid` — global realified Frobenioid (C^R_mod)
+
+- type: `Construction`
+- aliases: globally realified Frobenioid, C_mod realization
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:Frobenioid`, `iut:factorization_theorem`
+- claims about: 2
+
+### `iut:mono_anabelian` — mono-anabelian reconstruction
+
+- type: `Concept`
+- aliases: mono-anabelian geometry, mono-anabelian algorithm, log-Frobenius compatible anabelian framework
+- introduced by: person:Mochizuki
+- year: 2015
+- depends on: `iut:absolute_anabelian`, `iut:anabelian_geometry`
+- Lean module: `IutStatus.MonoAnabelian`
+
+### `iut:mono_theta_constant_multiple_rigidity` — constant multiple rigidity of mono-theta environments (EtTh Cor 2.19-iii)
+
+- type: `Theorem`
+- aliases: constant multiple rigidity
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:etale_theta_class`, `iut:absolute_anabelian_theta`, `iut:mono_theta_environment`
+
+### `iut:mono_theta_cyclotomic_rigidity` — cyclotomic rigidity of mono-theta environments (EtTh Cor 2.19-i)
+
+- type: `Theorem`
+- aliases: cyclotomic rigidity
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:etale_theta_class`, `iut:mono_theta_environment`
+- claims about: 1
+
+### `iut:mono_theta_discrete_rigidity` — discrete rigidity of mono-theta environments (EtTh Cor 2.19-ii)
+
+- type: `Theorem`
+- aliases: discrete rigidity
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:etale_theta_class`, `iut:mono_theta_environment`
+
 ### `iut:mono_theta_environment` — mono-theta environment
 
 - type: `Definition`
@@ -43,14 +177,54 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - year: 2009
 - depends on: `iut:etale_theta`
 - Lean module: `IutStatus.MonoTheta`
+- claims about: 1
+
+### `iut:non_arch_frobenioid_component` — non-archimedean (p-adic) Frobenioid component (FrdII Example 1.1, Thm 1.2)
+
+- type: `Definition`
+- aliases: p-adic Frobenioid, nonarchimedean Frobenioid component
+- introduced by: person:Mochizuki
+- year: 2008
+- depends on: `iut:Frobenioid`, `iut:base_category_of_Frobenioid`
+
+### `iut:tempered_rigidity` — tempered anabelian rigidity (EtTh Thm 1.6)
+
+- type: `Theorem`
+- aliases: etale theta rigidity, tempered fundamental group rigidity
+- introduced by: person:Mochizuki
+- year: 2009
+- depends on: `iut:anabelian_geometry`, `iut:etale_theta`
+- Lean module: `IutStatus.TemperedRigidity`
+- claims about: 1
+
+### `paper:Cuspidalizations2007` — Absolute Anabelian Cuspidalizations of Proper Hyperbolic Curves
+
+- type: `Paper`
 
 ### `paper:EtaleTheta` — The etale theta function and its Frobenioid-theoretic manifestations
 
 - type: `Paper`
 
-### `paper:Frobenioids_I` — The Geometry of Frobenioids I
+### `paper:FrdI` — The Geometry of Frobenioids I: The General Theory (Mochizuki, 2008)
 
 - type: `Paper`
+
+### `paper:FrdII` — The Geometry of Frobenioids II: Poly-Frobenioids (Mochizuki, 2008)
+
+- type: `Paper`
+
+### `paper:TopicsAnabelianI` — Topics in Absolute Anabelian Geometry I: Generalities
+
+- type: `Paper`
+
+### `paper:TopicsAnabelianIII` — Topics in Absolute Anabelian Geometry III: Global Reconstruction Algorithms
+
+- type: `Paper`
+
+### `person:Fesenko` — Ivan Fesenko
+
+- type: `Person`
+- aliases: I. B. Fesenko
 
 ### `person:Grothendieck` — Alexander Grothendieck
 
@@ -71,6 +245,11 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - type: `Person`
 - aliases: 望月新一
 
+### `person:Pop` — Florian Pop
+
+- type: `Person`
+- aliases: F. Pop
+
 ### `person:Yamashita` — Go Yamashita
 
 - type: `Person`
@@ -78,12 +257,62 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 
 ## 02_hodge_theater
 
+### `iut:D_prime_strip` — D-prime-strip (holomorphic base-prime-strip, IUTchI Def 4.1-i)
+
+- type: `Definition`
+- aliases: D-base-prime-strip
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:F_prime_strip`
+
+### `iut:F_LGP_prime_strip` — F-LGP-prime-strip (Logarithmic Gaussian Procession prime-strip, IUTchIII Def 3.8)
+
+- type: `Construction`
+- aliases: F-LGP-prime-strip, F-lgp-prime-strip
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:F_modulus_prime_strip`
+
+### `iut:F_circ_q_strip` — F-circ-q-strip (specialization of F-prime-strip with q-pilot constraint, IUTchI Ex 3.5-i)
+
+- type: `Construction`
+- aliases: F-mod-strip, q-strip
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:F_prime_strip`, `iut:theta_hodge_theater`
+
+### `iut:F_circ_theta_strip` — F-circ-theta-strip (specialization of F-prime-strip with Theta-pilot constraint, IUTchI Ex 3.5-ii)
+
+- type: `Construction`
+- aliases: F-tht-strip, theta-strip
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:F_prime_strip`, `iut:theta_hodge_theater`
+- claims about: 2
+
+### `iut:F_l_star_symmetry` — F-star-l symmetry (multiplicative combinatorial Teichmuller symmetry, IUTchI §4 Prop 4.8-4.9)
+
+- type: `Concept`
+- aliases: F-times-l mod pm1 symmetry, multiplicative symmetry
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:HodgeTheater`
+
 ### `iut:F_modulus_prime_strip` — F-modulus-prime-strip (F^⊩×µ)
 
 - type: `Construction`
 - introduced by: person:Mochizuki
 - year: 2012
 - depends on: `iut:F_prime_strip`
+- claims about: 2
+
+### `iut:F_pm_ell_symmetry` — F-semi-direct-pm-l symmetry (additive combinatorial Teichmuller symmetry, IUTchI Def 6.1-i)
+
+- type: `Concept`
+- aliases: additive symmetry, F_l-semi-direct-pm1 symmetry
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_pm_ell_hodge_theater`
 
 ### `iut:F_prime_strip` — F-prime-strip
 
@@ -91,6 +320,14 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - introduced by: person:Mochizuki
 - year: 2012
 - depends on: `iut:Frobenioid`
+
+### `iut:F_top_prime_strip` — F-top-prime-strip (mono-analytic Frobenioid prime-strip, IUTchI Def 5.2-ii/iv)
+
+- type: `Definition`
+- aliases: F-vdash-prime-strip, mono-analytic Frobenioid prime-strip
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:F_prime_strip`
 
 ### `iut:HodgeTheater` — Theta-pm-ellNF Hodge theater
 
@@ -102,11 +339,121 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - Lean module: `IutStatus.HodgeTheater`
 - claims about: 1
 
+### `iut:NF_hodge_theater` — NF-Hodge theater (D-level, IUTchI Def 4.6-iii)
+
+- type: `Construction`
+- aliases: D-NF-HT, base-Theta-NF-Hodge theater
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:HodgeTheater`, `iut:F_prime_strip`, `iut:cusp_label_class`, `iut:F_l_star_symmetry`
+- claims about: 1
+
+### `iut:cusp_label_class` — cusp label class LabCusp-pm (IUTchI Def 6.1-iii)
+
+- type: `Definition`
+- aliases: LabCusp-pm
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_pm_ell_hodge_theater`
+
+### `iut:procession` — procession (l-pm-procession of D-prime-strips, IUTchI Prop 6.9)
+
+- type: `Construction`
+- aliases: procession of prime-strips
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:cusp_label_class`
+- claims about: 1
+
+### `iut:theta_NF_hodge_theater` — Theta-NF-Hodge theater (Frobenius level, IUTchI Def 5.5-iii)
+
+- type: `Construction`
+- aliases: Theta-NF-HT
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:NF_hodge_theater`
+
+### `iut:theta_hodge_theater` — Theta-Hodge theater (Theta-component of Theta-pm-ellNF-HT)
+
+- type: `Construction`
+- aliases: HT^Theta, Theta-component projection of HodgeTheater
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:HodgeTheater`, `iut:Frobenioid`, `iut:etale_theta`
+
+### `iut:theta_pilot_object` — pilot object (Theta-pilot / q-pilot, IUTchII Def 4.9-viii)
+
+- type: `Definition`
+- aliases: theta-pilot, q-pilot
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_hodge_theater`, `iut:F_modulus_prime_strip`
+
+### `iut:theta_pm_ellNF_hodge_theater_integration` — Theta-pm-ellNF-Hodge theater (concrete Def 6.13 triple)
+
+- type: `Construction`
+- aliases: Theta-pm-ellNF integrated triple
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:HodgeTheater`, `iut:theta_pm_ell_hodge_theater`, `iut:theta_NF_hodge_theater`
+
+### `iut:theta_pm_ell_hodge_theater` — Theta-pm-ell-Hodge theater (additive symmetry sub-component, IUTchI Def 6.4 / 6.11)
+
+- type: `Construction`
+- aliases: HT-Theta-pm-ell
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:HodgeTheater`, `iut:theta_hodge_theater`
+- claims about: 1
+
 ### `paper:IUTchI` — Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)
 
 - type: `Paper`
 
 ## 03_theta_link
+
+### `iut:F_vdash_times_mu_prime_strip` — F-vdash-times-mu-prime-strip (IUTchII Def 4.9-vi/vii/viii refinement of F-modulus-prime-strip)
+
+- type: `Definition`
+- aliases: F-circ-times-mu-prime-strip refined
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:F_modulus_prime_strip`
+- claims about: 1
+
+### `iut:Frobenius_picture` — Frobenius-picture (infinite chain of Theta-linked Hodge theaters, IUTchI Cor.3.8)
+
+- type: `Construction`
+- aliases: log-theta-lattice horizontal slice
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_hodge_theater`, `iut:theta_link`
+
+### `iut:alien_arithmetic_holomorphic_structure` — alien arithmetic holomorphic structure (Mutually Alien Copies §3.3)
+
+- type: `Concept`
+- aliases: mutually alien copies, inter-universal wall
+- introduced by: person:Mochizuki
+- year: 2019
+- depends on: `iut:theta_link`
+- claims about: 1
+
+### `iut:hodge_arakelov_evaluation` — Hodge-Arakelov-theoretic evaluation isomorphism (IUTchII Cor 4.10-ii)
+
+- type: `Construction`
+- aliases: evaluation isomorphism, Galois evaluation
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:F_vdash_times_mu_prime_strip`, `iut:etale_theta_class`
+
+### `iut:theta_gau_link` — Theta-gau-link (Theta-times-mu Gauss link, IUTchII Cor 4.10-iii pt 2)
+
+- type: `Construction`
+- aliases: Gaussian link
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_times_mu_link`, `iut:hodge_arakelov_evaluation`
+- claims about: 1
 
 ### `iut:theta_link` — theta-link
 
@@ -116,12 +463,50 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - year: 2012
 - depends on: `iut:HodgeTheater`, `iut:F_modulus_prime_strip`, `iut:mono_theta_environment`
 - Lean module: `IutStatus.ThetaLink`
+- claims about: 2
+
+### `iut:theta_link_full_poly_iso` — full poly-isomorphism constituting the Theta-link (IUTchI Cor.3.7-i)
+
+- type: `Construction`
+- aliases: Theta-link full poly-iso
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_link`, `iut:F_circ_theta_strip`, `iut:F_circ_q_strip`
+
+### `iut:theta_link_preserved_data` — preserved data across the Theta-link: D-vdash and O-times (IUTchI Cor.3.7 ii-iii)
+
+- type: `Theorem`
+- aliases: D-prime preservation, O-times preservation
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_link_full_poly_iso`, `iut:D_prime_strip`
+
+### `iut:theta_times_mu_link` — Theta-times-mu-link (IUTchII Cor 4.10-iii pt 1)
+
+- type: `Construction`
+- aliases: Theta-times-mu-link
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:theta_link`, `iut:F_vdash_times_mu_prime_strip`
+
+### `paper:AlienCopies` — The Mathematics of Mutually Alien Copies: from Gaussian integrals to inter-universal Teichmuller theory (Mochizuki survey)
+
+- type: `Paper`
 
 ### `paper:IUTchII` — Inter-universal Teichmuller Theory II (Hodge-Arakelov-Theoretic Evaluation)
 
 - type: `Paper`
 
 ## 04_log_link
+
+### `iut:log_Kummer_correspondence` — log-Kummer correspondence on log-shells (IUTchIII Thm 3.11-ii)
+
+- type: `Theorem`
+- aliases: log-Kummer Correspondence, Kummer isomorphism system across vertical log-theta-lattice
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:log_link_compatibility`, `iut:log_shell`
+- claims about: 1
 
 ### `iut:log_link` — log-link
 
@@ -132,12 +517,63 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - depends on: `iut:HodgeTheater`, `iut:log_shell`
 - Lean module: `IutStatus.LogLink`
 
+### `iut:log_link_compatibility` — log-link compatibility with HT structure (IUTchIII Prop 1.2 i-x)
+
+- type: `Definition`
+- aliases: coricity of D-prime-strips, log-Kummer correspondence basis, log-wall
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:log_link_construction`, `iut:HodgeTheater`
+
+### `iut:log_link_construction` — log-link construction (tautological + full poly-iso, IUTchIII Def 1.1-iii)
+
+- type: `Construction`
+- aliases: tautological log-link, full log-link
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:log_link`
+- claims about: 1
+
 ### `iut:log_shell` — log-shell I_v
 
 - type: `Definition`
 - introduced by: person:Mochizuki
 - year: 2012
 - depends on: `iut:HodgeTheater`
+
+### `iut:log_shell_containment` — log-shell containment (O-sharp-K-v subset I_v, IUTchIII Prop 1.2-v + Rem 1.2.2-i/ii)
+
+- type: `Definition`
+- aliases: holomorphic log-shell containment
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:log_shell`
+- claims about: 1
+
+### `iut:log_theta_lattice` — log-theta-lattice (IUTchIII Def 1.4, vertical log-link + horizontal Theta-times-mu non-commutative)
+
+- type: `Construction`
+- aliases: Gaussian log-theta-lattice, non-Gaussian log-theta-lattice
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:log_link_construction`, `iut:theta_times_mu_link`, `iut:HodgeTheater`
+- claims about: 1
+
+### `iut:log_volume_integration` — log-volume integration foundation (IUTchIII Prop 1.2-iii + Rem 1.2.2-v + Prop 3.9-iv)
+
+- type: `Theorem`
+- aliases: log-volume commutativity across log-link
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:log_shell`, `iut:log_link_construction`
+
+### `iut:upper_semi_compatibility` — upper semi-compatibility of log-shells (IUTchIII Rem 1.2.2-iii, Kummer upper semi-commutativity)
+
+- type: `Theorem`
+- aliases: upper semi-commutativity, Remark 1.2.2 (iii)
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:log_shell`
 
 ### `paper:IUTchIII` — Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)
 
@@ -149,16 +585,67 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 
 - type: `Definition`
 - depends on: `iut:multiradial_algorithm`
+- claims about: 1
+
+### `iut:Ind1_d_prime_strip_aut` — Ind1 D-prime-strip Aut component (IUTchIII Thm 3.11-i, slot-wise automorphisms of procession)
+
+- type: `Definition`
+- aliases: mono-analytic etale-like Aut component of Ind1
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Ind1`, `iut:D_prime_strip`
+
+### `iut:Ind1_label_permutation` — Ind1 label permutation component (IUTchIII Thm 3.11-i, permutation automorphisms)
+
+- type: `Definition`
+- aliases: combinatorial component of Ind1
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Ind1`, `iut:cusp_label_class`
 
 ### `iut:Ind2` — indeterminacy Ind2 (Frobenius-theoretic)
 
 - type: `Definition`
 - depends on: `iut:multiradial_algorithm`
+- claims about: 1
+
+### `iut:Ind2_o_times_mu_action` — Ind2 O-times-mu group action component (Frobenius-theoretic per-summand action)
+
+- type: `Definition`
+- aliases: O-times-mu action component
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Ind2`
+
+### `iut:Ind2_z_times_indeterminacy` — Ind2 Z-times indeterminacy from Theta-link (non-archimedean Ism-orbit, IUTchIII Thm 3.11-i + Prop 1.2-vi)
+
+- type: `Definition`
+- aliases: Ism-orbit indeterminacy
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Ind2`, `iut:theta_link`, `iut:F_modulus_prime_strip`
 
 ### `iut:Ind3` — indeterminacy Ind3 (log-volume)
 
 - type: `Definition`
 - depends on: `iut:multiradial_algorithm`, `iut:log_shell`
+
+### `iut:Ind3_log_volume_absorption` — Ind3 log-volume absorption (precise log-volume compatibility across log-links, IUTchIII Thm 3.11-ii + Prop 3.9-iv)
+
+- type: `Theorem`
+- aliases: log-volume precisely compatible
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Ind3`, `iut:log_volume_integration`
+- claims about: 1
+
+### `iut:Ind3_upper_semi_compat_kummer` — Ind3 upper semi-compatibility of log-Kummer isomorphisms (IUTchIII Thm 3.11-ii)
+
+- type: `Definition`
+- aliases: upper semi-compatible log-Kummer
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:Ind3`, `iut:log_Kummer_correspondence`, `iut:upper_semi_compatibility`
 
 ### `iut:multiradial_algorithm` — multiradial algorithm
 
@@ -170,6 +657,23 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - Lean module: `IutStatus.Multiradial`
 - claims about: 1
 
+### `iut:multiradial_representation_thm_3_11` — Multiradial Representation (IUTchIII Thm 3.11-i)
+
+- type: `Theorem`
+- aliases: Thm 3.11 multiradial representation
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:multiradial_algorithm`, `iut:Ind1`, `iut:Ind2`, `iut:Ind3`
+- claims about: 1
+
+### `iut:multiradiality_property` — multiradiality property (IUTchIII §I3 introduction)
+
+- type: `Concept`
+- aliases: multiradial property
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:multiradial_algorithm`
+
 ## 06_cor_3_12
 
 ### `iut:Cor.3.12` — Corollary 3.12
@@ -180,7 +684,7 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 - year: 2012
 - depends on: `iut:multiradial_algorithm`, `iut:Ind1`, `iut:Ind2`, `iut:Ind3`
 - Lean module: `IutStatus.Cor312`
-- claims about: 12
+- claims about: 17
 
 ### `person:Scholze` — Peter Scholze
 
@@ -192,13 +696,31 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 
 ## 07_abc
 
+### `iut:ArithmeticTeichmullerSpaces` — Arithmetic Teichmuller Spaces (Joshi 2021-2024 ATS series, alternative framework)
+
+- type: `Construction`
+- aliases: ATS, Joshi ATS framework
+- introduced by: person:Joshi
+- year: 2021
+- depends on: `iut:abc_conjecture`
+- claims about: 1
+
 ### `iut:abc_conjecture` — abc conjecture (Masser-Oesterle 1985)
 
 - type: `Theorem`
 - aliases: abc予想
 - year: 1985
 - Lean module: `IutStatus.ABC`
-- claims about: 2
+- claims about: 3
+
+### `iut:abc_special_case_via_iut` — abc conjecture as special case of Theorem A (IUTchIV Cor 2.3)
+
+- type: `Theorem`
+- aliases: abc via Thm A
+- introduced by: person:Mochizuki
+- year: 2012
+- depends on: `iut:height_inequality`, `iut:abc_conjecture`, `iut:Cor.3.12`
+- Lean module: `IutStatus.ABC`
 
 ### `iut:diophantine_inequality` — Diophantine inequality (IUTchIV final)
 
@@ -218,7 +740,37 @@ This page is auto-generated from `data/entities.json` and `data/claims.json`. Th
 
 ## 08_disputes_timeline
 
+### `person:Calegari` — Frank Calegari
+
+- type: `Person`
+- aliases: F. Calegari
+
+### `person:Commelin` — Johan Commelin
+
+- type: `Person`
+- aliases: J. Commelin
+
 ### `person:Joshi` — Kirti Joshi
 
 - type: `Person`
+
+### `person:Kedlaya` — Kiran S. Kedlaya
+
+- type: `Person`
+- aliases: K. S. Kedlaya
+
+### `person:Sawin` — Will Sawin
+
+- type: `Person`
+- aliases: W. Sawin
+
+### `person:Topaz` — Adam Topaz
+
+- type: `Person`
+- aliases: A. Topaz
+
+### `person:Woit` — Peter Woit
+
+- type: `Person`
+- aliases: P. Woit
 

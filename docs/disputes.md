@@ -12,6 +12,45 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - `claim:mochizuki_2018_response` counters `claim:scholze_stix_2018_main`
   - The simplification proposed by Scholze-Stix is not harmless; it destroys the inter-universal un-entangling structure (Mochizuki 2018)
   - vs: Cor.3.12 reduces to a trivial inequality under harmless simplification (Scholze-Stix 2018)
+- `claim:mochizuki_anabelian_essential` counters `claim:scholze_stix_2018_sub_2`
+  - Anabelian geometry (mono-anabelian framework) is essential at Cor.3.12 (Mochizuki)
+  - vs: Anabelian geometry plays no essential role at the disputed step (SS sub-claim 2)
+- `claim:mochizuki_frobenioid_essential` counters `claim:scholze_stix_2018_main`
+  - General Frobenioid theory (Frd I/II) is essential to the IUT proof, not merely decorative (Mochizuki)
+  - vs: Cor.3.12 reduces to a trivial inequality under harmless simplification (Scholze-Stix 2018)
+- `claim:mochizuki_global_realified_essential` counters `claim:ss_global_realified_canonical_trivial`
+  - Global realified Frobenioid is essential at Cor.3.12 via FrdII Thm 5.5-iii category-theoretic reconstructibility (Mochizuki)
+  - vs: Global realified Frobenioids from F-circ-times-mu-prime strips are always canonically trivial via gamma_can (Scholze-Stix 2018, p.10)
+- `claim:ss_canonically_same_strips` counters `claim:mochizuki_2018_response`
+  - F-circ-times-mu-prime strips on both sides of the Theta-link are canonically the same; only the generator name differs (Scholze-Stix 2018, p.9)
+  - vs: The simplification proposed by Scholze-Stix is not harmless; it destroys the inter-universal un-entangling structure (Mochizuki 2018)
+- `claim:mochizuki_poly_iso_not_canonical` counters `claim:ss_canonically_same_strips`
+  - The full poly-isomorphism between theta-strip and mod-strip is not reducible to a canonical isomorphism; the two sides inhabit distinct ring-theoretic structures (Mochizuki)
+  - vs: F-circ-times-mu-prime strips on both sides of the Theta-link are canonically the same; only the generator name differs (Scholze-Stix 2018, p.9)
+- `claim:mochizuki_alien_copies_essential` counters `claim:ss_canonically_same_strips`
+  - Alien copies framework is the structural counter to SS canonical identification: ring structure is obliterated across the inter-universal wall (Mochizuki)
+  - vs: F-circ-times-mu-prime strips on both sides of the Theta-link are canonically the same; only the generator name differs (Scholze-Stix 2018, p.9)
+- `claim:ss_o_l_squared_blurring_useless` counters `claim:mochizuki_2018_response`
+  - Mochizuki's blurring response requires blurring of order O(l-squared), rendering any inequality so obtained useless (Scholze-Stix 2018 p.10)
+  - vs: The simplification proposed by Scholze-Stix is not harmless; it destroys the inter-universal un-entangling structure (Mochizuki 2018)
+- `claim:yamashita_faq_q2_poly_iso_history_forgetting` counters `claim:scholze_stix_2018_sub_1`
+  - Poly-isomorphisms (not canonical isos) are necessary because distinct copies must first forget their 'histories of operations' as Galois groups (Yamashita FAQ Q2)
+  - vs: Distinct copies of Hodge Theaters do not exist in the form required (SS sub-claim 1)
+- `claim:yamashita_faq_q3_identity_morph_illegitimate` counters `claim:scholze_stix_2018_main`
+  - Treating distinct copies with an identity morphism is illegitimate: once histories are forgotten the identity morphism cannot be defined across dagger-G and double-dagger-G (Yamashita FAQ Q3)
+  - vs: Cor.3.12 reduces to a trivial inequality under harmless simplification (Scholze-Stix 2018)
+- `claim:yamashita_faq_q6_trivial_constructions_nontrivial_conclusion` counters `claim:scholze_stix_2018_sub_3`
+  - IUT constructions appear trivial individually but the nontrivial content lies in the framework-level combination of preparatory results (Yamashita FAQ Q6, citing his survey)
+  - vs: Fundamental groups and geometry are equivalent and commute, making the IUT operations trivial (SS sub-claim 3)
+- `claim:joshi_ss_all_claims_false` counters `claim:scholze_stix_2018_main`
+  - Joshi asserts every mathematical claim in Scholze-Stix (2018) and Scholze (2021 zbMath) is false, demonstrated by ATS existence proofs (Joshi 2025)
+  - vs: Cor.3.12 reduces to a trivial inequality under harmless simplification (Scholze-Stix 2018)
+- `claim:joshi_ss_all_claims_false` counters `claim:scholze_stix_2018_sub_1`
+  - Joshi asserts every mathematical claim in Scholze-Stix (2018) and Scholze (2021 zbMath) is false, demonstrated by ATS existence proofs (Joshi 2025)
+  - vs: Distinct copies of Hodge Theaters do not exist in the form required (SS sub-claim 1)
+- `claim:joshi_ss_all_claims_false` counters `claim:scholze_stix_2018_sub_2`
+  - Joshi asserts every mathematical claim in Scholze-Stix (2018) and Scholze (2021 zbMath) is false, demonstrated by ATS existence proofs (Joshi 2025)
+  - vs: Anabelian geometry plays no essential role at the disputed step (SS sub-claim 2)
 
 ## All claims
 
@@ -44,6 +83,196 @@ Each claim is presented with its proponents, position, evidence, and any counter
   - [A proof of abc conjecture after Mochizuki (Yamashita 2024-06-25 update)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/abc2024Jun25.pdf)
   - Uchu to Uchu wo Tsunagu Sugaku: IUT Riron no Shogeki (Inter-universal Teichmuller Theory popularization, Kato Fumiharu 2019)
 - status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_anabelian_essential`
+
+- label: Anabelian geometry (mono-anabelian framework) is essential at Cor.3.12 (Mochizuki)
+- about: `iut:absolute_anabelian`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki, Hoshi
+- asserted: 2012-08-30
+- counters: `claim:scholze_stix_2018_sub_2`
+- evidence:
+  - [Topics in Absolute Anabelian Geometry I: Generalities (Mochizuki)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Topics%20in%20Absolute%20Anabelian%20Geometry%20I.pdf)
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_frobenioid_essential`
+
+- label: General Frobenioid theory (Frd I/II) is essential to the IUT proof, not merely decorative (Mochizuki)
+- about: `iut:frobenioid_axioms`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki, Hoshi, Yamashita
+- asserted: 2012-08-30
+- counters: `claim:scholze_stix_2018_main`
+- evidence:
+  - [The Geometry of Frobenioids I (Mochizuki 2008)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Geometry%20of%20Frobenioids%20I.pdf)
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_global_realified_essential`
+
+- label: Global realified Frobenioid is essential at Cor.3.12 via FrdII Thm 5.5-iii category-theoretic reconstructibility (Mochizuki)
+- about: `iut:global_realified_frobenioid`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- counters: `claim:ss_global_realified_canonical_trivial`
+- evidence:
+  - [The Geometry of Frobenioids II: Poly-Frobenioids (Mochizuki 2008)](https://www.kurims.kyoto-u.ac.jp/~motizuki/The%20Geometry%20of%20Frobenioids%20II.pdf)
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_nf_symmetry_essential`
+
+- label: F-star-l symmetry (NF-side multiplicative) is essential in IUT; Scholze-Stix is silent on this structure (Mochizuki)
+- about: `iut:NF_hodge_theater`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_theta_gau_link_essential`
+
+- label: The Theta-gau-link is essential to the IUTchIII multiradial algorithm (Thm 3.11); outside SS 2018 analytical scope (Mochizuki)
+- about: `iut:theta_gau_link`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf)
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_procession_essential`
+
+- label: Procession is essential for Ind1 indeterminacy reduction in the multiradial algorithm (Mochizuki)
+- about: `iut:procession`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_multiradial_thm_3_11_essential`
+
+- label: Multiradial Representation Theorem (IUTchIII Thm 3.11-i) is the load-bearing technical theorem of IUT (Mochizuki)
+- about: `iut:multiradial_representation_thm_3_11`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_ind2_two_components`
+
+- label: Ind2 decomposes into Z-times indeterminacy + O-times-mu action; Oμ insulation protects etale-theta Kummer theory (Mochizuki)
+- about: `iut:Ind2`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_ind3_log_volume_precise`
+
+- label: Ind3 produces upper-semi-compatibility at the set level but log-volume compatibility is precise (IUTchIII Thm 3.11-ii, Prop 3.9-iv)
+- about: `iut:Ind3_log_volume_absorption`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_ind1_two_components`
+
+- label: Ind1 decomposes into D-prime-strip Aut + label permutation components (IUTchIII Thm 3.11-i, made explicit in IUTchIII Intro pp.11-12)
+- about: `iut:Ind1`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_log_kummer_essential`
+
+- label: log-Kummer correspondence (IUTchIII Thm 3.11-ii) is essential at Cor.3.12; SS dispute targets Cor.3.12 conclusion not Thm 3.11-ii construction (Mochizuki)
+- about: `iut:log_Kummer_correspondence`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_log_theta_lattice_noncommutative`
+
+- label: log-theta-lattice is non-commutative; horizontal Theta-mu-link and vertical log-link generate the inter-universal framework (Mochizuki)
+- about: `iut:log_theta_lattice`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_log_shell_containment_essential`
+
+- label: log-shell containment O-sharp-K subset I_v is essential for the Cor.3.12 log-volume estimate (Mochizuki)
+- about: `iut:log_shell_containment`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_pm_ell_symmetry_essential`
+
+- label: F-pm-ell symmetry is essential in IUT; SS is silent on this structure (Mochizuki)
+- about: `iut:theta_pm_ell_hodge_theater`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mono_theta_three_rigidities_essential`
+
+- label: All three mono-theta rigidities (cyclotomic, discrete, constant multiple) are simultaneously essential to the IUT theta-link and Cor.3.12 multiradial algorithm (Mochizuki)
+- about: `iut:mono_theta_cyclotomic_rigidity`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2012-08-30
+- evidence:
+  - [The etale theta function and its Frobenioid-theoretic manifestations (Mochizuki 2009)](https://www.kurims.kyoto-u.ac.jp/~motizuki/The%20Etale%20Theta%20Function%20and%20its%20Frobenioid-theoretic%20Manifestations.pdf)
+  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf)
+  - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
+- status: acknowledged-without-critique-by-ss
 - verified at: 2026-05-06
 
 ### `claim:nlab_independent_summary`
@@ -82,6 +311,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - supports: `claim:scholze_stix_2018_main`
 - evidence:
   - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: Scholze-Stix 2018, p.6 (PDF-verified 2026-05-06): 'up to equivalence of categories, choosing a Hodge theater is equivalent to choosing a once-punctured elliptic curve abstractly isomorphic to X'; the equivalence of categories implies the distinctness of copies needed for the inter-universal argument is not present at the formal level.
 - status: unresolved-as-of-2026-05
 - verified at: 2026-05-06
 
@@ -109,7 +339,170 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - supports: `claim:scholze_stix_2018_main`
 - evidence:
   - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: Scholze-Stix 2018, p.9 footnote 12 (PDF-verified 2026-05-06): 'the critical [IUTT-3, Theorem 3.11] does not become false, but trivial' — under the canonical identifications taken consistently, the multiradial algorithm reduces to a tautology because the fundamental-group / geometry equivalence makes the commutation trivial.
 - status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:ss_global_realified_canonical_trivial`
+
+- label: Global realified Frobenioids from F-circ-times-mu-prime strips are always canonically trivial via gamma_can (Scholze-Stix 2018, p.10)
+- about: `iut:global_realified_frobenioid`
+- position: **alleged_gap** / stance: **critical**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- supports: `claim:scholze_stix_2018_main`
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS 2018 p.10 (PDF-verified 2026-05-06): 'always canonically trivial using the various gamma_can' — the canonical trivialization of the global realified Frobenioid, combined with canonical identification of theta-link copies, renders the log-volume inequality empty (no nontrivial constraint survives).
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:ss_global_realified_elementary`
+
+- label: The global realified Frobenioid actually used at Cor.3.12 is very elementary and equivalent to ordered 1-dim R-vector spaces (Scholze-Stix 2018)
+- about: `iut:degree_function`
+- position: **alleged_gap** / stance: **critical**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- supports: `claim:scholze_stix_2018_main`
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS 2018 p.7 §2.1.4 verbatim: 'the notion of a global realified Frobenioid is very elementary'; 'the category of global realified Frobenioids is equivalent to the category of ordered 1-dimensional R-vector spaces'. SS p.10: global realified Frobenioids from F-circ-times-mu-prime strips are 'always canonically trivial using the various gamma_can'.
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:ss_tempered_rigidity_used_not_evaluated`
+
+- label: Tempered anabelian rigidity (EtTh Thm 1.6) is invoked by Mochizuki at the abstract pilot stage; SS use it as input without independent evaluation (Scholze-Stix)
+- about: `iut:tempered_rigidity`
+- position: **factual_statement** / stance: **neutral-observation**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- status: factual-scope-statement
+- verified at: 2026-05-06
+
+### `claim:absolute_anabelian_theta_acknowledged`
+
+- label: Mochizuki's algorithm to recover q_v^{j^2} from tempered coverings (EtTh Thm 1.10) is ingenious and not disputed (Scholze-Stix 2018)
+- about: `iut:absolute_anabelian_theta`
+- position: **factual_statement** / stance: **neutral-observation**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- status: acknowledged-not-disputed
+- verified at: 2026-05-06
+
+### `claim:frobenioid_theta_construction_accepted`
+
+- label: The F-circ-times-mu-Theta prime strip construction (Frobenioid-theoretic theta values) is accepted by Scholze-Stix at the construction level
+- about: `iut:frobenioid_theoretic_theta`
+- position: **factual_statement** / stance: **neutral-observation**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: The essential role of EtTh Thm 5.10 at IUTchIII Cor.3.12 is disputed: SS p.10 argues abstract and concrete Theta-pilot objects are canonically identified via gamma_can.
+- status: construction-accepted-role-disputed
+- verified at: 2026-05-06
+
+### `claim:ss_canonically_same_strips`
+
+- label: F-circ-times-mu-prime strips on both sides of the Theta-link are canonically the same; only the generator name differs (Scholze-Stix 2018, p.9)
+- about: `iut:F_circ_theta_strip`
+- position: **alleged_gap** / stance: **critical**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- counters: `claim:mochizuki_2018_response`
+- supports: `claim:scholze_stix_2018_main`
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: Scholze-Stix 2018, p.9 §2.1.9 (PDF-verified 2026-05-06): 'The F-circ-times-mu-prime strips are given by data of the form Gv acting on o-times-mu_kbar_v times N on both sides (at finite places), and this data is canonically the same on both sides. It is simply the name of the generator of the monoid N that appears that is called Theta respectively q.' If this canonical identification is admitted, the full poly-isomorphism collapses to an obvious isomorphism. SS p.9 footnote 12 (verbatim): 'the critical [IUTT-3, Theorem 3.11] does not become false, but trivial.' The 'empty inequality' phrasing belongs to SS §2.2 p.10 main text, not to footnote 12.
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:ss_f_modulus_strip_focal_extended`
+
+- label: SS 2018 analyzes F-vdash-times-mu strip construction (Def 4.9) at the output layer of Cor 4.10; Mochizuki Kyoto agreement covers only strip description, not canonical identification conclusion
+- about: `iut:F_vdash_times_mu_prime_strip`
+- position: **factual_statement** / stance: **neutral-observation**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS 2018 §2.1.5 pp.7-8 (PDF-verified): F-circ-times-mu strip data described as G_v acting on o-times-mu times N. SS p.4 'Mochizuki agreed that some of these simplifications are OK, for example regarding the critical notion of F-circ-times-mu-prime strips below.' Mochizuki (RIMS 2018 response) contests that this agreement covers only the description of strip data, NOT the legitimacy of the subsequent canonical identification step (SS §2.2 p.10). Hodge-Arakelov evaluation (Cor 4.10-ii) declared out of scope: SS §2.1.2 fn.5 p.5 'plays no role for us'. Theta-gau-link: 0 occurrences in SS 2018.
+- status: factual-scope-statement-agreement-scope-disputed
+- verified at: 2026-05-06
+
+### `claim:ss_f_modulus_strip_focal`
+
+- label: Among prime-strip variants, Scholze-Stix 2018 analyzes only F-circ-times-mu in depth; all other variants (D, F-top, LGP, procession) are outside SS analytical scope
+- about: `iut:F_modulus_prime_strip`
+- position: **factual_statement** / stance: **neutral-observation**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS 2018 PDF full-text (pymupdf-verified 2026-05-06): 'prime strip' occurs 15 times concentrated in §2.1.5-2.1.9 on F-circ-times-mu; F-top (vdash) 0 occurrences; LGP 0 occurrences; procession 1 occurrence (§2.2 summary-only). SS p.4 Excuse (1): 'Mochizuki agreed that some of these simplifications are OK, for example regarding the critical notion of F-circ-times-mu-prime strips below' - the exact scope of agreement is disputed (no public minutes). SS Footnote 9 p.8: 'times-mu-Kummer structure plays no role for us'.
+- status: factual-scope-statement-unresolved-Kyoto-agreement
+- verified at: 2026-05-06
+
+### `claim:ss_j_squared_monodromy_inconsistent`
+
+- label: Inserting the j-squared scalars into the diagram of Cor.3.12 produces a monodromy j-squared, i.e. an inconsistency (Scholze-Stix 2018 p.10)
+- about: `iut:Cor.3.12`
+- position: **alleged_gap** / stance: **critical**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- supports: `claim:scholze_stix_2018_main`
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS 2018 p.10 §2.2 (PDF-verified 2026-05-06): when the canonical identifications are taken consistently, the j-squared scalars must be omitted from the equation, otherwise the diagram acquires a 'monodromy j-squared, i.e. being inconsistent'. Either choice (omit -> empty inequality; keep -> inconsistent diagram) prevents the proof from delivering arithmetic content.
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:ss_o_l_squared_blurring_useless`
+
+- label: Mochizuki's blurring response requires blurring of order O(l-squared), rendering any inequality so obtained useless (Scholze-Stix 2018 p.10)
+- about: `iut:Cor.3.12`
+- position: **alleged_gap** / stance: **critical**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- counters: `claim:mochizuki_2018_response`
+- supports: `claim:scholze_stix_2018_main`
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS 2018 p.10 §2.2 final paragraph (PDF-verified 2026-05-06): on day 5 of the Kyoto discussions Mochizuki proposed that indeterminacies (Ind1, Ind2, Ind3) blur the diagram enough to absorb the j-squared problem; SS reply that the required blurring is of order O(l-squared), which would render the resulting inequality useless for arithmetic applications.
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:ss_log_link_naturally_equivalent_to_identity`
+
+- label: The log endofunctor is naturally equivalent to the identity (Scholze-Stix 2018)
+- about: `iut:log_link_construction`
+- position: **alleged_gap** / stance: **critical**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- supports: `claim:scholze_stix_2018_main`
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS p.6 §2.1.3: 'It follows that the endofunctor log is naturally equivalent to the identity, with the natural equivalence to the identity given by log : log(K) ~= K.' Footnote 8 p.7: 'there is a completely natural isomorphism Pi_1 = pi_1(X) = Pi_2 and K_1 ~= K_2 as K_1 = k-bar = K_2 [...]. Choosing these obvious isomorphisms did not result in any problem.' Construction-level (bijection + endofunctor) accepted; SS claims the full poly-isomorphism indeterminacy adds no non-trivial transport.
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:ss_simplifications_kyoto_agreement_scope`
+
+- label: The Kyoto agreement (Mochizuki accepting some SS simplifications) covers the description of F-circ-times-mu-prime strip data, not the canonical-identification step that SS subsequently use (Scholze-Stix 2018 p.4)
+- about: `iut:F_modulus_prime_strip`
+- position: **factual_statement** / stance: **neutral-observation**
+- proponents: Scholze, Stix
+- asserted: 2018-07-16
+- evidence:
+  - [Why abc is still a conjecture (Scholze-Stix 2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
+- specific objection: SS 2018 p.4 (verbatim, PDF-verified 2026-05-06): 'During our discussion in Kyoto, Mochizuki agreed that some of these simplifications are OK, for example regarding the critical notion of F-circ-times-mu-prime strips below.' Mochizuki's 2018 Report on Discussions disputes that this agreement extends to the canonical identification step at SS §2.2; the precise scope of the Kyoto agreement is itself contested.
+- status: scope-of-agreement-disputed
 - verified at: 2026-05-06
 
 ### `claim:mochizuki_2018_response`
@@ -123,6 +516,78 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - evidence:
   - [Report on Discussions (Mochizuki 2018-09)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Rpt2018.pdf)
   - [Cmt2018-05 (Mochizuki additional comment, 2018-05)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Cmt2018-05.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:mochizuki_poly_iso_not_canonical`
+
+- label: The full poly-isomorphism between theta-strip and mod-strip is not reducible to a canonical isomorphism; the two sides inhabit distinct ring-theoretic structures (Mochizuki)
+- about: `iut:F_circ_theta_strip`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki, Hoshi, Yamashita
+- asserted: 2018-09-01
+- counters: `claim:ss_canonically_same_strips`
+- evidence:
+  - [Report on Discussions (Mochizuki 2018-09)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Rpt2018.pdf)
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:yamashita_faq_q1_mono_theta_as_prerequisite`
+
+- label: Mono-theta environments and mono-anabelian reconstruction are essential prerequisites for IUT; the three rigidities are central ingredients (Yamashita FAQ Q1)
+- about: `iut:mono_theta_environment`
+- position: **valid** / stance: **supportive**
+- proponents: Yamashita
+- asserted: 2018-09-01
+- supports: `claim:mono_theta_three_rigidities_essential`
+- evidence:
+  - [IU-FAQ (Yamashita)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/IUfaq_en2.pdf)
+  - [The etale theta function and its Frobenioid-theoretic manifestations (Mochizuki 2009)](https://www.kurims.kyoto-u.ac.jp/~motizuki/The%20Etale%20Theta%20Function%20and%20its%20Frobenioid-theoretic%20Manifestations.pdf)
+  - [Topics in Absolute Anabelian Geometry III: Global Reconstruction Algorithms (Mochizuki)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Topics%20in%20Absolute%20Anabelian%20Geometry%20III.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:yamashita_faq_q2_poly_iso_history_forgetting`
+
+- label: Poly-isomorphisms (not canonical isos) are necessary because distinct copies must first forget their 'histories of operations' as Galois groups (Yamashita FAQ Q2)
+- about: `iut:theta_link`
+- position: **valid** / stance: **supportive**
+- proponents: Yamashita
+- asserted: 2018-09-01
+- counters: `claim:scholze_stix_2018_sub_1`
+- supports: `claim:mochizuki_poly_iso_not_canonical`
+- evidence:
+  - [IU-FAQ (Yamashita)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/IUfaq_en2.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:yamashita_faq_q3_identity_morph_illegitimate`
+
+- label: Treating distinct copies with an identity morphism is illegitimate: once histories are forgotten the identity morphism cannot be defined across dagger-G and double-dagger-G (Yamashita FAQ Q3)
+- about: `iut:theta_link`
+- position: **valid** / stance: **supportive**
+- proponents: Yamashita
+- asserted: 2018-09-01
+- counters: `claim:scholze_stix_2018_main`
+- supports: `claim:mochizuki_alien_copies_essential`
+- evidence:
+  - [IU-FAQ (Yamashita)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/IUfaq_en2.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:yamashita_faq_q6_trivial_constructions_nontrivial_conclusion`
+
+- label: IUT constructions appear trivial individually but the nontrivial content lies in the framework-level combination of preparatory results (Yamashita FAQ Q6, citing his survey)
+- about: `iut:Cor.3.12`
+- position: **valid** / stance: **supportive**
+- proponents: Yamashita
+- asserted: 2018-09-01
+- counters: `claim:scholze_stix_2018_sub_3`
+- supports: `claim:mochizuki_2018_response`
+- evidence:
+  - [IU-FAQ (Yamashita)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/IUfaq_en2.pdf)
+  - [A proof of abc conjecture after Mochizuki (Yamashita 2024-06-25 update)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/abc2024Jun25.pdf)
 - status: unresolved-as-of-2026-05
 - verified at: 2026-05-06
 
@@ -141,6 +606,21 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - status: ongoing-as-of-2026-05
 - verified at: 2026-05-06
 
+### `claim:mochizuki_alien_copies_essential`
+
+- label: Alien copies framework is the structural counter to SS canonical identification: ring structure is obliterated across the inter-universal wall (Mochizuki)
+- about: `iut:alien_arithmetic_holomorphic_structure`
+- position: **valid** / stance: **supportive**
+- proponents: Mochizuki
+- asserted: 2019-01-01
+- counters: `claim:ss_canonically_same_strips`
+- supports: `claim:mochizuki_2018_response`
+- evidence:
+  - [The Mathematics of Mutually Alien Copies: from Gaussian integrals to inter-universal Teichmuller theory (Mochizuki survey)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Alien%20Copies,%20Gaussians,%20and%20Inter-universal%20Teichmuller%20Theory.pdf)
+  - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
+- status: unresolved-as-of-2026-05
+- verified at: 2026-05-06
+
 ### `claim:prims_2021_acceptance`
 
 - label: IUT four papers accepted and published by PRIMS, 2021-03
@@ -154,6 +634,26 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - status: factual-publication-not-verdict
 - verified at: 2026-05-06
 
+### `claim:joshi_ats_construction`
+
+- label: Joshi constructs Arithmetic Teichmuller Spaces (ATS) as an alternative framework grounded in p-adic holomorphic structures and perfectoid fields (2021-2024 series)
+- about: `iut:ArithmeticTeichmullerSpaces`
+- position: **alternative** / stance: **reformulation**
+- proponents: Joshi
+- asserted: 2021-06-01
+- evidence:
+  - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568v1)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Arithmetic Teichmuller Spaces I (Joshi 2021, arXiv:2106.11452)](https://arxiv.org/abs/2106.11452)
+  - [Untilts of fundamental groups (Joshi 2022, arXiv:2210.11635)](https://arxiv.org/abs/2210.11635)
+  - [Arithmetic Teichmuller Spaces II (Joshi 2023, arXiv:2303.01662)](https://arxiv.org/abs/2303.01662)
+  - [Arithmetic Teichmuller Spaces II.5 deformations of number fields (Joshi 2023, arXiv:2305.10398)](https://arxiv.org/abs/2305.10398)
+  - [Arithmetic Teichmuller Spaces III: Joshi Cor.3.12 proof + Rosetta Stone (Joshi 2024, arXiv:2401.13508)](https://arxiv.org/abs/2401.13508)
+  - [Arithmetic Teichmuller Spaces IV: abc from ATS (Joshi 2024, arXiv:2403.10430)](https://arxiv.org/abs/2403.10430)
+- specific objection: Joshi (arXiv:2505.10568 §1.2) constructs ATS via p-adic holomorphic functions and perfectoid field categories rather than anabelian geometry alone. Six-paper series: arXiv:2106.11452 (ATS I, 2021-06), arXiv:2210.11635 (Untilts, 2022-10), arXiv:2303.01662 (ATS II, 2023-03), arXiv:2305.10398 (ATS II.5, 2023-05), arXiv:2401.13508 (ATS III + Cor.3.12 + Rosetta Stone, 2024-01), arXiv:2403.10430 (ATS IV + abc, 2024-03). Joshi: 'arithmetic, both local and global, is far richer and occurs in many topologically distinct avatars than has been previously imagined.' No independent verification as of 2026-05-06; series is preprint level.
+- status: preprint-not-peer-reviewed-as-of-2026-05
+- verified at: 2026-05-06
+
 ### `claim:essential_logical_structure_reference`
 
 - label: Mochizuki's 'Essential Logical Structure of IUT' provides a structured AND/OR logical map of the proof (referenced as background)
@@ -165,6 +665,26 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - evidence:
   - [Essential Logical Structure of Inter-universal Teichmuller Theory (Mochizuki)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Essential%20Logical%20Structure%20of%20Inter-universal%20Teichmuller%20Theory.pdf)
 - status: self-published-RIMS-preprint
+- verified at: 2026-05-06
+
+### `claim:joshi_abc_follows_from_ats`
+
+- label: Joshi claims abc is established by the combination of Joshi (ATS series 2021-2024) and Mochizuki (IUTch I-IV), with Joshi Cor.3.12 proof (arXiv:2401.13508) as key step
+- about: `iut:abc_conjecture`
+- position: **alternative** / stance: **reformulation**
+- proponents: Joshi
+- asserted: 2024-03-01
+- evidence:
+  - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568v1)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Arithmetic Teichmuller Spaces I (Joshi 2021, arXiv:2106.11452)](https://arxiv.org/abs/2106.11452)
+  - [Untilts of fundamental groups (Joshi 2022, arXiv:2210.11635)](https://arxiv.org/abs/2210.11635)
+  - [Arithmetic Teichmuller Spaces II (Joshi 2023, arXiv:2303.01662)](https://arxiv.org/abs/2303.01662)
+  - [Arithmetic Teichmuller Spaces II.5 deformations of number fields (Joshi 2023, arXiv:2305.10398)](https://arxiv.org/abs/2305.10398)
+  - [Arithmetic Teichmuller Spaces III: Joshi Cor.3.12 proof + Rosetta Stone (Joshi 2024, arXiv:2401.13508)](https://arxiv.org/abs/2401.13508)
+  - [Arithmetic Teichmuller Spaces IV: abc from ATS (Joshi 2024, arXiv:2403.10430)](https://arxiv.org/abs/2403.10430)
+- specific objection: Joshi (arXiv:2505.10568 §1.4): 'the abc-conjecture stands established by the combination of [Joshi ATS series] and [Mochizuki IUTch I-IV].' Mechanism: (1) ATS provides existence of distinct arithmetic holomorphic structures, (2) arXiv:2401.13508 (ATS III) gives Cor.3.12 proof via 'Rosetta Stone' dictionary between ATS and IUT, (3) arXiv:2403.10430 (ATS IV) derives abc from ATS framework. Caveats: no independent verification of arXiv:2401.13508 or arXiv:2403.10430 as of 2026-05-06; Joshi Cor.3.12 proof has not been accepted as resolving the SS controversy by Scholze/Stix/neutral third parties in any verified statement; 'abc is established' must be read as Joshi's assertion, not community consensus.
+- status: preprint-not-peer-reviewed-as-of-2026-05
 - verified at: 2026-05-06
 
 ### `claim:yamashita_2024_independent_exposition`
@@ -183,14 +703,50 @@ Each claim is presented with its proponents, position, evidence, and any counter
 
 ### `claim:joshi_2025_alternative`
 
-- label: Arithmetic Teichmuller Spaces yield a corrected framework where abc follows (Joshi v1 2025-04, v2 2026-05)
+- label: Arithmetic Teichmuller Spaces yield a corrected framework where abc follows (Joshi v1 2025-04 + FAQ 2025-11)
 - about: `iut:abc_conjecture`
 - position: **alternative** / stance: **reformulation**
 - proponents: Joshi
 - asserted: 2025-04-29
 - evidence:
   - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568v1)
-  - [Final Report on the Mochizuki-Scholze-Stix Controversy v2 (Joshi 2026-05-02)](https://arxiv.org/abs/2505.10568v2)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Arithmetic Teichmuller Spaces I (Joshi 2021, arXiv:2106.11452)](https://arxiv.org/abs/2106.11452)
+  - [Untilts of fundamental groups (Joshi 2022, arXiv:2210.11635)](https://arxiv.org/abs/2210.11635)
+  - [Arithmetic Teichmuller Spaces II (Joshi 2023, arXiv:2303.01662)](https://arxiv.org/abs/2303.01662)
+  - [Arithmetic Teichmuller Spaces II.5 deformations of number fields (Joshi 2023, arXiv:2305.10398)](https://arxiv.org/abs/2305.10398)
+  - [Arithmetic Teichmuller Spaces III: Joshi Cor.3.12 proof + Rosetta Stone (Joshi 2024, arXiv:2401.13508)](https://arxiv.org/abs/2401.13508)
+  - [Arithmetic Teichmuller Spaces IV: abc from ATS (Joshi 2024, arXiv:2403.10430)](https://arxiv.org/abs/2403.10430)
+- specific objection: Joshi (arXiv:2505.10568v1 + Joshi FAQ 2025-11): the alleged gap identified by Scholze-Stix in IUTchIII Cor.3.12 can be repaired by reformulating Mochizuki's setup via Arithmetic Teichmüller Spaces (ATS); under ATS, the abc conjecture follows. This is neither a defense of the original IUT proof nor an endorsement of the SS critique as terminal; it is a reformulation.
+- status: preprint-not-peer-reviewed-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:joshi_ss_all_claims_false`
+
+- label: Joshi asserts every mathematical claim in Scholze-Stix (2018) and Scholze (2021 zbMath) is false, demonstrated by ATS existence proofs (Joshi 2025)
+- about: `iut:Cor.3.12`
+- position: **alternative** / stance: **reformulation**
+- proponents: Joshi
+- asserted: 2025-04-29
+- counters: `claim:scholze_stix_2018_main`, `claim:scholze_stix_2018_sub_1`, `claim:scholze_stix_2018_sub_2`
+- evidence:
+  - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568v1)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+- specific objection: Joshi (arXiv:2505.10568 §1.1): 'every assertion of [Scholze and Stix, 2018] and [Scholze, 2021] is mathematically false.' Table 2 catalogs SS claims (non-existence of distinct Hodge Theaters / Etale Pictures / Frobenius Pictures / Isomorphs / Prime-strips, theta-link non-triviality) and marks each 'disproved by Joshi'. Counter-argument: ATS provides explicit existence proofs of structures SS denied. Caveat: Joshi's own assessment; no neutral third-party verification; Scholze has not responded to ATS series in any verified public statement; informal Scholze MO commentary and Sawin locality critique reported but URLs unverified.
+- status: preprint-not-peer-reviewed-as-of-2026-05
+- verified at: 2026-05-06
+
+### `claim:joshi_mochizuki_incomplete_ats_essential`
+
+- label: Joshi holds Mochizuki's IUT proof is incomplete (not wrong in direction); ATS supplies the missing rigorous quantification of distinct arithmetic holomorphic structures (Joshi 2025)
+- about: `iut:Cor.3.12`
+- position: **alternative** / stance: **reformulation**
+- proponents: Joshi
+- asserted: 2025-04-29
+- evidence:
+  - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568v1)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+- specific objection: Joshi (arXiv:2505.10568 §1.2 + §1.4): Mochizuki's proof is incomplete because anabelian methods alone cannot rigorously establish that multiple arithmetic holomorphic structures exist - a requirement for inter-universal comparison. Joshi does not accept SS conclusion that the proof is wrong; instead provides 'a canonical formulation of the theory without which Mochizuki's work stands incomplete.' Caveats: Joshi's tripartite framing (Mochizuki incomplete / SS wrong / Joshi complete) is Joshi's own synthesis; not endorsed by Mochizuki who maintains the original proof is complete; no independent mathematician has publicly validated that ATS fills precisely this gap.
 - status: preprint-not-peer-reviewed-as-of-2026-05
 - verified at: 2026-05-06
 

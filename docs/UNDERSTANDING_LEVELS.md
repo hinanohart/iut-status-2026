@@ -48,7 +48,7 @@ limit, not an achievable state.
 **Auto-verifiable success criteria.**
 - L2a: `scripts/coverage_report.py --paper IUTchI` prints registered fraction (target ≥ 80 % at v0.5, ≥ 95 % at v1.0).
 - L2b: every Yamashita FAQ "Q" has a corresponding `claim:yamashita_faq_q###`.
-- L2c: every section of SS 2018 (10 pp.), Mochizuki Rpt 2018, and Joshi v2 has at least one anchored entity or claim.
+- L2c: every section of SS 2018 (10 pp.), Mochizuki Rpt 2018, and Joshi FAQ 2025-11 has at least one anchored entity or claim.
 
 **Current status.** Approximately 5 % of L2 (heads of major theorems only;
 no FAQ coverage; no per-section SS claims yet).

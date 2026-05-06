@@ -187,8 +187,8 @@ Key concepts established: `iut:Frobenioid`, `iut:etale_theta`, `iut:mono_theta_e
   Peter Woit's Not Even Wrong blog carries ongoing commentary.
   `claim:woit_blog_2025_skeptical` / `evidence:Woit_blog_2025` (status: `informal-blog-commentary`)
 
-- **2026-05-02** — Joshi v2 update (arXiv:2505.10568v2).
-  `event:2026_joshi_v2` / `evidence:Joshi_arxiv_2505_10568_v2`; status: `preprint-not-peer-reviewed-as-of-2026-05`
+- **2025-11-01** — Joshi FAQ 2025-11 (arXiv:2505.10568v1 + Joshi FAQ 2025-11).
+  `event:2025_11_joshi_faq` / `evidence:Joshi_FAQ_2025_11`; status: `preprint-not-peer-reviewed-as-of-2026-05`
 
 ---
 
@@ -258,7 +258,7 @@ No claim in `claims.json` carries status `resolved` as of 2026-05-06.
 | Stix | Critic | 2018-03 (visit), 2018-07 (report) |
 | Yamashita | Proponent / expositor | 2018-03 (visit), 2024-06-25 (survey), 2025-03-20 (Summit talk) |
 | Hoshi | Proponent | 2018-03 (visit), 2025-03 (Summit), 2026-03-31 (LANA), 2026-04 |
-| Joshi | Reformulator | 2025-04-29 (v1), 2026-05-02 (v2) |
+| Joshi | Reformulator | 2025-04-29 (v1), 2025-11-01 (FAQ) |
 | Commelin | Formalization | 2026-03-31 (LANA) |
 | Kedlaya | Formalization | 2026-03-31 (LANA), 2025-03-20 (Summit) |
 | Calegari | Skeptic | 2017-12-17 |
@@ -289,7 +289,7 @@ The Scholze–Stix critique (`claim:scholze_stix_2018_main`) reduces to a two-ho
 
 **Mochizuki structural counter:** The canonical identification is illegitimate because F-circ-times-mu-prime strips on the two sides reside in distinct arithmetic holomorphic structures (IUTchI Rem 3.9.4: ring structure "obliterated"; `claim:mochizuki_alien_copies_essential`). The full poly-isomorphism of abstract topological monoids (`claim:mochizuki_poly_iso_not_canonical`) cannot be replaced by a ring-level canonical isomorphism without traversing the inter-universal wall. This structural counter is not resolved as of 2026-05-06.
 
-**Joshi alternative path:** Joshi (arXiv:2505.10568v2, `claim:joshi_2025_alternative`) proposes that both Horn A and Horn B can be avoided via Arithmetic Teichmuller Spaces (ATS): the ATS reformulation is claimed to repair the alleged gap without requiring acceptance of the SS canonical identification. This is a reformulation, not an endorsement of either the original IUT proof or the SS critique as terminal. Status: preprint-not-peer-reviewed as of 2026-05-06.
+**Joshi alternative path:** Joshi (arXiv:2505.10568v1 + Joshi FAQ 2025-11, `claim:joshi_2025_alternative`) proposes that both Horn A and Horn B can be avoided via Arithmetic Teichmuller Spaces (ATS): the ATS reformulation is claimed to repair the alleged gap without requiring acceptance of the SS canonical identification. This is a reformulation, not an endorsement of either the original IUT proof or the SS critique as terminal. Status: preprint-not-peer-reviewed as of 2026-05-06.
 
 **Formalization status:** The LANA project (`claim:lana_formalization_in_progress`, `event:2026_mochizuki_formalization_report`) is formalizing anabelian geometry prerequisites in Lean 4. The 2026-04-07 preliminary progress report states a specific contentious point has been articulated but not yet resolved. LANA mid-report is scheduled for 2026-07-17.
 

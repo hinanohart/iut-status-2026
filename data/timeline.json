@@ -230,10 +230,10 @@
       ]
     },
     {
-      "id": "event:2026_joshi_v2",
+      "id": "event:2025_11_joshi_faq",
       "type": "event",
-      "label": "Joshi arXiv:2505.10568 v2 update",
-      "date": "2026-05-02",
+      "label": "Joshi FAQ on Mochizuki-Scholze-Stix dispute posted (math.arizona.edu, supplementary to arXiv:2505.10568v1)",
+      "date": "2025-11-01",
       "actors": [
         "Joshi"
       ]
