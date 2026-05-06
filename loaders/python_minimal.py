@@ -81,6 +81,7 @@ class Evidence:
     type: str
     label: str
     url: str | None = None
+    archive_url: str | None = None
     doi: str | None = None
     isbn: str | None = None
     publisher: str | None = None
@@ -95,6 +96,7 @@ class TimelineEvent:
     date: str
     actors: tuple[str, ...] = ()
     url: str | None = None
+    archive_url: str | None = None
 
 
 @dataclass
@@ -225,6 +227,7 @@ class IutGraph:
                 type=record["type"],
                 label=record["label"],
                 url=record.get("url"),
+                archive_url=record.get("archive_url"),
                 doi=record.get("doi"),
                 isbn=record.get("isbn"),
                 publisher=record.get("publisher"),
@@ -243,6 +246,7 @@ class IutGraph:
                 date=record["date"],
                 actors=tuple(record.get("actors", ())),
                 url=record.get("url"),
+                archive_url=record.get("archive_url"),
             )
         except KeyError as exc:
             raise ValueError(f"timeline missing required field {exc}: {record}") from exc

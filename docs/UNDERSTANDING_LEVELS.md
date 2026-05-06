@@ -94,12 +94,13 @@ to where Level 3 is being pursued externally:
 
 ## Roadmap (revised v0.2.2, post-architecture review)
 
-| Version | L1 target | L2 target | scale (entities / claims / lines) |
+| Version | L1 target | L2 target | scale (entities / claims / evidence / timeline) |
 |---|---|---|---|
-| v0.2.x (current) | ~30 % (Claude-only) | ~5 % | 33 / 16 / ~2 500 |
-| v0.3 | 50 % (3 vendors, symmetry CI) | 30 % | 80 / 40 / ~5 000 |
-| v0.5 | 80 % (5 vendors, full L1 CI) | 60 % | 150 / 65 / ~10 000 |
-| v1.0 (gated on LANA mid-report + 6 mo) | 95 % (7 vendors, full CI) | 80 % | 200 + / 80 + / ~15 000 + |
+| v0.2.x (closed 2026-05-06) | ~30 % (Claude-only) | ~5 % | 33 / 16 / 24 / 20 |
+| **v0.7.x (current)** | **~30 %** (still Claude-only — see `cold_start_evidence.md`) | **~10 %** | **104 / 53 / 34 / 25** |
+| v0.8 (cold-start 3-vendor matrix) | 50 % (3 vendors, symmetry CI) | 30 % | 130 / 70 / 50 / 35 |
+| v0.9 (5-vendor matrix + full L1 CI) | 80 % | 60 % | 150 / 80 / 60 / 40 |
+| v1.0 (gated on LANA mid-report 2026-07-17 + 6 mo) | 95 % (7 vendors) | 80 % | 200 + / 100 + / 80 + / 50 + |
 | absolute 100 % | feasible (L1) | **forever asymptotic** (L2) | grows with new papers |
 
 L2 100 % is a category error. New papers redefine the goalpost

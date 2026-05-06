@@ -97,10 +97,10 @@ iut-status-2026/
 ├── README.md              # this file
 ├── data/                  # JSON-LD source of truth
 │   ├── context.jsonld     # @context for all data files
-│   ├── entities.json      # IUT concepts + persons + papers (33 entries)
-│   ├── claims.json        # Mochizuki / Scholze-Stix / Joshi / LANA / Woit / Yamashita / nLab claim graph (16 entries)
-│   ├── evidence.json      # 24 bibliographic evidence records (papers, blogs, books, projects)
-│   └── timeline.json      # 1985-2026 dispute timeline (20 events)
+│   ├── entities.json      # IUT concepts + persons + papers (104 entries as of v0.7.0)
+│   ├── claims.json        # Mochizuki / Scholze-Stix / Joshi / LANA / Woit / Yamashita / nLab claim graph (53 entries)
+│   ├── evidence.json      # 34 bibliographic evidence records (papers, blogs, books, projects)
+│   └── timeline.json      # 1985-2026 dispute timeline (25 events)
 ├── schemas/               # JSON Schema 2020-12 validators
 │   ├── entity.json
 │   ├── claim.json
