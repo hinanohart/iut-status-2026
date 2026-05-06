@@ -151,6 +151,13 @@ recorded with date and commit SHA where relevant.
 - **Files**: `schemas/entity.json` (`role` enum optional), `data/entities.json` (Grothendieck=historical_foundation, Pop=background_reference, Sawin=background_reference), `tools/validate.py` (Person-edge-or-role-required rule), `loaders/python_minimal.py` (Entity.role field).
 - **Architect false-positive recorded**: the same audit listed `IUTchIII Def 1.4` as missing, but the entity exists under the descriptive IRI `iut:log_theta_lattice` (label-search miss; IRI-search would have found it). Future audits should scan IUTch reference-strings inside `informal_md` paths and `definedIn` chains, not only entity labels, before declaring missing.
 
+### V. Innovation log monthly heartbeat (`.github/workflows/innovation_heartbeat.yml`)
+- **Idea**: This log is a document, not a process. Without a heartbeat the silent-death class (explorer "is silent" indistinguishable from "found nothing") cannot be detected from outside the workflow. Closes Phase 1 must-band #5 by ensuring a single observable signal — a monthly auto-opened issue — fires whether or not new candidates are discovered.
+- **Status**: **Implemented** (v0.7.3, commit pending).
+- **Files**: `.github/workflows/innovation_heartbeat.yml` (cron 02:30 UTC on the 1st of every month + manual workflow_dispatch; permissions issues:write contents:read; idempotent label-creation guard; duplicate-issue guard via gh issue list filter).
+- **Body**: lists the count of `Surveyed` candidates auto-detected via grep over the file, and the standing 90-day stalled-candidate review rule.
+- **Why a heartbeat is enough**: silent failure is now loud (issue does not appear → workflow died → fix it). No analysis logic is needed for the silent-death class; that is a separate candidate (regex-driven candidate scanning over arXiv / RIMS / ems.press / openalex) which v0.7.x may add.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---
