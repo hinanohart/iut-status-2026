@@ -418,7 +418,7 @@ mathematical, not personal.
 | SS 2018 | Not retracted; SS position unchanged in public statements |
 | Mochizuki 2025-10 report | Reaffirms validity; introduces Lean4 formalization strategy |
 | LANA formalization project | Announced 2026-03-31; mid-report scheduled 2026-07-17 (PENDING); Lean 4 formalization of `iut:theta_pm_ellNF_hodge_theater_integration` and `iut:multiradial_representation_thm_3_11` underway; expected to require several more years (`claim:lana_formalization_in_progress`) |
-| Joshi 2025 (arXiv:2505.10568 v1+v2) | Proposes corrected framework; preprint, not peer-reviewed; represents a third mathematical perspective (`claim:joshi_2025_alternative`) |
+| Joshi 2025 (arXiv:2505.10568 v1) + Joshi FAQ 2025-11 | Proposes corrected framework; preprint, not peer-reviewed; represents a third mathematical perspective (`claim:joshi_2025_alternative`). Round 5 audit removed a previously-claimed v2 (2026-05-02) which was fictional; the FAQ is the supplementary source. |
 | Western mathematical commentariat | A significant portion remains skeptical in informal discourse; no formal retraction of skepticism |
 
 Key uncertainty: the LANA project represents the first systematic attempt at

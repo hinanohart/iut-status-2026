@@ -30,13 +30,40 @@ jobs:
         run: python -m unittest tests.test_verify_identifiers -v
       - name: Run cold_start runner tests (offline path)
         run: python -m unittest tests.test_cold_start_runner -v
+      - name: Run mcp server tests
+        run: python -m unittest tests.test_mcp_server -v
       - name: Verify URL syntax (offline)
         run: python tools/verify_urls.py
       - name: Archive evidence offline summary
         run: python tools/archive_evidence.py
       - name: Verify DOI / ISBN identifiers (offline)
         run: python tools/verify_identifiers.py
-      - name: Render docs (smoke test)
-        run: python tools/render_md.py --data data --out /tmp/docs-smoke
-      - name: MCP server smoke test
-        run: timeout 5 python mcp/server.py < /dev/null || true
+      - name: Render docs and check committed artefacts in sync (Round 9 gate)
+        run: |
+          python tools/render_md.py --data data --out /tmp/docs-rendered
+          for f in overview.md disputes.md timeline.md; do
+            if ! diff -q "/tmp/docs-rendered/$f" "docs/$f" > /dev/null; then
+              echo "::error::docs/$f is stale — run 'python tools/render_md.py --out docs' and commit"
+              diff "docs/$f" "/tmp/docs-rendered/$f" | head -50
+              exit 1
+            fi
+          done
+      - name: MCP server initialize handshake
+        run: |
+          # Round 9 audit (v0.7.8): "|| true" was masking server crashes.
+          # Pipe a real initialize request and check the response shape.
+          response=$(echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | timeout 5 python mcp/server.py)
+          echo "$response" | grep -q '"protocolVersion"' || { echo "::error::MCP initialize response malformed: $response"; exit 1; }
+      - name: Lean stub smoke (advisory, allowed-to-fail)
+        continue-on-error: true
+        run: |
+          # Round 9 audit (v0.7.8): CI did not exercise lake build, so
+          # syntax / namespace collisions in lean/IutStatus/*.lean were
+          # invisible. This step is allowed to fail — lake build pulls
+          # mathlib4 (~ 1 GB) and times out on the free tier — but a
+          # clean local run must precede each Lean module change.
+          if command -v lake >/dev/null 2>&1; then
+            cd lean && lake build 2>&1 | head -200
+          else
+            echo "lake not installed in CI runner; skipping (advisory)"
+          fi

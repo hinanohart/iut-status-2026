@@ -114,6 +114,63 @@ class ApplyToDataTests(unittest.TestCase):
             )
             self.assertEqual(target["archive_url"], archive_url)
 
+    def test_apply_handles_duplicate_url_records_correctly(self) -> None:
+        # Round 9 audit (v0.7.8): regression test for run_submit's
+        # outcomes.index(o) bug where frozen dataclass eq=True could
+        # let two records sharing all fields collapse on .index() and
+        # shift the remaining slice. apply_to_data uses record_id as
+        # primary key, so duplicate records (synthetic test) must
+        # update independently if they have different IDs.
+        with TemporaryDirectory() as td:
+            data = Path(td)
+            sample = {
+                "@context": "./context.jsonld",
+                "@graph": [
+                    {
+                        "id": "evidence:Dup_A",
+                        "type": "Paper",
+                        "label": "duplicate URL test record A",
+                        "url": "https://example.com/dup.pdf",
+                    },
+                    {
+                        "id": "evidence:Dup_B",
+                        "type": "Paper",
+                        "label": "duplicate URL test record B",
+                        "url": "https://example.com/dup.pdf",
+                    },
+                ],
+            }
+            (data / "evidence.json").write_text(
+                json.dumps(sample, indent=2) + "\n", encoding="utf-8"
+            )
+            (data / "timeline.json").write_text(
+                json.dumps({"@graph": []}, indent=2) + "\n", encoding="utf-8"
+            )
+            outcomes = [
+                ae.ArchiveOutcome(
+                    record_id="evidence:Dup_A",
+                    kind="evidence",
+                    url="https://example.com/dup.pdf",
+                    archive_url="https://web.archive.org/web/2024A/x",
+                    action="found",
+                    detail="A",
+                ),
+                ae.ArchiveOutcome(
+                    record_id="evidence:Dup_B",
+                    kind="evidence",
+                    url="https://example.com/dup.pdf",
+                    archive_url="https://web.archive.org/web/2024B/x",
+                    action="found",
+                    detail="B",
+                ),
+            ]
+            written = ae.apply_to_data(outcomes, data)
+            self.assertEqual(written, 2)
+            doc = json.loads((data / "evidence.json").read_text(encoding="utf-8"))
+            urls = {r["id"]: r.get("archive_url") for r in doc["@graph"]}
+            self.assertEqual(urls["evidence:Dup_A"], "https://web.archive.org/web/2024A/x")
+            self.assertEqual(urls["evidence:Dup_B"], "https://web.archive.org/web/2024B/x")
+
     def test_apply_does_not_overwrite_existing(self) -> None:
         with TemporaryDirectory() as td:
             data = Path(td)

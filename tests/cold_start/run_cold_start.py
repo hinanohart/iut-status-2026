@@ -86,40 +86,162 @@ SEED_ENTITIES = (
     "iut:log_theta_lattice",
 )
 
-# Round 8 audit (v0.7.7): block-header constraint added so that prose
-# mentioning "Joshi" or "alternative" in passing inside one block does
-# NOT silently mark the Alternative block as present. Each pattern
-# now requires either a leading numeric/heading marker (e.g.
-# "3. Alternative", "(3) Alternative", "## Alternative") OR an
-# explicit "block"/"position"/"side"/"view" qualifier. This is
-# stricter than the prior bare-keyword match and reduces the
-# false-positive rate that the architect's verification experiment
-# observed (3/3 false positives with the old pattern).
+# Round 9 audit (v0.7.8): the v0.7.7 strict header-only constraint
+# eliminated the bare-keyword false-positive class but introduced a
+# false-negative regression for natural-prose responses (LLMs that
+# write "Mochizuki maintains that..." without a numbered header had
+# their block labelled missing — see Round 9 critic CRIT-1).
+#
+# The repaired contract is a two-stage lookup per block:
+# tier 1 — strict v0.7.7-style header marker. Always passes.
+# tier 2 — keyword + proximity to a position-related context word
+#          (≤ 200 chars). Catches natural prose without false-
+#          positively flagging the block on a bare mention.
+#
+# A block is present iff tier 1 OR tier 2 matches.
 _HEADER = r"(?:^|\n)\s*(?:[#*\-]+\s*)?(?:\(?\d+[.)]\s*)?"
 _QUALIFIER = r"(?:\s+(?:block|position|side|view|interpretation|framework))"
-BLOCK_LABEL_PATTERNS = (
-    ("mochizuki", re.compile(
-        rf"{_HEADER}mochizuki(?:{_QUALIFIER}|\s*[:\-—])", re.IGNORECASE | re.MULTILINE,
-    )),
-    ("scholze-stix", re.compile(
-        rf"{_HEADER}scholze[-\s]*stix(?:{_QUALIFIER}|\s*[:\-—])"
-        r"|scholze and stix",
-        re.IGNORECASE | re.MULTILINE,
-    )),
-    ("alternative", re.compile(
-        rf"{_HEADER}(?:alternative|joshi(?:'s)?\s+(?:alternative|reformulation|approach|interpretation|framework|ats))(?:{_QUALIFIER}|\s*[:\-—])"
-        rf"|{_HEADER}alternative\s*[:\-—]",
-        re.IGNORECASE | re.MULTILINE,
-    )),
-    ("pending", re.compile(
-        rf"{_HEADER}pending(?:{_QUALIFIER}|\s+investigation|\s*[:\-—])",
-        re.IGNORECASE | re.MULTILINE,
-    )),
-    ("unresolved", re.compile(
-        rf"{_HEADER}unresolved(?:{_QUALIFIER}|\s+(?:flag|residue)|\s*[:\-—])",
-        re.IGNORECASE | re.MULTILINE,
-    )),
+_PROXIMITY_CHARS = 200
+
+
+@dataclass(frozen=True, slots=True)
+class BlockSpec:
+    """Specification for a 5-block protocol block label.
+
+    Attributes:
+        name: Lowercase canonical block name.
+        header_pattern: Strict header-style match. If this matches
+            anywhere in the response, the block is present.
+        keyword_pattern: Naked keyword (any occurrence). Tier-2
+            matching anchors here.
+        context_pattern: Words that, if found within
+            ``_PROXIMITY_CHARS`` of any keyword occurrence, count as
+            a tier-2 match.
+    """
+
+    name: str
+    header_pattern: re.Pattern[str]
+    keyword_pattern: re.Pattern[str]
+    context_pattern: re.Pattern[str]
+
+
+BLOCKS: tuple[BlockSpec, ...] = (
+    BlockSpec(
+        name="mochizuki",
+        header_pattern=re.compile(
+            rf"{_HEADER}mochizuki(?:{_QUALIFIER}|\s*[:\-—])",
+            re.IGNORECASE | re.MULTILINE,
+        ),
+        keyword_pattern=re.compile(r"\bmochizuki\b", re.IGNORECASE),
+        context_pattern=re.compile(
+            r"\b(?:position|side|view|interpretation|maintains|holds|argues|"
+            r"claims|asserts|defends|reformulation|response|report|stance|"
+            r"counter|rebuttal|replies?|defended|maintained|essential|"
+            r"correct|valid|stand|stands|frobenioid|theta|hodge|cor\.|"
+            r"corollary)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    BlockSpec(
+        name="scholze-stix",
+        header_pattern=re.compile(
+            rf"{_HEADER}scholze[-\s]*stix(?:{_QUALIFIER}|\s*[:\-—])"
+            r"|scholze and stix",
+            re.IGNORECASE | re.MULTILINE,
+        ),
+        keyword_pattern=re.compile(
+            r"\b(?:scholze[-\s]*stix|scholze\s+and\s+stix|"
+            r"\(SS\)|why\s+abc\s+is\s+still)\b",
+            re.IGNORECASE,
+        ),
+        context_pattern=re.compile(
+            r"\b(?:objection|critique|gap|criticize|critical|challenge|"
+            r"dispute|silent|alleged|flaw|circular|tautolog|conjecture|"
+            r"2018|2021|distinct|copies|conflate|raise|raised)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    BlockSpec(
+        name="alternative",
+        header_pattern=re.compile(
+            rf"{_HEADER}(?:alternative|joshi(?:'s)?\s+(?:alternative|"
+            r"reformulation|approach|interpretation|framework|ats))"
+            rf"(?:{_QUALIFIER}|\s*[:\-—])"
+            rf"|{_HEADER}alternative\s*[:\-—]",
+            re.IGNORECASE | re.MULTILINE,
+        ),
+        keyword_pattern=re.compile(
+            r"\b(?:alternative|joshi|ats|arithmetic\s+teichmu)\b",
+            re.IGNORECASE,
+        ),
+        context_pattern=re.compile(
+            r"\b(?:framework|reformulation|propose|proposes|proposed|"
+            r"suggests?|alternat|ats|arxiv|claim|claims|formulation|"
+            r"approach|interpretation|series|preprint|2025|2026)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    BlockSpec(
+        name="pending",
+        header_pattern=re.compile(
+            rf"{_HEADER}pending(?:{_QUALIFIER}|\s+investigation|\s*[:\-—])",
+            re.IGNORECASE | re.MULTILINE,
+        ),
+        keyword_pattern=re.compile(
+            r"\b(?:pending|in\s+progress|under\s+review)\b",
+            re.IGNORECASE,
+        ),
+        context_pattern=re.compile(
+            r"\b(?:investigation|review|peer.review|formalization|lana|"
+            r"awaiting|scheduled|mid.report|in\s+progress|formaliz|"
+            r"verify|verifying|verified)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    BlockSpec(
+        name="unresolved",
+        header_pattern=re.compile(
+            rf"{_HEADER}unresolved(?:{_QUALIFIER}|\s+(?:flag|residue)|\s*[:\-—])",
+            re.IGNORECASE | re.MULTILINE,
+        ),
+        keyword_pattern=re.compile(
+            r"\b(?:unresolved|undecided|open\s+question)\b",
+            re.IGNORECASE,
+        ),
+        context_pattern=re.compile(
+            r"\b(?:flag|residue|unresolved|undecided|tbd|open|awaiting|"
+            r"third.party|verify|verification|consensus|status|known|"
+            r"not\s+yet|remains?|outstanding)\b",
+            re.IGNORECASE,
+        ),
+    ),
 )
+
+
+def _block_is_present(spec: BlockSpec, text: str) -> bool:
+    """Return True if the block is mentioned in ``text``.
+
+    Tier 1: strict header pattern → always counts.
+    Tier 2: keyword anywhere + position-related context word within
+    ``_PROXIMITY_CHARS`` characters of the keyword span. Picks up
+    natural-prose responses such as "Mochizuki maintains that ...".
+    """
+    if spec.header_pattern.search(text):
+        return True
+    for match in spec.keyword_pattern.finditer(text):
+        start, end = match.span()
+        window_start = max(0, start - 50)
+        window_end = min(len(text), end + _PROXIMITY_CHARS)
+        window = text[window_start:window_end]
+        if spec.context_pattern.search(window):
+            return True
+    return False
+
+
+# Backwards-compatible alias kept so existing callers / external tests
+# that imported ``BLOCK_LABEL_PATTERNS`` still resolve. Each entry is
+# now a (name, BlockSpec) pair; consumers should call _block_is_present.
+BLOCK_LABEL_PATTERNS = tuple((spec.name, spec) for spec in BLOCKS)
 
 IRI_PATTERN = re.compile(
     r"\b(?:iut|person|paper|claim|evidence|event):[A-Za-z][A-Za-z0-9_.]*"
@@ -222,11 +344,14 @@ def call_claude(
 
     Round 8 audit (v0.7.7): the protocol contract from
     ``LLM_CONTEXT.md`` is moved to the ``system`` parameter of the
-    Messages API. Vendors that honour a system slot (Claude / GPT)
-    treat protocol-level instructions with higher steerability there
-    than inside the user message; vendors that have only a user slot
-    can fall back to concatenation. ``system_text=None`` preserves
-    the v0.7.4 concatenation behaviour for back-compat.
+    Messages API. Round 9 audit (v0.7.8) flagged that the
+    ``system_text=None`` branch is dead code under the current
+    ``--vendor`` choices restriction: ``main()`` always passes a
+    system_text. The branch is retained as a small safety valve for
+    future vendor implementations (e.g. Llama-style providers that
+    do not surface a system slot) — explicitly an "unused-yet"
+    code path, not a "Llama-fallback" claim. The vendor choice
+    enforcement at the CLI layer ensures only Claude reaches here.
 
     Raises RuntimeError on transport / API errors so the workflow can
     classify them.
@@ -323,14 +448,21 @@ def collect_known_iris(context: str, data_dir: Path | None = None) -> set[str]:
 
 
 def verify_structure(response_text: str, context: str) -> StructuralResult:
-    """Apply the 5-block structural rubric."""
+    """Apply the 5-block structural rubric.
+
+    Round 9 (v0.7.8): block presence is decided by ``_block_is_present``,
+    which evaluates header-style match (tier 1) OR keyword + proximity-
+    context-word match (tier 2). This catches both numbered-list
+    responses and natural-prose responses without re-introducing the
+    bare-keyword false-positive class that v0.7.7 sealed.
+    """
     found: list[str] = []
     missing: list[str] = []
-    for label, pattern in BLOCK_LABEL_PATTERNS:
-        if pattern.search(response_text):
-            found.append(label)
+    for spec in BLOCKS:
+        if _block_is_present(spec, response_text):
+            found.append(spec.name)
         else:
-            missing.append(label)
+            missing.append(spec.name)
 
     known = collect_known_iris(context)
     response_iris = {_normalise_iri(raw) for raw in IRI_PATTERN.findall(response_text)}

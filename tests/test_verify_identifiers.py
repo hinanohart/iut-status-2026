@@ -113,6 +113,18 @@ class IsbnChecksumTests(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("length", detail)
 
+    def test_unicode_dash_isbn_strip(self) -> None:
+        # Round 9 audit (v0.7.8): regression test for v0.7.7 Unicode-dash
+        # NFKC + Pd category strip. en-dash (U+2013) and em-dash (U+2014)
+        # in a JP-pasted ISBN must reduce to the same valid digits.
+        # 978-4-04-400417-0 (Kato 2019) variants:
+        en_dash_isbn = "978–4–04–400417–0"
+        em_dash_isbn = "978—4—04—400417—0"
+        nbsp_isbn = "978 4 04 400417 0"
+        for variant in (en_dash_isbn, em_dash_isbn, nbsp_isbn):
+            ok, _ = vi.validate_isbn(variant)
+            self.assertTrue(ok, f"variant {variant!r} should be valid")
+
 
 class DoiPatternTests(unittest.TestCase):
     def test_prims_doi(self) -> None:

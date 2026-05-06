@@ -61,7 +61,7 @@ Key concepts established: `iut:Frobenioid`, `iut:etale_theta`, `iut:mono_theta_e
 ## 8.4 The Scholze–Stix exchange (2018)
 
 - **2018-03-15** (date approximate per `timeline.json`) — Scholze and Stix visit RIMS in person (5-day session, Kyoto).
-  `event:2018_scholze_stix_visit` | actors: Scholze, Stix, Mochizuki, Hoshi, Yamashita
+  `event:2018_scholze_stix_visit` | actors: Scholze, Stix, Mochizuki, Hoshi (Round 7 audit removed Yamashita: primary sources Wikipedia + ncatlab corroborate the four named only)
 
   During the visit, Mochizuki acknowledged some of Scholze–Stix's simplifications regarding the description of F-circ-times-mu-prime strips (`claim:ss_simplifications_kyoto_agreement_scope`). The scope of this agreement is itself subsequently disputed.
 

@@ -112,11 +112,21 @@ def _render_claim(claim: Claim, graph: IutGraph) -> str:
     for ev_id in claim.evidence:
         ev = graph.evidence.get(ev_id)
         if ev and ev.url:
-            parts.append(f"  - [{ev.label}]({ev.url})\n")
+            # Round 9 audit (v0.7.8): expose archive_url alongside url so
+            # readers of disputes.md / overview.md have a Wayback fallback
+            # when the primary URL rots.
+            archive_suffix = (
+                f" ([archive]({ev.archive_url}))" if ev.archive_url else ""
+            )
+            parts.append(f"  - [{ev.label}]({ev.url}){archive_suffix}\n")
         elif ev:
             parts.append(f"  - {ev.label}\n")
         else:
             parts.append(f"  - `{ev_id}` (record not yet in evidence.json)\n")
+    if claim.specific_support:
+        # Round 9 audit (v0.7.8): specific_support was added in v0.7.7
+        # context.jsonld but never surfaced in the human-readable view.
+        parts.append(f"- specific support: {claim.specific_support}\n")
     if claim.specific_objection:
         parts.append(f"- specific objection: {claim.specific_objection}\n")
     if claim.status:

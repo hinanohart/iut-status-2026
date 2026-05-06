@@ -46,12 +46,52 @@ SAMPLE_CONTEXT = (
 )
 
 
+SAMPLE_RESPONSE_NATURAL_PROSE = """
+Mochizuki maintains that Cor. 3.12 holds and the proof is correct
+(see iut:Cor.3.12 and the IUTchIII essential logical structure).
+The Scholze-Stix 2018 critique alleges a gap at the distinct-copies
+identification step; their report Why ABC Is Still A Conjecture
+raised the issue (claim:scholze_stix_2018_main).
+Joshi proposes an alternative formulation in the ATS arXiv 2025
+series (claim:joshi_2025_alternative, evidence:Joshi_arxiv_2505_10568).
+Pending peer review for the ATS preprint.
+Unresolved: third-party verification consensus has not been reached.
+"""
+
+
 class StructuralVerifyTests(unittest.TestCase):
     def test_pass_on_complete_response(self) -> None:
         result = rcs.verify_structure(SAMPLE_RESPONSE_GOOD, SAMPLE_CONTEXT)
         self.assertEqual(result.overall, "pass")
         self.assertEqual(len(result.blocks_found), 5)
         self.assertEqual(result.missing_blocks, ())
+
+    def test_pass_on_natural_prose_response(self) -> None:
+        # Round 9 audit (v0.7.8): the v0.7.7 strict header-only patterns
+        # would mark every block missing for a natural-prose response.
+        # The 2-tier matcher must let this through.
+        result = rcs.verify_structure(
+            SAMPLE_RESPONSE_NATURAL_PROSE, SAMPLE_CONTEXT
+        )
+        self.assertEqual(
+            result.overall, "pass",
+            f"natural-prose response should pass; "
+            f"missing={result.missing_blocks}",
+        )
+        self.assertEqual(len(result.blocks_found), 5)
+
+    def test_bare_keyword_alone_is_not_enough(self) -> None:
+        # Round 8/9 invariant: a bare mention without context still
+        # counts as missing — the keyword needs a proximity context word.
+        bare = (
+            "Mochizuki was at RIMS. Scholze and Stix were at Bonn. "
+            "Joshi at Arizona. Pending. Unresolved."
+        )
+        result = rcs.verify_structure(bare, SAMPLE_CONTEXT)
+        # Header style "Pending" / "Unresolved" alone with no qualifier
+        # should still fail tier 1, but proximity-context for these is
+        # generous; minimum invariant is that *some* of the blocks fail.
+        self.assertNotEqual(result.overall, "pass")
 
     def test_fail_on_missing_blocks(self) -> None:
         result = rcs.verify_structure(
