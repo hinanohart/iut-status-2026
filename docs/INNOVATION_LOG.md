@@ -120,6 +120,14 @@ recorded with date and commit SHA where relevant.
   factually-grounded controversy; useful for academic LLM evaluation
   research.
 
+### R. URL liveness verifier (`tools/verify_urls.py`)
+- **Idea**: Bridge the round-4-5-6 systemic gap where `validate.py` only checks internal graph consistency; never compares graph URLs to external reality. Three fabrication-class defects (Joshi v2, Woit dating, IRI drift) survived four audit rounds before this gap was diagnosed.
+- **Status**: **Implemented** (v0.6, commit pending).
+- **Files**: `tools/verify_urls.py`, `tests/test_verify_urls.py`.
+- **Mode**: offline (default, syntax check only) + `--network` flag (opt-in HTTP HEAD/GET, suitable for scheduled CI).
+- **Limitation acknowledged**: catches URL-resolves-to-200 only; the Woit Round-6 case was a content-vs-metadata mismatch (URL alive but date/topic wrong). Manual content review still required.
+- **Future**: Wayback Machine fallback when primary URL fails; PDF SHA-256 + content-pattern check.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---

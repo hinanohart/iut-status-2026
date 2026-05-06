@@ -22,6 +22,10 @@ jobs:
         run: python -m unittest tests.test_validation -v
       - name: Run Merkle tests
         run: python -m unittest tests.test_merkle -v
+      - name: Run URL verifier tests (offline path)
+        run: python -m unittest tests.test_verify_urls -v
+      - name: Verify URL syntax (offline)
+        run: python tools/verify_urls.py
       - name: Render docs (smoke test)
         run: python tools/render_md.py --data data --out /tmp/docs-smoke
       - name: MCP server smoke test
