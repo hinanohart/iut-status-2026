@@ -1112,6 +1112,21 @@
       "informal_md": "docs/section_5_multiradial/5d_ind3_log_volume_deep.md",
       "section": "05_multiradial",
       "verified_at": "2026-05-06"
+    },
+    {
+      "id": "iut:abc_special_case_via_iut",
+      "type": "Theorem",
+      "label": "abc conjecture as special case of Theorem A (IUTchIV Cor 2.3)",
+      "alt_labels": ["abc via Thm A"],
+      "introduced_by": "person:Mochizuki",
+      "introduced_year": "2012",
+      "definedIn": "paper:IUTchIV",
+      "depends_on": ["iut:height_inequality", "iut:abc_conjecture", "iut:Cor.3.12"],
+      "informal_md": "docs/section_7_abc.md",
+      "lean_stub": "theorem abc_special_case_via_iut : Prop := by sorry",
+      "lean_module": "IutStatus.ABC",
+      "section": "07_abc",
+      "verified_at": "2026-05-06"
     }
   ]
 }
