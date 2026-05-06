@@ -137,6 +137,14 @@ recorded with date and commit SHA where relevant.
 - **Limitations**: SPN anonymous quota fluctuates (~10 req / min / IP); paywalled hosts and `robots.txt`-excluded URLs are not archivable; ISBNs are not URLs (separate v0.7.x DOI/ISBN extension planned).
 - **Why it complements R**: R detects "URL is alive vs dead" *now*; S preserves "what URL was *meant to point to* at cite time", enabling content-vs-metadata mismatch detection (Round-6 Woit class) once a follow-up audit fetches both live URL and `archive_url` and diffs them.
 
+### T. DOI / ISBN identifier verifier (`tools/verify_identifiers.py`)
+- **Idea**: Round 7 (v0.6.1) closed a Kato-book ISBN fabrication that `verify_urls.py` cannot detect because URL liveness has nothing to say about identifier-registry integrity. This candidate adds a structural layer: ISO 2108 ISBN-10 / ISBN-13 checksum + ANSI/NISO Z39.84-2010 DOI pattern, plus opt-in network resolution via doi.org and Open Library.
+- **Status**: **Implemented** (v0.7.1, commit pending).
+- **Files**: `tools/verify_identifiers.py`, `tests/test_verify_identifiers.py`.
+- **Modes**: offline (default; structural checksum + pattern; CI-safe) / `--check-doi` (HEAD doi.org; alive=2xx/3xx, invalid=4xx/5xx) / `--check-isbn` (Open Library API; 404=unresolved, not invalid, since JP coverage is partial).
+- **Happy finding**: the Round-7 fabricated ISBN `978-4-04-110262-7` actually **fails** the ISBN-13 checksum (sum 91 mod 10 = 1 ≠ 0). Cross-source verification was the gold standard for Round 7, but this tool would have caught it structurally; pinned by `test_isbn13_round7_fabricated_fails_checksum` so the regression cannot recur silently.
+- **Limitation**: Open Library Japanese-language coverage is partial — a 404 is mapped to `unresolved` rather than `invalid` to avoid CI failures on legitimately-rare titles. Future v0.7.x may add NDL Search API for stronger JP coverage.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---

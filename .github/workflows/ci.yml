@@ -26,10 +26,14 @@ jobs:
         run: python -m unittest tests.test_verify_urls -v
       - name: Run archive_evidence tests (offline path)
         run: python -m unittest tests.test_archive_evidence -v
+      - name: Run verify_identifiers tests (offline path)
+        run: python -m unittest tests.test_verify_identifiers -v
       - name: Verify URL syntax (offline)
         run: python tools/verify_urls.py
       - name: Archive evidence offline summary
         run: python tools/archive_evidence.py
+      - name: Verify DOI / ISBN identifiers (offline)
+        run: python tools/verify_identifiers.py
       - name: Render docs (smoke test)
         run: python tools/render_md.py --data data --out /tmp/docs-smoke
       - name: MCP server smoke test
