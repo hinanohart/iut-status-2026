@@ -128,6 +128,15 @@ recorded with date and commit SHA where relevant.
 - **Limitation acknowledged**: catches URL-resolves-to-200 only; the Woit Round-6 case was a content-vs-metadata mismatch (URL alive but date/topic wrong). Manual content review still required.
 - **Future**: Wayback Machine fallback when primary URL fails; PDF SHA-256 + content-pattern check.
 
+### S. Wayback Machine archival bootstrap (`tools/archive_evidence.py`)
+- **Idea**: Round 4-7 audits found four fabrication-class defects (Joshi v2 fictional, Woit blog dating drift, Kato ISBN fabrication, PRIMS issue ID drift) whose common root cause is **external reality drift**: the cited material itself moves, mutates, or vanishes. R (`verify_urls.py`) detects URL-no-longer-resolves; this candidate captures the snapshot at-cite-time so a Round-N+1 audit can compare the live URL against what the graph originally cited.
+- **Status**: **Implemented** (v0.7.0, commit pending).
+- **Files**: `tools/archive_evidence.py`, `tests/test_archive_evidence.py`, `schemas/evidence.json` + `schemas/timeline.json` (`archive_url` optional field), `loaders/python_minimal.py` (Evidence + TimelineEvent dataclasses extended).
+- **Modes**: offline (collect-and-classify, no network) / `--network --lookup` (Availability API, read-only) / `--network --submit` (Save Page Now, anonymous, rate-limited 12 s/req). `--apply` writes back to `data/*.json`.
+- **Drift-zero contract**: the tool never synthesises a `web.archive.org/web/<timestamp>` value. Every populated `archive_url` is taken verbatim from API response or redirect Location header. Synthesising a snapshot URL without API confirmation would itself be a fabrication-class defect of the type Round-7 closed.
+- **Limitations**: SPN anonymous quota fluctuates (~10 req / min / IP); paywalled hosts and `robots.txt`-excluded URLs are not archivable; ISBNs are not URLs (separate v0.7.x DOI/ISBN extension planned).
+- **Why it complements R**: R detects "URL is alive vs dead" *now*; S preserves "what URL was *meant to point to* at cite time", enabling content-vs-metadata mismatch detection (Round-6 Woit class) once a follow-up audit fetches both live URL and `archive_url` and diffs them.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---

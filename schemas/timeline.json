@@ -19,6 +19,11 @@
     "url": {
       "type": "string",
       "description": "Source URL for the event (kurims news entry, arXiv abstract page, conference program page, etc.) — added at v0.5.2 to prevent fabrication-class drift surfaced by round-6 audit."
+    },
+    "archive_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Wayback Machine (or other archival) snapshot URL for the primary `url`. Particularly important for events pinned to volatile index pages such as `kurims.kyoto-u.ac.jp/~motizuki/news-english.html` whose entries rotate over time."
     }
   },
   "additionalProperties": false

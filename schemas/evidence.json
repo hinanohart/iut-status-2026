@@ -13,6 +13,11 @@
     "type": {"enum": ["Paper", "Blog", "Talk", "Book", "Project"]},
     "label": {"type": "string", "minLength": 5},
     "url": {"type": "string", "format": "uri"},
+    "archive_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Wayback Machine (or other archival) snapshot URL for the primary `url`. Optional in v0.7.0 (population follow-up); v0.7.x must-band #6 will require Paper / Blog / Book records to carry an archive_url so that Round-6-class content drift can be detected post-hoc."
+    },
     "doi": {"type": "string"},
     "isbn": {"type": "string"},
     "publisher": {"type": "string"},
