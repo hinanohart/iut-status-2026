@@ -31,10 +31,16 @@ Contributions are welcome under the rules below.
 2. PR description must list every IRI added/modified.
 3. CI must pass:
    - `python tools/validate.py` (structural)
+   - `python tools/property_audit.py` (schema-to-consumer drift gate; v0.7.9+)
    - `python -m unittest tests.test_validation` (semantic)
+   - `python -m unittest tests.test_property_audit` (audit self-tests)
    - Lean build (when applicable)
 4. PR that adds a claim must also add its evidence record in the same PR.
-5. PR that asserts "the dispute is over" or any equivalent will be closed.
+5. PR that adds, renames, or removes a JSON-Schema property must
+   follow the checklist in `docs/PROPERTY_PROPAGATION.md`. The CI gate
+   blocks merge if the property does not propagate to all four
+   downstream surfaces (context / loader / MCP / render).
+6. PR that asserts "the dispute is over" or any equivalent will be closed.
 
 ## Citation policy
 

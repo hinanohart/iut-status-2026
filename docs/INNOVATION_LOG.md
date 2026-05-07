@@ -202,6 +202,22 @@ recorded with date and commit SHA where relevant.
 - **Drift-zero contract restoration**: 5 fields silently dropped at MCP layer for 1+ releases. Consumer chain now sweeps every dataclass field via the parity test.
 - **Process meta-finding**: 8 connected releases (v0.7.0 → v0.7.7) in 1 day exceeded the cadence at which prose-layer + consumer-chain drift can be sanity-checked. Round 8 critic's recommendation "per-release mini-audit instead of batch-end audit" stands; Round 9 going batch-style was an audit-process drift in itself. Round 10 (if user-override fires) should be 1-agent per-release form, or accept that further batch audits will continue surfacing 1-2 CRITICAL each round at decreasing marginal cost.
 
+### AA. v0.7.9 — `tools/property_audit.py` (R4-R9 systemic root-cause structural fix)
+
+- **Idea**: Rounds 4-9 each surfaced ≥ 1 CRITICAL drift in the same class — schema property declared in `schemas/*.json` failed to propagate to one of the consumer surfaces (context.jsonld, loaders/python_minimal.py, mcp/server.py, tools/render_md.py). Round 9 critic concluded that *per-release audits cannot replace a structural gate*; v0.7.9 is the structural gate. `tools/property_audit.py` enumerates every schema property and verifies presence at L1-L4 with indent-bounded source slicing for nested dispatch branches. L4 (render) is opt-in via per-property `render_optional` allow-list to keep the human-readable Markdown view curated.
+- **Status**: **Implemented** (v0.7.9, commit pending).
+- **Drift caught on first run**: `_claim_to_json` was silently dropping the `type` field (entity serializer emitted it; claim serializer did not). Identical R9-class drift, surviving R9. The audit caught it on its first execution — direct empirical validation.
+- **Files**:
+  - `tools/property_audit.py` (new, 323 lines) — full audit driver; `--json` machine-readable mode; `--schema <file>` filter; indent-aware function-body slicing handles nested branches inside `_dispatch_tool`.
+  - `tests/test_property_audit.py` (new, 9 cases) — `CleanRepoAuditTests` (4 cases: clean repo passes, JSON mode parses, single-schema filter, unknown-schema is no-op), `DriftInjectionTests` (3 cases: L1/L2/L3 drift in tempdir copies must fail audit), `PolicyContractTests` (2 cases: every policy points to a real schema; render_optional ⊆ schema properties).
+  - `mcp/server.py:108`: `_claim_to_json` now emits `"type": claim.type` (drift fix uncovered by audit).
+  - `.github/workflows/ci.yml`: new `Property propagation audit` step + `Run property audit tests` step, both gating merge.
+  - `docs/PROPERTY_PROPAGATION.md` (new) — checklist for adding/renaming/removing schema properties; lists every consumer surface and the precise edit each one requires.
+  - `CONTRIBUTING.md`: PR rule #3 expanded to include `property_audit.py` and `test_property_audit`; new rule #5 references `PROPERTY_PROPAGATION.md`.
+- **Why this closes the class**: a property added to schema without propagation now fails CI. The audit is content-light (source-string presence checks) but contract-strict (every schema property × every required surface). False positives are impossible by construction (the schema is the source); false negatives require either (a) the policy `render_optional` to be too permissive, or (b) a new consumer surface added without extending the audit, both of which are conscious acts visible in PR diff.
+- **What this does NOT close**: semantic correctness (property values can still be wrong), prose-layer scrub (Round 8 class — repairs to `data/` followed by stale prose in `docs/section_*.md`), or external-reality drift (Round 6 class — URL rot). These remain handled by `tools/validate.py`, the `Render docs and check committed artefacts in sync` CI gate, and `tools/verify_urls.py` respectively.
+- **Forward**: a future Round N audit finding multi-layer property drift would mean the audit policy itself needs tightening (render_optional too permissive, or a new consumer surface added without extending POLICIES). The audit is the gate, not the answer; it makes the gate cheap.
+
 ### Q. (open slot for future innovation-explorer findings)
 
 ---
