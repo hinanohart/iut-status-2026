@@ -1,0 +1,76 @@
+name: PR label gate
+# CONTRIBUTING.md PR rule #1 mechanically enforced.
+#
+# Background: until v0.7.10 the label requirement was a documentation
+# claim only; nothing checked PR labels at merge time. This workflow
+# closes the governance gap surfaced by the round-7 honest revision of
+# AUDIT_PROVENANCE.md (the gate exists in policy but not in machinery).
+#
+# Behaviour: a PR must carry exactly ONE of the allowed labels. Zero
+# labels OR multiple allowed labels both fail the gate; merge is blocked
+# until the contributor (or maintainer) reapplies labels.
+
+on:
+  pull_request:
+    # Trigger whenever labels change so re-running is cheap; also on
+    # open / sync so a label set at PR creation is verified up-front.
+    types: [opened, reopened, edited, synchronize, labeled, unlabeled]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  enforce_one_label:
+    name: Enforce CONTRIBUTING.md PR rule #1 (exactly one allowed label)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify exactly one allowed label is present
+        env:
+          PR_LABELS_JSON: ${{ toJson(github.event.pull_request.labels) }}
+          ALLOWED_LABELS: "evidence-only claim-add entity-add lean-stub schema docs-fix infra"
+        run: |
+          set -euo pipefail
+          # Extract label names from the JSON array provided by GitHub.
+          # Use python so we don't add a jq dependency to the runner.
+          mapfile -t pr_label_names < <(python3 - <<'PY'
+          import json, os, sys
+          payload = os.environ.get("PR_LABELS_JSON", "[]")
+          try:
+              labels = json.loads(payload)
+          except json.JSONDecodeError as exc:
+              print(f"::error::failed to parse pull_request.labels JSON: {exc}", file=sys.stderr)
+              raise SystemExit(2)
+          for label in labels:
+              name = label.get("name") if isinstance(label, dict) else None
+              if name:
+                  print(name)
+          PY
+          )
+
+          allowed=( ${ALLOWED_LABELS} )
+          declare -A allowed_map=()
+          for a in "${allowed[@]}"; do allowed_map["$a"]=1; done
+
+          matches=()
+          for name in "${pr_label_names[@]}"; do
+            if [[ -n "${allowed_map[$name]:-}" ]]; then
+              matches+=("$name")
+            fi
+          done
+
+          n_match=${#matches[@]}
+          n_total=${#pr_label_names[@]}
+
+          echo "::notice::PR carries ${n_total} label(s); ${n_match} are in the allowed set."
+          if [[ ${n_match} -eq 0 ]]; then
+            echo "::error::No allowed CONTRIBUTING.md PR rule #1 label is present."
+            echo "::error::Add exactly one of: ${ALLOWED_LABELS}"
+            exit 1
+          fi
+          if [[ ${n_match} -gt 1 ]]; then
+            echo "::error::Multiple allowed labels present: ${matches[*]}."
+            echo "::error::CONTRIBUTING.md PR rule #1 requires exactly one. Remove the extras."
+            exit 1
+          fi
+
+          echo "::notice::PR rule #1 passes — exactly one allowed label: ${matches[0]}"
