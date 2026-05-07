@@ -53,7 +53,7 @@ operational definition.
 | Level | Statement | Feasibility |
 |---|---|---|
 | **L1** AI Navigation Capability | A fresh LLM session can resolve every IRI, apply the 5-block answer template, and decline gracefully when the graph is silent. | Achievable in this OSS alone; auto-verifiable. |
-| **L2** Asymptotic Statement Coverage | Every numbered statement in IUTchI–IV, Frobenioids I–II, *Étale Theta*, *Alien Copies*, Mochizuki *Rpt2018* / *Cmt2018-05* / *IUT-2025-10*, Yamashita FAQ, Scholze–Stix 2018, and Joshi v1+v2 is registered. | **Asymptotic, never absolute** — new papers re-extend the goalpost. |
+| **L2** Asymptotic Statement Coverage | Every numbered statement in IUTchI–IV, Frobenioids I–II, *Étale Theta*, *Alien Copies*, Mochizuki *Rpt2018* / *Cmt2018-05* / *IUT-2025-10*, Yamashita FAQ, Scholze–Stix 2018, Joshi v1, and Joshi FAQ 2025-11 is registered. | **Asymptotic, never absolute** — new papers re-extend the goalpost. |
 | **L3** Mathematical Understanding (validity judgement) | Decide whether IUT proves abc; whether SS critique is terminal; whether Joshi reformulation succeeds. | **Out of scope, intentionally and permanently.** Delegated to LANA + future external reviews. |
 
 The repository's "100 %" target is L1 = 100 % + L2 best-effort asymptote.
@@ -273,7 +273,8 @@ See `LLM_CONTEXT.md` §8 for the full reusability checklist.
 
 - [LANA project](https://zen.ac.jp/en/zmc/topics/jwz-o8xr3v6f) — Lean 4 formalization (2026-03-31, ongoing)
 - [Mochizuki, "On the Formalization of IUT" (2026-04)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Formalization%20of%20IUT%20(2026-04).pdf)
-- [Joshi, arXiv:2505.10568 v2 (2026-05-02)](https://arxiv.org/abs/2505.10568v2)
+- [Joshi, arXiv:2505.10568 v1 (2025-04-29)](https://arxiv.org/abs/2505.10568v1)
+- [Joshi, "FAQ on Mochizuki–Joshi" (2025-11)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
 - [Scholze-Stix, "Why abc is still a conjecture" (2018)](https://www.math.uni-bonn.de/people/scholze/WhyABCisStillaConjecture.pdf)
 - [Mochizuki, "Report on Discussions" (2018-09)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Rpt2018.pdf)
 - [Yamashita, "A proof of abc conjecture after Mochizuki" (2024-06)](https://www.kurims.kyoto-u.ac.jp/~gokun/DOCUMENTS/abc2024Jun25.pdf)

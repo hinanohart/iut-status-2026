@@ -271,9 +271,16 @@ def _dispatch_tool(
         # Round 9 audit (v0.7.8): url + archive_url were silently
         # dropped; LLM consumers asking "where can I read about this
         # event?" got nothing back.
+        # Round 10 audit (v0.7.13): the `type` field was being silently
+        # dropped here even though property_audit's substring match
+        # accidentally PASSed (the MCP envelope `{"type": "text"}`
+        # below provided a false-positive substring hit). Re-emitting
+        # the field; envelope-mask added to property_audit closes the
+        # checker bypass.
         payload_list = [
             {
                 "id": e.id,
+                "type": e.type,
                 "label": e.label,
                 "date": e.date,
                 "actors": list(e.actors),
@@ -316,27 +323,71 @@ def main() -> int:
         try:
             req = json.loads(line)
         except json.JSONDecodeError:
-            logger.warning("malformed JSON-RPC line: %r", line)
+            # JSON-RPC 2.0 §4.4: parse error response carries id=null.
+            sys.stdout.write(
+                json.dumps(_make_error(None, -32700, "parse error"), ensure_ascii=False) + "\n"
+            )
+            sys.stdout.flush()
             continue
 
-        method = req.get("method")
-        request_id = req.get("id")
-
-        if method == "initialize":
-            response = handle_initialize(request_id)
-        elif method == "tools/list":
-            response = handle_tools_list(request_id)
-        elif method == "tools/call":
-            response = handle_tools_call(request_id, req.get("params", {}), graph)
-        elif method == "notifications/initialized":
-            continue
-        else:
-            response = _make_error(request_id, -32601, f"unknown method: {method}")
-
-        sys.stdout.write(json.dumps(response, ensure_ascii=False) + "\n")
-        sys.stdout.flush()
+        # Round 10 audit (v0.7.13): JSON-RPC 2.0 §6 batch handling +
+        # §1.2 notification (no `id` key) handling + §4.4 invalid-type
+        # rejection. Prior versions crashed on `[…]` / null / 42 /
+        # "string" inputs with `'list' object has no attribute 'get'`.
+        responses = _handle_jsonrpc(req, graph)
+        for response in responses:
+            sys.stdout.write(json.dumps(response, ensure_ascii=False) + "\n")
+            sys.stdout.flush()
 
     return 0
+
+
+def _handle_jsonrpc(req: object, graph: IutGraph) -> list[dict]:
+    """Dispatch a single or batch JSON-RPC 2.0 message.
+
+    Returns the list of response objects to emit (possibly empty for
+    notifications and notification-only batches).
+    """
+    if isinstance(req, list):
+        # JSON-RPC 2.0 §6: batch — empty array → invalid request.
+        if not req:
+            return [_make_error(None, -32600, "invalid request: empty batch")]
+        out: list[dict] = []
+        for item in req:
+            out.extend(_handle_jsonrpc(item, graph))
+        return out
+
+    if not isinstance(req, dict):
+        return [_make_error(None, -32600, "invalid request: not an object")]
+
+    method = req.get("method")
+    # JSON-RPC 2.0 §1.2: a notification is a Request object that has no
+    # `id` member. `id: null` is NOT a notification; it is a Request
+    # whose response id is null. Use `"id" in req` to distinguish.
+    is_notification = "id" not in req
+    request_id = req.get("id")
+
+    if not isinstance(method, str):
+        if is_notification:
+            return []
+        return [_make_error(request_id, -32600, "invalid request: missing or non-string method")]
+
+    if method == "initialize":
+        response = handle_initialize(request_id)
+    elif method == "tools/list":
+        response = handle_tools_list(request_id)
+    elif method == "tools/call":
+        response = handle_tools_call(request_id, req.get("params", {}), graph)
+    elif method == "notifications/initialized":
+        return []
+    else:
+        if is_notification:
+            return []
+        response = _make_error(request_id, -32601, f"unknown method: {method}")
+
+    if is_notification:
+        return []
+    return [response]
 
 
 if __name__ == "__main__":

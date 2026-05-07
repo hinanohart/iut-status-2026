@@ -8,13 +8,20 @@ of independence behind the design.
 
 ## Disclaimer (top of every audit doc)
 
-> All audit rounds for this repository, through commit `591fab2`
-> (v0.2.3), were produced inside a single Claude (Anthropic) family
-> session, by sub-agents with shared model weights. **Independence
-> across LLM vendors is not established at this time.** Multi-vendor
-> evidence is the responsibility of the L1 cold-start CI matrix in
-> `docs/cold_start_evidence.md`; that file is the source of truth for
-> independence claims, not the audit documents themselves.
+> All audit rounds for this repository, through commit `a0de80e`
+> (v0.7.12) and Round 10 closure at v0.7.13, were produced inside a
+> single Claude (Anthropic) family session, by sub-agents with shared
+> model weights. **Independence across LLM vendors is not established
+> at this time.** Multi-vendor evidence is the responsibility of the
+> L1 cold-start CI matrix in `docs/cold_start_evidence.md`; that file
+> is the source of truth for independence claims, not the audit
+> documents themselves. Round 10 (v0.7.13) was the first round to
+> empirically falsify the v0.7.9 / 9.5 claim that the property-drift
+> class was "structurally closed" — `iut_timeline` was silently
+> dropping the `type` field while the substring-based property_audit
+> kept reporting OK, because the MCP response envelope
+> `{"type": "text"}` shared the schema property name. The fix
+> upgrades property_audit to AST-based payload-dict-key extraction.
 
 ## Round table
 
@@ -33,6 +40,7 @@ of independence behind the design.
 | 9.5 | 2026-05-07 | systemic root-cause repair (post-Round-9, no new audit) | architect + analyst | Same Claude session | None — same family. v0.7.9 ships `tools/property_audit.py` + CI gate to close the R4-R9 multi-layer-drift class structurally rather than via further per-round detection. Empirical validation: the audit caught a fresh CRITICAL on its first execution (`_claim_to_json` silently dropped the `type` field — entity serializer emitted, claim serializer did not). Fix shipped in the same commit. | `_claim_to_json` `type` field drop (R9-class drift that survived R9); structural gate now blocks this class going forward |
 | 9.6 | 2026-05-07 | deferred-finding cleanup (Architect Sec-8 + HIGH-2 + governance honest-revision) | n/a (test + governance machinery, not an audit round) | Same Claude session | None — same family. v0.7.10 closes three deferred items: (i) `tools/render_md.py` and `loaders/python_minimal.py` had no direct unit tests (Architect Sec-8); (ii) `data/context.jsonld` had only forward-direction coverage from property_audit (HIGH-2); (iii) CONTRIBUTING.md PR rule #1 had no machinery (Round 7 honest-revision). | n/a — no new finding; repairs Architect Sec-8 / HIGH-2 / Round-7 governance gaps. Test count 100 → 168. |
 | 9.7 | 2026-05-07 | deferred-finding cleanup (R7 jp-ISBN fabrication-class + v0.7.0 schema population) | n/a (resolver extension + data rotation, not an audit round) | Same Claude session | None — same family. v0.7.11 extends `verify_identifiers.py` with NDL Search API fallback for Japanese-group ISBNs; v0.7.12 runs a passive Wayback Availability lookup against the live graph and applies the 3 found snapshots (5.5 % hit rate of with-URL records). Merkle root rotated `6736c24a…` → `c516d24f…`. | n/a — no new finding; closes R7 fabrication-class gap (jp ISBN now machine-checkable) + v0.7.0 archive_url empty-state. 52 records deferred to v0.7.13 Save Page Now sweep. |
+| 10 | 2026-05-07 | user override「3エージェントで欠陥や漏れがないか徹底的にチェック前提すら疑って修正したり改善したり」(after Round 9.7 deferred-finding closure) | analyst + architect + critic (independent prompts, no cross-pollination) | Same Claude session | None — same family. Three independent sub-agents converged on overlapping CRITICAL findings (multiple agents independently surfaced the README Joshi v2 fabrication regression and the MCP `type`-field drop), strengthening confidence beyond single-agent variance. | **README.md:276 Joshi v2 fictional URL** (R5 closure regression — `arXiv:2505.10568v2 (2026-05-02)` clickable link survived 5 release boundaries because `test_audit_known_corrections_not_in_docs` only scanned `docs/`, not repo-root `*.md`) + **`mcp/server.py` iut_timeline silently drops `type` field** (R9.5 closure regression — substring-based property_audit was fooled by the MCP envelope `{"type": "text"}`, so the same drift class R9.5 claimed to "structurally close" survived in a different emitter) + **`schemas/timeline.json` url field had no format/scheme constraint** (`javascript:alert(1)` / `file:///` / `data:` were silently accepted; XSS surface for any future renderer) + **MCP server JSON-RPC 2.0 spec violations** (batch crash, notification responses sent against §4.1, non-object root crash) + **`docs/section_2_hodge_theater.md:83` IRI typo** (`iut:Theta-link, iut:log-link` — data/ uses snake_case `theta_link, log_link`) + **`docs/section_8_disputes_timeline.md:188` Woit IRIs reference 2025 records that don't exist in data/** (only 2024 records exist; this is the same R5/R6/R8/R9 docs-cite-nonexistent-IRI class re-surfacing in curated section docs which had no structural gate, so v0.7.13 added `test_section_docs_iris_resolve_in_data`); meta-finding: per-release mini-audit cadence is now operationally established and continues to surface real CRITICAL each round. |
 
 ## Numerical premises and their verification status
 

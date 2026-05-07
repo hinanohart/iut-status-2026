@@ -80,7 +80,7 @@ This document records the 3-agent merge of mochizuki-side and SS-side drafts of 
 
 ## Cross-reference
 
-- IRI / Lean stub mapping: `data/entities.json` (`iut:HodgeTheater`, `iut:Theta-link`, `iut:log-link`).
+- IRI / Lean stub mapping: `data/entities.json` (`iut:HodgeTheater`, `iut:theta_link`, `iut:log_link`).
 - Dispute claim graph: `data/claims.json` — relevant nodes: `claim:scholze_stix_2018_sub_1`, `claim:scholze_stix_2018_sub_2`, `claim:scholze_stix_2018_sub_3`, `claim:scholze_stix_2018_main`, `claim:mochizuki_2012_proves_abc`, `claim:mochizuki_2018_response`.
 - Per-side drafts (do NOT cite as source of truth): `docs/concepts/hodge_theater.md`, `docs/concepts/hodge_theater_ss_view.md`.
 - Section 1 (prerequisites): `docs/section_1_prerequisites.md` — anabelian / Frobenioid / étale theta consensus and disputes feeding into this section.

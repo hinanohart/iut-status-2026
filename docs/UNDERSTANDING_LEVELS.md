@@ -36,7 +36,7 @@ simulation only; multi-vendor test pending; symmetry not yet auto-checked).
 in IUTchI – IUTchIV, in Frobenioids I & II, in *The étale theta function*, in
 the Mochizuki survey *Mathematics of Mutually Alien Copies*, in the Mochizuki
 *Report on Discussions* and *Cmt2018-05* and *IUT-report-2025-10*, in the
-Yamashita FAQ, in Scholze–Stix 2018, and in Joshi v1 / v2, is registered as
+Yamashita FAQ, in Scholze–Stix 2018, in Joshi v1, and in Joshi FAQ 2025-11, is registered as
 an entity or claim with a stable IRI and a `definition_locator`. Every
 position any party has publicly published is registered as a claim.
 
