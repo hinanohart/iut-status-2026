@@ -372,26 +372,34 @@ class GenericityTests(unittest.TestCase):
     def test_documented_test_count_matches_collected(self) -> None:
         """Round 12 audit (v0.7.15) gate: README / ARCHITECTURE /
         INNOVATION_LOG documented test counts must be **at least** the
-        actual ``pytest --collect-only`` count. Drift between those
-        documents (R12 critic M1 found 201/189/204 mismatch across the
-        three) is a cosmetic-but-erodes-trust class. The gate accepts
-        documents that say "204+ cases" / "204 cases" but rejects any
-        document that understates the real count.
-        """
-        import subprocess
+        real test count. Drift between those documents (R12 critic M1
+        found 201/189/204 mismatch across the three) is a
+        cosmetic-but-erodes-trust class. The gate accepts documents
+        that say "204+ cases" / "204 cases" but rejects any document
+        that understates the real count.
 
-        actual = sum(
-            1
-            for line in subprocess.run(
-                [sys.executable, "-m", "pytest", "--collect-only", "-q"],
-                capture_output=True, text=True, cwd=REPO_ROOT, check=False,
-            ).stdout.splitlines()
-            if "::" in line
-        )
-        # Count anchor regex: matches `(NNN cases ... )` or `NNN unittest cases`
-        # in narrative prose. Documents are allowed to use "NNN+" suffix
-        # to mean "at least NNN".
-        count_re = re.compile(r"\b(\d{2,4})\+?\s*(?:cases|unittest cases|tests)\b")
+        Round 12.1 (v0.7.16) follow-up: switched from subprocess
+        pytest invocation (returned 0 in CI because pytest isn't
+        installed under unittest-driven CI) to `unittest.TestLoader`
+        which is stdlib-only and matches the way CI runs tests.
+        """
+        loader = unittest.TestLoader()
+        suite = loader.discover(start_dir=str(REPO_ROOT / "tests"), pattern="test_*.py")
+
+        def _count_tests(s: unittest.TestSuite) -> int:
+            n = 0
+            for child in s:
+                if isinstance(child, unittest.TestSuite):
+                    n += _count_tests(child)
+                else:
+                    n += 1
+            return n
+
+        actual = _count_tests(suite)
+        # Count anchor regex: matches "NNN cases" / "NNN unittest cases"
+        # / "NNN tests" / "NNN tests PASS" in narrative prose. Documents
+        # may use the "NNN+" suffix to mean "at least NNN".
+        count_re = re.compile(r"\b(\d{2,4})\+?\s*(?:unittest\s+)?(?:cases|tests)\b")
         for rel in (
             "README.md",
             "docs/ARCHITECTURE.md",
@@ -402,8 +410,9 @@ class GenericityTests(unittest.TestCase):
                 claimed = int(match.group(1))
                 self.assertLessEqual(
                     claimed, actual,
-                    f"{rel} claims {claimed} tests but pytest collected "
-                    f"{actual}; documented count must not exceed real count",
+                    f"{rel} claims {claimed} tests but unittest discovered "
+                    f"{actual}; documented count must not exceed real count "
+                    f"(matched fragment near offset {match.start()})",
                 )
 
     def test_no_commit_pending_on_implemented_status(self) -> None:
