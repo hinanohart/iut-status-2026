@@ -76,7 +76,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2012-08-30
 - evidence:
   - [Inter-universal Teichmuller Theory I (Construction of Hodge Theaters)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20I.pdf)
-  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf)
+  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf) ([archive](https://web.archive.org/web/20260407152619/https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf))
   - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
   - [Inter-universal Teichmuller Theory IV (Log-Volume Computations and Set-theoretic Foundations)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20IV.pdf)
   - [PRIMS Volume 57, No.1/2 special issue (2021)](https://ems.press/journals/prims/issues/1507)
@@ -151,7 +151,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - proponents: Mochizuki
 - asserted: 2012-08-30
 - evidence:
-  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf)
+  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf) ([archive](https://web.archive.org/web/20260407152619/https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf))
   - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
 - specific support: IUTchII Cor 4.10-iii p.160: Theta-gau-link = composite of Theta-times-mu-link with inverse of Hodge-Arakelov evaluation. IUTchII Rmk 4.10.2-i p.162: 'it is precisely by thinking of [a further enhanced version of] the Theta-times-mu-gau-link as an object that one may establish the crucial multiradiality properties discussed in [IUTchIII], Theorem 3.11.' Value-group transformation q_v to {q^{j²}_v}_{j=1,...,l-star} is the operative Teichmuller deformation content. SS 2018 (10 pp PDF-verified): 0 occurrences of Theta-gau / Gaussian link; SS reduces to F-circ-times-mu output layer without engaging the internal composite structure.
 - status: unresolved-as-of-2026-05
@@ -284,7 +284,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2012-08-30
 - evidence:
   - [The etale theta function and its Frobenioid-theoretic manifestations (Mochizuki 2009)](https://www.kurims.kyoto-u.ac.jp/~motizuki/The%20Etale%20Theta%20Function%20and%20its%20Frobenioid-theoretic%20Manifestations.pdf)
-  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf)
+  - [Inter-universal Teichmuller Theory II (Hodge-Arakelov-theoretic Evaluation)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf) ([archive](https://web.archive.org/web/20260407152619/https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20II.pdf))
   - [Inter-universal Teichmuller Theory III (Canonical Splittings of the Log-Theta-Lattice)](https://www.kurims.kyoto-u.ac.jp/~motizuki/Inter-universal%20Teichmuller%20Theory%20III.pdf)
 - specific support: EtTh Cor 2.19 (pp.58-59): all three rigidities established for mono-theta environments; bi-theta environments fail discrete rigidity (Cor 2.16 / Rem 2.16.1). IUTchII §2: theta-link requires cyclotomic comparison across Hodge theaters. IUTchIII Cor.3.12: multiradial algorithm invokes functorial choice-free algorithms of Cor 2.19 as foundational input. SS 2018 全文 (pymupdf-verified) に 'mono-theta' / 'Cor 2.19' の出現なし; SS 批判は downstream の R-copies identification に集中し、3 rigidities apparatus を invalid とする主張なし.
 - status: acknowledged-without-critique-by-ss
@@ -667,7 +667,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2021-06-01
 - evidence:
   - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568)
-  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf) ([archive](https://web.archive.org/web/20251218211839/https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf))
   - [Arithmetic Teichmuller Spaces I (Joshi 2021, arXiv:2106.11452)](https://arxiv.org/abs/2106.11452)
   - [Untilts of fundamental groups (Joshi 2022, arXiv:2210.11635)](https://arxiv.org/abs/2210.11635)
   - [Arithmetic Teichmuller Spaces II (Joshi 2023, arXiv:2303.01662)](https://arxiv.org/abs/2303.01662)
@@ -700,7 +700,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2024-03-01
 - evidence:
   - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568)
-  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf) ([archive](https://web.archive.org/web/20251218211839/https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf))
   - [Arithmetic Teichmuller Spaces I (Joshi 2021, arXiv:2106.11452)](https://arxiv.org/abs/2106.11452)
   - [Untilts of fundamental groups (Joshi 2022, arXiv:2210.11635)](https://arxiv.org/abs/2210.11635)
   - [Arithmetic Teichmuller Spaces II (Joshi 2023, arXiv:2303.01662)](https://arxiv.org/abs/2303.01662)
@@ -747,7 +747,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2025-04-29
 - evidence:
   - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568)
-  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf) ([archive](https://web.archive.org/web/20251218211839/https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf))
   - [Arithmetic Teichmuller Spaces I (Joshi 2021, arXiv:2106.11452)](https://arxiv.org/abs/2106.11452)
   - [Untilts of fundamental groups (Joshi 2022, arXiv:2210.11635)](https://arxiv.org/abs/2210.11635)
   - [Arithmetic Teichmuller Spaces II (Joshi 2023, arXiv:2303.01662)](https://arxiv.org/abs/2303.01662)
@@ -768,7 +768,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - counters: `claim:scholze_stix_2018_main`, `claim:scholze_stix_2018_sub_1`, `claim:scholze_stix_2018_sub_2`
 - evidence:
   - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568)
-  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf) ([archive](https://web.archive.org/web/20251218211839/https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf))
 - specific objection: Joshi (arXiv:2505.10568 §1.1): 'every assertion of [Scholze and Stix, 2018] and [Scholze, 2021] is mathematically false.' Table 2 catalogs SS claims (non-existence of distinct Hodge Theaters / Etale Pictures / Frobenius Pictures / Isomorphs / Prime-strips, theta-link non-triviality) and marks each 'disproved by Joshi'. Counter-argument: ATS provides explicit existence proofs of structures SS denied. Caveat: Joshi's own assessment; no neutral third-party verification; Scholze has not responded to ATS series in any verified public statement; informal Scholze MO commentary and Sawin locality critique reported but URLs unverified.
 - status: preprint-not-peer-reviewed-as-of-2026-05
 - verified at: 2026-05-06
@@ -782,7 +782,7 @@ Each claim is presented with its proponents, position, evidence, and any counter
 - asserted: 2025-04-29
 - evidence:
   - [Final Report on the Mochizuki-Scholze-Stix Controversy v1 (Joshi 2025-04-29)](https://arxiv.org/abs/2505.10568)
-  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf)
+  - [Joshi FAQ on Mochizuki-Scholze-Stix dispute (Joshi 2025-11, supplementary to arXiv:2505.10568v1)](https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf) ([archive](https://web.archive.org/web/20251218211839/https://math.arizona.edu/~kirti/joshi-mochizuki-FAQ.pdf))
 - specific objection: Joshi (arXiv:2505.10568 §1.2 + §1.4): Mochizuki's proof is incomplete because anabelian methods alone cannot rigorously establish that multiple arithmetic holomorphic structures exist - a requirement for inter-universal comparison. Joshi does not accept SS conclusion that the proof is wrong; instead provides 'a canonical formulation of the theory without which Mochizuki's work stands incomplete.' Caveats: Joshi's tripartite framing (Mochizuki incomplete / SS wrong / Joshi complete) is Joshi's own synthesis; not endorsed by Mochizuki who maintains the original proof is complete; no independent mathematician has publicly validated that ATS fills precisely this gap.
 - status: preprint-not-peer-reviewed-as-of-2026-05
 - verified at: 2026-05-06
