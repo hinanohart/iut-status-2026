@@ -149,7 +149,7 @@ iut-status-2026/
 │   ├── INNOVATION_LOG.md        # candidate A-X catalogue (B/R/S/T/U/V/W/X implemented)
 │   ├── AUDIT_PROVENANCE.md      # round 1-7 disclosure + governance honest revision
 │   └── cold_start_evidence.md   # multi-vendor cold-start run log (v0.7.4 weekly auto-append)
-├── tests/                 # CI validation (91 cases as of v0.7.8)
+├── tests/                 # CI validation (100 cases as of v0.7.9)
 │   ├── test_validation.py / test_merkle.py
 │   ├── test_verify_urls.py / test_verify_identifiers.py
 │   ├── test_archive_evidence.py / test_cold_start_runner.py
@@ -179,6 +179,7 @@ iut-status-2026/
 | v0.7.6 | ARCHITECTURE.md band table updated with v0.7 status; UNDERSTANDING_LEVELS.md roadmap row sync; this README block | documentation coherence after 6 incremental releases |
 | v0.7.7 | Round 8 user-override audit close (1 CRITICAL + 5 HIGH + 4 MEDIUM): docs prose-scrub class identified; `docs/section_8_disputes_timeline.md` ISBN scrub miss; `data/context.jsonld` archive_url + role mapping; cold_start runner repairs (model id + system role + IRI check + BLOCK pattern); validate.py surname full-name match; verify_identifiers Unicode dash | systemic prose-retention class surfaced |
 | v0.7.8 | Round 9 user-override audit close (4 CRITICAL + 9 HIGH + 6 MEDIUM): 6-release stale auto-gen `docs/disputes.md` + `timeline.md` + `overview.md` regenerated + CI diff gate; BLOCK_LABEL_PATTERNS 2-tier (header + proximity) repaired natural-prose regression introduced by v0.7.7; `mcp/server.py` exposes `archive_url` / `role` / `specific_support` / `lean_stub` (was silently dropping 5 fields); `loaders/python_minimal.py` Claim dataclass `specific_support`; `LICENSE` short-form → Apache-2.0 official 11264-byte text; `tools/render_md.py` surfaces archive_url + specific_support; CI gains MCP initialize handshake + lake build advisory + render-diff gate; ISBN regression generalised to PROSE_SCRUB_INVARIANTS; ARCHITECTURE.md schemas/v0.{2,3} 6 dead refs honestly repositioned as planned-not-yet | drift-zero contract repaired across consumer chain (loader → MCP → render); audit-process meta-finding: per-release mini-audit recommendation |
+| v0.7.9 | **Structural close of R4-R9 systemic root cause** — `tools/property_audit.py` (323 lines) enumerates every schema property and verifies propagation through L1 (context.jsonld) / L2 (loaders/python_minimal.py) / L3 (mcp/server.py) / L4 (tools/render_md.py, opt-in via per-property allow-list); indent-bounded source slicing handles nested `_dispatch_tool` branches; `tests/test_property_audit.py` (9 cases) pins clean-repo + L1/L2/L3 drift-injection + policy contract; CI gains `Property propagation audit` blocking step; first audit run uncovered `_claim_to_json` silently dropping `type` field (entity-side emitted, claim-side did not) — fix shipped in same commit; `docs/PROPERTY_PROPAGATION.md` (new) gives the human-readable checklist; `CONTRIBUTING.md` PR rule #3 + #5 reference both. | the R4-R9 multi-layer-drift class can no longer survive a green build |
 
 ## Citation policy
 

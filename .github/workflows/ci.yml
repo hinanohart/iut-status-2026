@@ -18,6 +18,16 @@ jobs:
         run: python tools/validate.py
       - name: Verify Merkle root
         run: python tools/verify_merkle.py
+      - name: Property propagation audit (R4-R9 systemic root-cause gate)
+        run: |
+          # v0.7.9 — schema property must propagate to context / loader /
+          # MCP serializer / render. Adding a property to schemas/*.json
+          # without touching all four surfaces (or marking exempt in
+          # tools/property_audit.py POLICIES.render_optional) blocks
+          # merge. Closes the multi-layer-drift class that R4-R9 found.
+          python tools/property_audit.py
+      - name: Run property audit tests
+        run: python -m unittest tests.test_property_audit -v
       - name: Run validation tests
         run: python -m unittest tests.test_validation -v
       - name: Run Merkle tests

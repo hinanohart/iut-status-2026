@@ -105,6 +105,7 @@ def _claim_to_json(graph: IutGraph, claim_iri: str) -> dict[str, Any] | None:
     # downstream LLMs were missing supportive context entirely.
     return {
         "id": claim.id,
+        "type": claim.type,
         "label": claim.label,
         "about": claim.about,
         "position": claim.position,
