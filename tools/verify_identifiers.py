@@ -53,6 +53,12 @@ USER_AGENT = (
 )
 DOI_RESOLVER = "https://doi.org/{doi}"
 OPEN_LIBRARY_API = "https://openlibrary.org/isbn/{isbn}.json"
+# NDL (National Diet Library, Japan) OpenSearch interface for ISBN
+# lookup. Comprehensive Japanese-language coverage; complements Open
+# Library which is sparse for jp titles. Returns Atom XML; we only
+# inspect <openSearch:totalResults>.
+# Reference: https://iss.ndl.go.jp/api/opensearch_api/
+NDL_ISBN_API = "https://iss.ndl.go.jp/api/opensearch?isbn={isbn}"
 HTTP_TIMEOUT_SECONDS = 15.0
 
 DOI_PATTERN = re.compile(r"^10\.\d{4,9}/[-._;()/:A-Za-z0-9]+$")
@@ -204,15 +210,84 @@ def verify_doi_network(doi: str) -> tuple[str, str]:
     return "invalid", f"http {code} ({detail})"
 
 
-def verify_isbn_network(isbn: str) -> tuple[str, str]:
-    """Query Open Library for the given ISBN.
+def _is_japanese_isbn(digits: str) -> bool:
+    """True if the ISBN is in the Japanese registration group.
 
-    Returns ``(status, detail)``. A 200 response means Open Library
-    has metadata; 404 means **not registered there**, which is mapped
-    to ``unresolved`` rather than ``invalid`` because Open Library's
-    Japanese-language coverage is partial.
+    ISBN-13 prefix ``978-4-`` or ``979-4-`` (rare); ISBN-10 starting
+    with ``4`` are Japanese books. Per ISO 2108 group code assignments.
+    """
+    if len(digits) == 13:
+        return digits.startswith(("9784", "9794"))
+    if len(digits) == 10:
+        return digits.startswith("4")
+    return False
+
+
+def _query_ndl_isbn(digits: str) -> tuple[str, str]:
+    """Query NDL OpenSearch for an ISBN.
+
+    NDL returns Atom XML even for "no hits". The hit count is in the
+    ``<openSearch:totalResults>`` element; we substring-match rather
+    than parse XML to keep the dependency footprint at stdlib.
+
+    Returns ``(status, detail)`` where status is one of:
+
+    * ``"alive"`` — totalResults >= 1 (book registered)
+    * ``"unresolved"`` — totalResults = 0 OR transport failure
+                       (caller decides whether to escalate to
+                       ``"invalid"`` based on the Japanese-ISBN
+                       fabrication heuristic).
+    """
+    url = NDL_ISBN_API.format(isbn=quote(digits, safe=""))
+    request = Request(url, method="GET", headers={"User-Agent": USER_AGENT})
+    try:
+        with urlopen(request, timeout=HTTP_TIMEOUT_SECONDS) as response:
+            body = response.read().decode("utf-8", errors="replace")
+            code = response.status
+    except HTTPError as exc:
+        return "unresolved", f"ndl http error: {exc.code} {exc.reason}"
+    except URLError as exc:
+        return "unresolved", f"ndl url error: {exc.reason}"
+    except TimeoutError:
+        return "unresolved", f"ndl timeout after {HTTP_TIMEOUT_SECONDS}s"
+    except Exception as exc:  # noqa: BLE001 — defensive against transport bugs
+        return "unresolved", f"ndl unexpected: {type(exc).__name__}: {exc}"
+
+    if not (200 <= code < 300):
+        return "unresolved", f"ndl http {code}"
+
+    # Match either <openSearch:totalResults>N</openSearch:totalResults>
+    # or <os:totalResults>N</os:totalResults>; both forms appear in NDL
+    # responses depending on the namespace prefix the server picks.
+    match = re.search(
+        r"<(?:openSearch|os):totalResults>(\d+)</(?:openSearch|os):totalResults>",
+        body,
+    )
+    if match is None:
+        return "unresolved", "ndl response missing totalResults element"
+    n = int(match.group(1))
+    if n >= 1:
+        return "alive", f"ndl total_results={n}"
+    return "unresolved", "ndl total_results=0 (not in jp national bibliography)"
+
+
+def verify_isbn_network(isbn: str) -> tuple[str, str]:
+    """Query Open Library; for Japanese-group ISBNs, fall back to NDL.
+
+    Returns ``(status, detail)``. A 2xx from Open Library → ``alive``.
+    For Japanese ISBNs, 404 from Open Library triggers an NDL fallback
+    query so that books with sparse Open Library metadata still get
+    a positive resolution. Open Library 404 + NDL 0 hits on a
+    Japanese ISBN escalates to ``invalid`` (this is the Round-7-class
+    Kato-ISBN fabrication signal: structural checksum passes, no
+    bibliographic registry confirms existence).
+
+    For non-Japanese ISBNs, behaviour is unchanged: Open Library 404
+    → ``unresolved`` (English-language coverage is comprehensive
+    enough that "not in OL" is suspicious but not conclusive).
     """
     digits = _strip_isbn_separators(isbn).upper()
+    is_jp = _is_japanese_isbn(digits)
     url = OPEN_LIBRARY_API.format(isbn=digits)
     request = Request(url, method="GET", headers={"User-Agent": USER_AGENT})
     try:
@@ -220,17 +295,35 @@ def verify_isbn_network(isbn: str) -> tuple[str, str]:
             code = response.status
         if 200 <= code < 300:
             return "alive", f"open-library http {code}"
-        return "unresolved", f"open-library http {code}"
+        # Non-2xx without raising HTTPError is rare; fall through to
+        # NDL fallback for Japanese ISBNs.
     except HTTPError as exc:
-        if exc.code == 404:
-            return "unresolved", "open-library 404 (jp coverage partial)"
-        return "unresolved", f"open-library http error: {exc.code} {exc.reason}"
+        code = exc.code
+        if exc.code != 404:
+            return "unresolved", f"open-library http error: {exc.code} {exc.reason}"
     except URLError as exc:
         return "unresolved", f"open-library url error: {exc.reason}"
     except TimeoutError:
         return "unresolved", f"open-library timeout after {HTTP_TIMEOUT_SECONDS}s"
     except Exception as exc:  # noqa: BLE001 — defensive against transport bugs
         return "unresolved", f"open-library unexpected: {type(exc).__name__}: {exc}"
+    else:
+        code = 200  # 2xx already returned above; keep mypy-style happy
+
+    # We arrive here on Open Library 404. If non-Japanese, defer to
+    # the previous "partial coverage" handling.
+    if not is_jp:
+        return "unresolved", "open-library 404 (en coverage)"
+
+    ndl_status, ndl_detail = _query_ndl_isbn(digits)
+    if ndl_status == "alive":
+        return "alive", f"open-library 404; {ndl_detail}"
+    if ndl_status == "unresolved" and "total_results=0" in ndl_detail:
+        # Both registries say no — strong fabrication signal for jp ISBN.
+        return "invalid", f"open-library 404 + {ndl_detail}"
+    # Transport failure on NDL — preserve unresolved (don't fail CI on
+    # network flake).
+    return "unresolved", f"open-library 404; {ndl_detail}"
 
 
 def verify_one(

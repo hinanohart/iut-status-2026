@@ -204,17 +204,124 @@ class VerifyDoiNetworkTests(unittest.TestCase):
         self.assertEqual(status, "unresolved")
 
 
+class _MockResponse:
+    """Minimal urlopen() context-manager stand-in."""
+
+    def __init__(self, status: int, body: bytes = b"") -> None:
+        self.status = status
+        self._body = body
+
+    def read(self) -> bytes:
+        return self._body
+
+    def __enter__(self):  # noqa: D401
+        return self
+
+    def __exit__(self, *exc) -> bool:
+        return False
+
+
+def _fake_404(url: str) -> HTTPError:
+    return HTTPError(url=url, code=404, msg="Not Found", hdrs=None, fp=None)
+
+
+def _ndl_body(total_results: int) -> bytes:
+    return (
+        f'<?xml version="1.0"?>'
+        f'<rss xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">'
+        f"<openSearch:totalResults>{total_results}</openSearch:totalResults>"
+        f"</rss>"
+    ).encode("utf-8")
+
+
 class VerifyIsbnNetworkTests(unittest.TestCase):
-    def test_open_library_404_is_unresolved(self) -> None:
-        # Open Library 404 = "we don't have metadata", not "ISBN is fake"
-        fake_404 = HTTPError(
-            url="https://openlibrary.org/isbn/9784044004170.json",
-            code=404, msg="Not Found", hdrs=None, fp=None,
-        )
-        with mock.patch.object(vi, "urlopen", side_effect=fake_404):
-            status, detail = vi.verify_isbn_network("978-4-04-400417-0")
+    def test_non_jp_open_library_404_is_unresolved_no_ndl_call(self) -> None:
+        """Non-Japanese ISBN with Open Library 404 stays at unresolved
+        without consulting NDL (NDL is the Japanese national library)."""
+        en_isbn = "0-7864-0700-X"  # ISBN-10, group 0 = English
+        with mock.patch.object(
+            vi, "urlopen", side_effect=_fake_404("https://openlibrary.org/...")
+        ) as mock_open:
+            status, detail = vi.verify_isbn_network(en_isbn)
         self.assertEqual(status, "unresolved")
-        self.assertIn("404", detail)
+        self.assertIn("en coverage", detail)
+        self.assertEqual(mock_open.call_count, 1, "NDL must not be queried for non-jp ISBN")
+
+    def test_jp_open_library_404_ndl_zero_hits_is_invalid(self) -> None:
+        """R7-class fabrication signal: structurally valid Japanese ISBN
+        that is in *neither* Open Library nor the National Diet Library
+        is highly likely to be fabricated."""
+        jp_isbn = "978-4-04-400417-0"
+
+        def side_effect(request, timeout=None):
+            url = request.full_url if hasattr(request, "full_url") else str(request)
+            if "openlibrary.org" in url:
+                raise _fake_404(url)
+            if "ndl.go.jp" in url:
+                return _MockResponse(200, _ndl_body(0))
+            raise AssertionError(f"unexpected url: {url}")
+
+        with mock.patch.object(vi, "urlopen", side_effect=side_effect):
+            status, detail = vi.verify_isbn_network(jp_isbn)
+        self.assertEqual(status, "invalid")
+        self.assertIn("total_results=0", detail)
+
+    def test_jp_open_library_404_ndl_hit_is_alive(self) -> None:
+        jp_isbn = "978-4-04-400417-0"
+
+        def side_effect(request, timeout=None):
+            url = request.full_url if hasattr(request, "full_url") else str(request)
+            if "openlibrary.org" in url:
+                raise _fake_404(url)
+            return _MockResponse(200, _ndl_body(1))
+
+        with mock.patch.object(vi, "urlopen", side_effect=side_effect):
+            status, detail = vi.verify_isbn_network(jp_isbn)
+        self.assertEqual(status, "alive")
+        self.assertIn("ndl total_results=1", detail)
+
+    def test_jp_open_library_404_ndl_transport_error_is_unresolved(self) -> None:
+        """Don't fail CI on NDL network flake — keep at unresolved."""
+        jp_isbn = "978-4-04-400417-0"
+
+        def side_effect(request, timeout=None):
+            url = request.full_url if hasattr(request, "full_url") else str(request)
+            if "openlibrary.org" in url:
+                raise _fake_404(url)
+            from urllib.error import URLError
+            raise URLError("temporary network failure")
+
+        with mock.patch.object(vi, "urlopen", side_effect=side_effect):
+            status, detail = vi.verify_isbn_network(jp_isbn)
+        self.assertEqual(status, "unresolved")
+        self.assertIn("ndl url error", detail)
+
+    def test_open_library_2xx_is_alive_no_ndl_call(self) -> None:
+        jp_isbn = "978-4-04-400417-0"
+        with mock.patch.object(
+            vi, "urlopen", return_value=_MockResponse(200, b"{}")
+        ) as mock_open:
+            status, detail = vi.verify_isbn_network(jp_isbn)
+        self.assertEqual(status, "alive")
+        self.assertIn("open-library", detail)
+        self.assertEqual(mock_open.call_count, 1, "NDL fallback must not run on OL hit")
+
+
+class JapaneseIsbnDetectionTests(unittest.TestCase):
+    def test_isbn13_978_4_is_japanese(self) -> None:
+        self.assertTrue(vi._is_japanese_isbn("9784044004170"))
+
+    def test_isbn13_978_0_is_not_japanese(self) -> None:
+        self.assertFalse(vi._is_japanese_isbn("9780786407002"))
+
+    def test_isbn10_starting_4_is_japanese(self) -> None:
+        self.assertTrue(vi._is_japanese_isbn("4044004176"))
+
+    def test_isbn10_starting_0_is_not_japanese(self) -> None:
+        self.assertFalse(vi._is_japanese_isbn("0786407008"))
+
+    def test_invalid_length_is_not_japanese(self) -> None:
+        self.assertFalse(vi._is_japanese_isbn("123"))
 
 
 class CLIOfflineTests(unittest.TestCase):
