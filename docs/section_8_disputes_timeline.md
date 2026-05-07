@@ -184,8 +184,8 @@ Key concepts established: `iut:Frobenioid`, `iut:etale_theta`, `iut:mono_theta_e
 - **2025-10-28** — Mochizuki posts IUT progress report.
   `event:2025_mochizuki_october_report` / `evidence:Mochizuki_IUT_report_2025_10`
   `claim:mochizuki_2025_october_report`: continued defense of original framework (status: `self-published-RIMS-preprint`)
-  Peter Woit's Not Even Wrong blog carries ongoing commentary.
-  `claim:woit_blog_2025_skeptical` / `evidence:Woit_blog_2025` (status: `informal-blog-commentary`)
+  Peter Woit's Not Even Wrong blog carries ongoing commentary (the registered post is the 2024 entry on Joshi's earlier exposition).
+  `claim:woit_blog_2024_mochizuki_on_joshi_skeptical` / `evidence:Woit_blog_2024_mochizuki_on_joshi` (status: `informal-blog-commentary`)
 
 - **2025-11-01** — Joshi FAQ 2025-11 (arXiv:2505.10568v1 + Joshi FAQ 2025-11).
   `event:2025_11_joshi_faq` / `evidence:Joshi_FAQ_2025_11`; status: `preprint-not-peer-reviewed-as-of-2026-05`

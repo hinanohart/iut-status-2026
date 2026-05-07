@@ -127,5 +127,110 @@ class JsonRpcTests(unittest.TestCase):
         self.assertEqual(err["error"]["message"], "boom")
 
 
+class JsonRpcProtocolEdgeCaseTests(unittest.TestCase):
+    """Round 10 audit (v0.7.13) regression suite for JSON-RPC 2.0
+    spec compliance. Pre-v0.7.13 ``main`` loop crashed on batch
+    inputs, sent responses to notifications (JSON-RPC §4.1
+    forbids), and never produced a parse-error for non-object
+    roots. The dispatcher is now factored into ``_handle_jsonrpc``
+    and exercised here directly without spawning subprocesses.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.graph = mcp_server.IutGraph.load(mcp_server.REPO_ROOT / "data")
+
+    def test_batch_request_returns_array_of_responses(self) -> None:
+        batch = [
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+            {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+        ]
+        responses = mcp_server._handle_jsonrpc(batch, self.graph)
+        self.assertEqual(len(responses), 2)
+        self.assertEqual({r["id"] for r in responses}, {1, 2})
+
+    def test_batch_with_notification_omits_response(self) -> None:
+        batch = [
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+            {"jsonrpc": "2.0", "method": "notifications/initialized"},  # no id => notif
+        ]
+        responses = mcp_server._handle_jsonrpc(batch, self.graph)
+        self.assertEqual(len(responses), 1)
+        self.assertEqual(responses[0]["id"], 1)
+
+    def test_empty_batch_returns_invalid_request_error(self) -> None:
+        responses = mcp_server._handle_jsonrpc([], self.graph)
+        self.assertEqual(len(responses), 1)
+        self.assertEqual(responses[0]["error"]["code"], -32600)
+        self.assertIsNone(responses[0]["id"])
+
+    def test_non_object_non_array_root_returns_invalid_request(self) -> None:
+        for bad in (None, 42, "string", True):
+            responses = mcp_server._handle_jsonrpc(bad, self.graph)
+            self.assertEqual(len(responses), 1)
+            self.assertEqual(responses[0]["error"]["code"], -32600)
+            self.assertIsNone(responses[0]["id"])
+
+    def test_notification_unknown_method_returns_no_response(self) -> None:
+        # JSON-RPC 2.0 §4.1: server MUST NOT reply to a Notification.
+        notif = {"jsonrpc": "2.0", "method": "totally/made/up"}
+        responses = mcp_server._handle_jsonrpc(notif, self.graph)
+        self.assertEqual(responses, [])
+
+    def test_request_with_id_null_receives_response(self) -> None:
+        # `id: null` is a Request (not a Notification); response carries id=null.
+        req = {"jsonrpc": "2.0", "id": None, "method": "initialize", "params": {}}
+        responses = mcp_server._handle_jsonrpc(req, self.graph)
+        self.assertEqual(len(responses), 1)
+        self.assertIsNone(responses[0]["id"])
+
+    def test_request_missing_method_field_returns_invalid_request(self) -> None:
+        req = {"jsonrpc": "2.0", "id": 5, "params": {}}
+        responses = mcp_server._handle_jsonrpc(req, self.graph)
+        self.assertEqual(len(responses), 1)
+        self.assertEqual(responses[0]["error"]["code"], -32600)
+
+
+class IutTimelinePayloadFieldTests(unittest.TestCase):
+    """Round 10 audit (v0.7.13) regression: the ``iut_timeline`` MCP
+    branch was silently dropping the ``type`` field of timeline
+    events because the prior property_audit substring check was
+    fooled by the response envelope ``{"type": "text"}``. The
+    AST-based check now distinguishes payload from envelope; this
+    suite pins the actually-emitted shape so the regression cannot
+    silently return.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.graph = mcp_server.IutGraph.load(mcp_server.REPO_ROOT / "data")
+
+    def _call_iut_timeline(self) -> list[dict]:
+        response = mcp_server.handle_tools_call(
+            request_id=99,
+            params={"name": "iut_timeline", "arguments": {}},
+            graph=self.graph,
+        )
+        text = response["result"]["content"][0]["text"]
+        return json.loads(text)
+
+    def test_iut_timeline_emits_type_field(self) -> None:
+        events = self._call_iut_timeline()
+        self.assertGreater(len(events), 0)
+        for ev in events:
+            self.assertIn("type", ev, f"event missing type: {ev}")
+
+    def test_iut_timeline_emits_url_and_archive_url(self) -> None:
+        events = self._call_iut_timeline()
+        for ev in events:
+            self.assertIn("url", ev)
+            self.assertIn("archive_url", ev)
+
+    def test_iut_timeline_actor_list_is_jsonable(self) -> None:
+        events = self._call_iut_timeline()
+        for ev in events:
+            self.assertIsInstance(ev["actors"], list)
+
+
 if __name__ == "__main__":
     unittest.main()

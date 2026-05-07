@@ -7,7 +7,7 @@ complements `UNDERSTANDING_LEVELS.md` (what we are scaling toward) and
 `FAILURE_MODES.md` (what to avoid).
 
 **v0.7 progress (2026-05-07)**: 104 entities / 53 claims / 34 evidence /
-25 timeline events / 91 unittest cases / Lean per-section split (16
+25 timeline events / 189 unittest cases / Lean per-section split (16
 modules) / cold-start CI scaffolding / Wayback + DOI/ISBN verification /
 Person role invariant. v0.2.4 priority-band status updated in §
 "v0.2.3 / v0.2.4 stress-test refinements" below.

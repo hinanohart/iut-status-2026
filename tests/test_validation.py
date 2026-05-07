@@ -14,6 +14,8 @@ Run with::
 """
 from __future__ import annotations
 
+import json
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -208,23 +210,53 @@ class GenericityTests(unittest.TestCase):
         # must therefore not survive in any docs/*.md outside the
         # explicit fabrication-record allowlist. Adding a new entry
         # here closes a future drift class in one line.
+        # Round 10 audit (v0.7.13): expanded both ways. (a) FABRICATIONS
+        # now covers Joshi v2 (R5 closure regression — a "v2 (2026-05-02)"
+        # link survived in README.md:276 across 5 releases because the
+        # scan scope was docs/ only). (b) scan scope expanded to repo
+        # root *.md (README, LLM_CONTEXT, CONTRIBUTING, NOTICE) so the
+        # next regression at this layer surfaces immediately.
         FABRICATIONS: list[tuple[str, str]] = [
             # (needle, round-where-fixed)
             ("978-4-04-110262-7", "R7 Kato ISBN"),
             ("ems.press/journals/prims/issues/249", "R7 PRIMS issue ID"),
+            ("2505.10568v2", "R5 Joshi v2 fictional version (R10 readded check)"),
+            ("2026-05-02", "R5 Joshi v2 fictional date (R10 readded check)"),
+            ("Joshi v1+v2", "R5 Joshi v2 prose retention (R10)"),
+            ("Joshi v1 / v2", "R5 Joshi v2 prose retention (R10)"),
+            ("iut:Theta-link", "R10 docs IRI typo (snake_case is canonical)"),
+            ("iut:log-link", "R10 docs IRI typo (snake_case is canonical)"),
+            ("woit_blog_2025_skeptical", "R10 docs Woit IRI mismatch with data/"),
+            ("evidence:Woit_blog_2025", "R10 docs Woit IRI mismatch with data/"),
         ]
         ALLOWED = {
             REPO_ROOT / "docs" / "INNOVATION_LOG.md",
             REPO_ROOT / "docs" / "AUDIT_PROVENANCE.md",
+            # The validation test file itself enumerates the needles:
+            REPO_ROOT / "tests" / "test_validation.py",
+        }
+        # Round 10 (v0.7.13): per-(file, needle) allowlist for legitimate
+        # historical records — release notes / audit prose that *document*
+        # a past fabrication for transparency. Anything not here is treated
+        # as a regression.
+        DOCUMENTED_AS_FABRICATION: set[tuple[Path, str]] = {
+            # README v0.7.11 release-table entry references the R7 Kato ISBN
+            # while explaining that NDL Search now flags it as `invalid`.
+            (REPO_ROOT / "README.md", "978-4-04-110262-7"),
+            # section_6 explicitly notes Round 5 removed the fictional v2.
+            (REPO_ROOT / "docs" / "section_6_cor_3_12.md", "2026-05-02"),
         }
         offenders: list[tuple[Path, str]] = []
-        md_files = list((REPO_ROOT / "docs").rglob("*.md"))
+        # Round 10 (v0.7.13): scan repo-root *.md too (README, LLM_CONTEXT,
+        # CONTRIBUTING, NOTICE), not just docs/.
+        md_files: list[Path] = list((REPO_ROOT / "docs").rglob("*.md"))
+        md_files += [p for p in REPO_ROOT.glob("*.md")]
         for path in md_files:
             if path in ALLOWED:
                 continue
             text = path.read_text(encoding="utf-8")
             for needle, label in FABRICATIONS:
-                if needle in text:
+                if needle in text and (path, needle) not in DOCUMENTED_AS_FABRICATION:
                     offenders.append((path, label))
         self.assertEqual(
             offenders, [],
@@ -233,6 +265,71 @@ class GenericityTests(unittest.TestCase):
                 f"{p.relative_to(REPO_ROOT)} ({label})"
                 for p, label in offenders
             ),
+        )
+
+    def test_section_docs_iris_resolve_in_data(self) -> None:
+        """Round 10 audit (v0.7.13) gate: every (iut|claim|evidence|event):*
+        IRI cited inside ``docs/section_*.md`` must resolve to a record
+        in ``data/``.
+
+        Class background: Round 5/6/8/9 each surfaced "docs cite an IRI
+        that has been renamed or never existed" as a CRITICAL
+        fabrication-class defect. The auto-generated docs (overview /
+        disputes / timeline) are diff-gated against ``render_md.py``
+        output, but the curated ``section_*.md`` family was not. This
+        test closes that gap.
+        """
+        graph = IutGraph.load(DATA_DIR)
+        known_ids: set[str] = (
+            set(graph.entities.keys())
+            | set(graph.claims.keys())
+            | set(graph.evidence.keys())
+            | set(graph.timeline.keys())
+        )
+        # Pattern matches IRI tokens of the form `prefix:identifier`
+        # inside backtick-quoted spans only — bare prose words like
+        # "iut: introduction" are intentionally excluded by the
+        # backtick anchor.
+        iri_re = re.compile(
+            r"`((?:iut|claim|evidence|event|person|paper|org):[A-Za-z0-9_]+)`"
+        )
+        offenders: list[tuple[Path, str]] = []
+        for path in sorted((REPO_ROOT / "docs").glob("section_*.md")):
+            text = path.read_text(encoding="utf-8")
+            for match in iri_re.finditer(text):
+                iri = match.group(1)
+                if iri.startswith(("person:", "paper:", "org:")):
+                    # person/paper/org are entities — also check entity registry.
+                    if iri in graph.entities:
+                        continue
+                if iri in known_ids:
+                    continue
+                offenders.append((path, iri))
+        self.assertEqual(
+            offenders, [],
+            "section docs cite IRIs that don't resolve in data/: "
+            + ", ".join(
+                f"{p.relative_to(REPO_ROOT)}:{iri}" for p, iri in offenders
+            ),
+        )
+
+    def test_javascript_url_in_timeline_rejected(self) -> None:
+        """Round 10 audit (v0.7.13) gate: timeline schema's `url` field
+        must enforce ``format: uri`` + ``http(s)`` scheme, otherwise
+        ``javascript:alert(1)`` / ``file:///etc/passwd`` / ``data:...``
+        are silently accepted and propagate to MCP / docs.
+        """
+        schema_path = REPO_ROOT / "schemas" / "timeline.json"
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        url_props = schema["properties"]["url"]
+        self.assertEqual(
+            url_props.get("format"), "uri",
+            "timeline.json url field must declare format=uri",
+        )
+        pattern = url_props.get("pattern", "")
+        self.assertTrue(
+            pattern.startswith("^https?"),
+            f"timeline.json url pattern must restrict to http(s); got {pattern!r}",
         )
 
 

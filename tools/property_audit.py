@@ -41,9 +41,11 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import logging
 import sys
+import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -302,6 +304,46 @@ def _check_l2_loader(
     return findings
 
 
+def _extract_payload_dict_keys(body: str) -> set[str]:
+    """Collect string keys from *payload* dict literals inside ``body``.
+
+    Round 10 audit (v0.7.13) replaced the prior "any-substring-match"
+    heuristic. The earlier check was bypassed by the MCP response
+    envelope ``{"content": [{"type": "text", "text": ...}]}``: the
+    envelope contains ``"type"`` and ``"text"`` as keys regardless of
+    whether the payload dict emits them, so a forgotten payload key was
+    silently passing whenever the envelope happened to share its name
+    (e.g. ``iut_timeline`` payload omitted ``type`` for two releases).
+
+    The fix: parse the function body as Python AST, walk every dict
+    literal, and only consider literals that include ``"id"`` as a key
+    — a stable invariant of every payload dict (entity / claim /
+    evidence / timeline). The MCP envelope never carries ``"id"``, so
+    this discriminator cleanly separates payload from framing.
+    """
+    # Dedent: the extracted body keeps the original column from the
+    # surrounding function (typically 4 or 8 spaces deep), but ast.parse
+    # requires column-0 code. textwrap.dedent strips the common leading
+    # whitespace.
+    dedented = textwrap.dedent(body)
+    try:
+        tree = ast.parse(dedented)
+    except SyntaxError:
+        return set()
+    keys: set[str] = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Dict):
+            continue
+        string_keys = {
+            k.value
+            for k in node.keys
+            if isinstance(k, ast.Constant) and isinstance(k.value, str)
+        }
+        if "id" in string_keys:
+            keys |= string_keys
+    return keys
+
+
 def _check_l3_mcp(
     properties: tuple[str, ...], policy: SchemaPolicy, source: str
 ) -> list[AuditFinding]:
@@ -315,12 +357,23 @@ def _check_l3_mcp(
         ))
         return findings
 
+    payload_keys = _extract_payload_dict_keys(body)
+    if not payload_keys:
+        findings.append(AuditFinding(
+            schema=policy.schema_file, layer="3-mcp",
+            property="<payload>",
+            detail=(
+                f"could not locate any payload dict literal containing 'id' "
+                f"inside {policy.mcp_emitter}; emitter may have been "
+                f"refactored away or the dispatch shape changed. AST-based "
+                f"check requires at least one `{{\"id\": …, …}}` literal."
+            ),
+        ))
+        return findings
+
     for prop in properties:
         py_name = policy.schema_to_python_rename.get(prop, prop)
-        # MCP output dict uses Python-style keys; accept either schema or
-        # renamed form, but require quoted string literal so we are
-        # checking *output* keys, not unrelated comment text.
-        if f'"{py_name}"' in body or f'"{prop}"' in body:
+        if py_name in payload_keys or prop in payload_keys:
             continue
         findings.append(AuditFinding(
             schema=policy.schema_file, layer="3-mcp",
@@ -328,7 +381,8 @@ def _check_l3_mcp(
             detail=(
                 f"property not emitted by MCP serializer "
                 f"({policy.mcp_emitter}). schema_name={prop!r} "
-                f"python_name={py_name!r} both absent"
+                f"python_name={py_name!r} absent from any payload dict "
+                f"(dict literal containing 'id' key) inside the dispatch branch"
             ),
         ))
     return findings
