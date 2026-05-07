@@ -122,7 +122,7 @@ recorded with date and commit SHA where relevant.
 
 ### R. URL liveness verifier (`tools/verify_urls.py`)
 - **Idea**: Bridge the round-4-5-6 systemic gap where `validate.py` only checks internal graph consistency; never compares graph URLs to external reality. Three fabrication-class defects (Joshi v2, Woit dating, IRI drift) survived four audit rounds before this gap was diagnosed.
-- **Status**: **Implemented** (v0.6, commit pending).
+- **Status**: **Implemented** (v0.6, commit `1df6818`).
 - **Files**: `tools/verify_urls.py`, `tests/test_verify_urls.py`.
 - **Mode**: offline (default, syntax check only) + `--network` flag (opt-in HTTP HEAD/GET, suitable for scheduled CI).
 - **Limitation acknowledged**: catches URL-resolves-to-200 only; the Woit Round-6 case was a content-vs-metadata mismatch (URL alive but date/topic wrong). Manual content review still required.
@@ -130,7 +130,7 @@ recorded with date and commit SHA where relevant.
 
 ### S. Wayback Machine archival bootstrap (`tools/archive_evidence.py`)
 - **Idea**: Round 4-7 audits found four fabrication-class defects (Joshi v2 fictional, Woit blog dating drift, Kato ISBN fabrication, PRIMS issue ID drift) whose common root cause is **external reality drift**: the cited material itself moves, mutates, or vanishes. R (`verify_urls.py`) detects URL-no-longer-resolves; this candidate captures the snapshot at-cite-time so a Round-N+1 audit can compare the live URL against what the graph originally cited.
-- **Status**: **Implemented** (v0.7.0, commit pending).
+- **Status**: **Implemented** (v0.7.0, commit `c3b9827`).
 - **Files**: `tools/archive_evidence.py`, `tests/test_archive_evidence.py`, `schemas/evidence.json` + `schemas/timeline.json` (`archive_url` optional field), `loaders/python_minimal.py` (Evidence + TimelineEvent dataclasses extended).
 - **Modes**: offline (collect-and-classify, no network) / `--network --lookup` (Availability API, read-only) / `--network --submit` (Save Page Now, anonymous, rate-limited 12 s/req). `--apply` writes back to `data/*.json`.
 - **Drift-zero contract**: the tool never synthesises a `web.archive.org/web/<timestamp>` value. Every populated `archive_url` is taken verbatim from API response or redirect Location header. Synthesising a snapshot URL without API confirmation would itself be a fabrication-class defect of the type Round-7 closed.
@@ -139,7 +139,7 @@ recorded with date and commit SHA where relevant.
 
 ### T. DOI / ISBN identifier verifier (`tools/verify_identifiers.py`)
 - **Idea**: Round 7 (v0.6.1) closed a Kato-book ISBN fabrication that `verify_urls.py` cannot detect because URL liveness has nothing to say about identifier-registry integrity. This candidate adds a structural layer: ISO 2108 ISBN-10 / ISBN-13 checksum + ANSI/NISO Z39.84-2010 DOI pattern, plus opt-in network resolution via doi.org and Open Library.
-- **Status**: **Implemented** (v0.7.1, commit pending).
+- **Status**: **Implemented** (v0.7.1, commit `2728261`).
 - **Files**: `tools/verify_identifiers.py`, `tests/test_verify_identifiers.py`.
 - **Modes**: offline (default; structural checksum + pattern; CI-safe) / `--check-doi` (HEAD doi.org; alive=2xx/3xx, invalid=4xx/5xx) / `--check-isbn` (Open Library API; 404=unresolved, not invalid, since JP coverage is partial).
 - **Happy finding**: the Round-7 fabricated ISBN `978-4-04-110262-7` actually **fails** the ISBN-13 checksum (sum 91 mod 10 = 1 ≠ 0). Cross-source verification was the gold standard for Round 7, but this tool would have caught it structurally; pinned by `test_isbn13_round7_fabricated_fails_checksum` so the regression cannot recur silently.
@@ -147,34 +147,34 @@ recorded with date and commit SHA where relevant.
 
 ### U. Person edge-or-role invariant (`role` field + `validate.py` rule)
 - **Idea**: v0.7 architect audit flagged Pop / Sawin as "0-edge" Person entities (no claim proponent, no introduced_by edge). Naïvely "fixing" by adding fabricated proponent edges would be a Round-7-class defect (Sawin's locality critique URL is explicitly flagged unverified in `claim:joshi_ss_all_claims_false`). Better: make the orphan-status data-driven via a `role` field documenting *why* the disconnection is intentional, and let validate.py reject future un-tagged orphans.
-- **Status**: **Implemented** (v0.7.2, commit pending).
+- **Status**: **Implemented** (v0.7.2, commit `815b43a`).
 - **Files**: `schemas/entity.json` (`role` enum optional), `data/entities.json` (Grothendieck=historical_foundation, Pop=background_reference, Sawin=background_reference), `tools/validate.py` (Person-edge-or-role-required rule), `loaders/python_minimal.py` (Entity.role field).
 - **Architect false-positive recorded**: the same audit listed `IUTchIII Def 1.4` as missing, but the entity exists under the descriptive IRI `iut:log_theta_lattice` (label-search miss; IRI-search would have found it). Future audits should scan IUTch reference-strings inside `informal_md` paths and `definedIn` chains, not only entity labels, before declaring missing.
 
 ### V. Innovation log monthly heartbeat (`.github/workflows/innovation_heartbeat.yml`)
 - **Idea**: This log is a document, not a process. Without a heartbeat the silent-death class (explorer "is silent" indistinguishable from "found nothing") cannot be detected from outside the workflow. Closes Phase 1 must-band #5 by ensuring a single observable signal — a monthly auto-opened issue — fires whether or not new candidates are discovered.
-- **Status**: **Implemented** (v0.7.3, commit pending).
+- **Status**: **Implemented** (v0.7.3, commit `71e1508`).
 - **Files**: `.github/workflows/innovation_heartbeat.yml` (cron 02:30 UTC on the 1st of every month + manual workflow_dispatch; permissions issues:write contents:read; idempotent label-creation guard; duplicate-issue guard via gh issue list filter).
 - **Body**: lists the count of `Surveyed` candidates auto-detected via grep over the file, and the standing 90-day stalled-candidate review rule.
 - **Why a heartbeat is enough**: silent failure is now loud (issue does not appear → workflow died → fix it). No analysis logic is needed for the silent-death class; that is a separate candidate (regex-driven candidate scanning over arXiv / RIMS / ems.press / openalex) which v0.7.x may add.
 
 ### W. Multi-vendor cold-start CI (`tests/cold_start/` + `cold_start_weekly.yml`)
 - **Idea**: The L1 contract in `docs/UNDERSTANDING_LEVELS.md` is "a fresh LLM session, given only `LLM_CONTEXT.md` + sample data, answers via the 5-block protocol". Until that runs against real vendors the "L1 ~30 % (Claude-only)" Roadmap figure is self-graded, not evidence. v0.7.4 lands the runner + workflow with Claude implemented; other vendors are stubs.
-- **Status**: **Implemented (Claude only)** (v0.7.4, commit pending). Other vendors planned v0.7.x.
+- **Status**: **Implemented (Claude only)** (v0.7.4, commit `3bc336f`). Other vendors planned v0.7.x.
 - **Files**: `tests/cold_start/README.md` + `prompt.txt` + `expected_5_block_structure.md` + `run_cold_start.py` (stdlib-only Anthropic Messages API client; deterministic excerpt selection over `entities.json` / `claims.json` / `evidence.json` / `timeline.json`); `tests/test_cold_start_runner.py` (5 cases, no network); `.github/workflows/cold_start_weekly.yml` (Sunday 03:00 UTC, secret-gated, allow-fail, auto-commits result row); `docs/cold_start_evidence.md` table header + run log appended by runner.
 - **Drift-zero contract**: excerpt is a deterministic subset (6 seed entities, all `about: iut:Cor.3.12` claims, transitive evidence, 2018–2026 timeline window). No git history, branch state, or unrelated docs leak into the prompt.
 - **Advisory only**: structural failures exit 0 with `fail` row; transport / API errors exit 1 but workflow uses `continue-on-error: true`. The maintainer review of the row is the gate, not the workflow exit code.
 
 ### X. Lean stub per-section split (`lean/IutStatus/<Module>.lean` × 16)
 - **Idea**: 17 entities in `data/entities.json` carry a `lean_module` field pointing at `IutStatus.Anabelian` / `Frobenioid` / `EtaleTheta` / etc., yet `lean/IutStatus/Basic.lean` was the only file. Validate.py never enforced the existence of those module files — a Round-7-class drift between graph metadata and on-disk reality. Closes Phase 1 must-band #2 by splitting Basic.lean into 16 per-section files (one per unique `lean_module` value), turning Basic.lean into a pure orchestrator that imports every module, and adding a validator rule that fails CI if any `lean_module` reference does not resolve to a file.
-- **Status**: **Implemented** (v0.7.5, commit pending).
+- **Status**: **Implemented** (v0.7.5, commit `fca140e`).
 - **Files**: 16 new `lean/IutStatus/<Module>.lean` files (Anabelian / AbsoluteAnabelian / MonoAnabelian / Frobenioid / EtaleTheta / MonoTheta / TemperedRigidity / Cuspidalization / HodgeTheater / ThetaLink / LogLink / Multiradial / Cor312 / HeightInequality / Diophantine / ABC); rewritten `lean/IutStatus/Basic.lean` (orchestrator with explicit imports); `tools/validate.py` (lean_module resolution rule); `tests/test_validation.py` LeanModuleTests (2 cases: every-module-resolves + Basic-imports-every-module).
 - **Drift-zero contract preserved**: every identifier in every per-section file maps 1:1 to an `iut:*` IRI in entities.json. Module dependencies are encoded via `import` statements following the mathematical hierarchy (Anabelian → AbsoluteAnabelian → MonoAnabelian; Frobenioid → EtaleTheta → MonoTheta + TemperedRigidity + Cuspidalization; HodgeTheater → ThetaLink + LogLink → Multiradial → Cor312 → HeightInequality → Diophantine + ABC).
 - **MonoTheta exception**: the `iut:mono_theta_environment` entity carries `lean_module=IutStatus.MonoTheta` but no `lean_stub`. The new module file ships a minimal `axiom mono_theta_environment : Prop` so the file exists and Basic.lean imports cleanly; the data record itself is not modified.
 
 ### Y. Round 8 user-override audit (multi-class fixes + 2 regression tests)
 - **Idea**: Round 8 was launched by the standing user-override phrase after Round 7 analyst recommended skipping. The audit found one class of defect the prior 7 rounds missed — *prose-layer scrub miss after data/ repair* — directly contradicting v0.7.6's "documentation coherence pass" claim. Closes 1 critical + 5 high + 4 medium findings in a single release with two new regression tests.
-- **Status**: **Implemented** (v0.7.7, commit pending).
+- **Status**: **Implemented** (v0.7.7, commit `b8e15af`).
 - **Critical**: `docs/section_8_disputes_timeline.md:124` retained the Round-7 fabricated ISBN `978-4-04-110262-7` even though `data/evidence.json` was repaired in v0.6.1; v0.7.6 doc-coherence pass scrubbed counts but missed the scrub of fabricated identifiers. Fix replaces the value + adds `test_round_7_fabricated_isbn_not_in_docs` (allowlist for INNOVATION_LOG.md / AUDIT_PROVENANCE.md which document the fabrication intentionally).
 - **JSON-LD context drift**: `data/context.jsonld` was missing mappings for `archive_url` (added v0.7.0) and `role` (added v0.7.2) — JSON-LD processors silently dropped those fields on expansion. Fix adds mappings + `test_every_schema_property_has_context_mapping` regression.
 - **Cold-start runner repairs**: placeholder model id `claude-opus-4-5` → real `claude-opus-4-7`; `LLM_CONTEXT.md` moved to Messages API `system` slot (vendor-neutrality + steerability); `collect_known_iris` now reads the full on-disk graph (not just the truncated excerpt) so legitimate IRIs do not register as fabrications; `BLOCK_LABEL_PATTERNS` strengthened with header / qualifier constraints to avoid `joshi`-keyword false positives.
@@ -184,7 +184,7 @@ recorded with date and commit SHA where relevant.
 
 ### Z. Round 9 user-override audit (consumer-chain drift repair + per-release mini-audit recommendation)
 - **Idea**: Round 9 launched after Round 8 critic recommended switching to per-release mini-audit; instead the user override fired the standard 3-agent batch audit. Round 9 found a class of defect Round 8 missed: **the consumer chain** (loader → MCP → render → committed docs) was diverging from the **schema chain** Round 8 had repaired. Schemas had `archive_url` and `role`; loaders, MCP serializers, render_md, and even the auto-generated docs/disputes.md / timeline.md / overview.md had not propagated the changes. v0.7.6 "documentation coherence pass" was self-undermined: the auto-gen files were 6 release boundaries stale (last commit v0.5.1).
-- **Status**: **Implemented** (v0.7.8, commit pending). 4 CRITICAL + 9 HIGH + 6 MEDIUM closed.
+- **Status**: **Implemented** (v0.7.8, commit `9fcf87f`). 4 CRITICAL + 9 HIGH + 6 MEDIUM closed.
 - **Files**:
   - `docs/disputes.md` / `timeline.md` / `overview.md`: regenerated; CI now `git diff --exit-code` after `render_md.py` to fail-loud on future stale-state.
   - `mcp/server.py`: `_entity_to_json` exposes `lean_stub` + `role`; `_claim_to_json` exposes `specific_support`; evidence + timeline dispatch expose `archive_url` and `url`. Regression suite `tests/test_mcp_server.py` (6 cases) pins serializer parity vs dataclass fields.
@@ -205,7 +205,7 @@ recorded with date and commit SHA where relevant.
 ### AA. v0.7.9 — `tools/property_audit.py` (R4-R9 systemic root-cause structural fix)
 
 - **Idea**: Rounds 4-9 each surfaced ≥ 1 CRITICAL drift in the same class — schema property declared in `schemas/*.json` failed to propagate to one of the consumer surfaces (context.jsonld, loaders/python_minimal.py, mcp/server.py, tools/render_md.py). Round 9 critic concluded that *per-release audits cannot replace a structural gate*; v0.7.9 is the structural gate. `tools/property_audit.py` enumerates every schema property and verifies presence at L1-L4 with indent-bounded source slicing for nested dispatch branches. L4 (render) is opt-in via per-property `render_optional` allow-list to keep the human-readable Markdown view curated.
-- **Status**: **Implemented** (v0.7.9, commit pending).
+- **Status**: **Implemented** (v0.7.9, commit `c92234a`).
 - **Drift caught on first run**: `_claim_to_json` was silently dropping the `type` field (entity serializer emitted it; claim serializer did not). Identical R9-class drift, surviving R9. The audit caught it on its first execution — direct empirical validation.
 - **Files**:
   - `tools/property_audit.py` (new, 323 lines) — full audit driver; `--json` machine-readable mode; `--schema <file>` filter; indent-aware function-body slicing handles nested branches inside `_dispatch_tool`.
@@ -221,7 +221,7 @@ recorded with date and commit SHA where relevant.
 ### BB. v0.7.10 — Architect-Sec-8 + HIGH-2 deferred coverage close + governance machinery
 
 - **Idea**: Two test-coverage gaps and one governance gap had been deferred since v0.7.8. Architect Sec-8 noted that `tools/render_md.py` and `loaders/python_minimal.py` had no direct unit tests (only indirect coverage via end-to-end CI render-diff and validate.py loading). HIGH-2 (Round 9 architect) flagged that `data/context.jsonld` had only forward-direction coverage from property_audit.py. Governance honest-revision (Round 7) noted that CONTRIBUTING.md PR rule #1 (label requirement) was a documentation claim with no machinery. v0.7.10 closes all three.
-- **Status**: **Implemented** (v0.7.10, commit pending).
+- **Status**: **Implemented** (v0.7.10, commit `e5b85f1`).
 - **Files**:
   - `tests/test_render_md.py` (new, 24 cases) — per-render-function contract: banner invariant, section grouping, ordering by date, evidence URL + archive_url surfacing, `_render_claim` neutrality (no editorial canaries like "consensus" / "settled"), specific_support / specific_objection conditional surfaces, missing-evidence placeholder, em-dash actor formatting.
   - `tests/test_loader.py` (new, 23 cases) — `LoadGraphTests` (full round-trip / missing dir / missing required file / evidence optional / non-graph rejection), per-dataclass field population + optional defaults + KeyError → ValueError translation, `GraphQueryTests` (entity / claim lookup, claims_about, opposing_pairs both directions, claims_by_position, claims_by_peer_review, frozen=True immutability), and `LiveGraphSmokeTests` against actual `data/`.
@@ -238,7 +238,7 @@ recorded with date and commit SHA where relevant.
 ### CC. v0.7.11 — NDL Search API extension to ISBN-net resolution
 
 - **Idea**: Round 7 fabricated Kato ISBN (`978-4-04-110262-7`) had a passing structural shape but no real existence. `tools/verify_identifiers.py --check-isbn` only consulted Open Library, whose Japanese-language coverage is partial (`unresolved` was the polite response, blocking automated detection of jp-fabrication-class). v0.7.11 closes that gap by adding a National Diet Library (NDL) OpenSearch fallback for Japanese-group ISBNs (978-4-/4-).
-- **Status**: **Implemented** (v0.7.11, commit pending).
+- **Status**: **Implemented** (v0.7.11, commit `6ab5c38`).
 - **Files**:
   - `tools/verify_identifiers.py`: new `_is_japanese_isbn(digits)` (978-4 / 9794 prefix; ISBN-10 leading 4); `_query_ndl_isbn(digits)` issues GET to `https://iss.ndl.go.jp/api/opensearch?isbn=…`, substring-matches `<openSearch:totalResults>N</openSearch:totalResults>` (or `<os:` namespace variant) without an XML parser dependency. `verify_isbn_network` extended: jp ISBN + OL 404 + NDL 0-hits → `invalid` (the fabrication signal); jp ISBN + OL 404 + NDL hit → `alive`; jp ISBN + OL 404 + NDL transport error → `unresolved` (no false-positive on flake); non-jp behaviour unchanged.
   - `tests/test_verify_identifiers.py`: new `_MockResponse` helper, `_fake_404` constructor, `_ndl_body(total_results)` Atom RSS factory; replaces the single 404-only test with 5 path tests (`test_non_jp_open_library_404_is_unresolved_no_ndl_call`, `test_jp_open_library_404_ndl_zero_hits_is_invalid`, `test_jp_open_library_404_ndl_hit_is_alive`, `test_jp_open_library_404_ndl_transport_error_is_unresolved`, `test_open_library_2xx_is_alive_no_ndl_call`); new `JapaneseIsbnDetectionTests` (5 cases for `_is_japanese_isbn`).
@@ -249,7 +249,7 @@ recorded with date and commit SHA where relevant.
 ### DD. v0.7.12 — Wayback Machine archive_url passive-lookup population
 
 - **Idea**: Schema-level support for `archive_url` shipped at v0.7.0 with empty values everywhere; the actual Wayback population was deferred. v0.7.12 runs `tools/archive_evidence.py --network --lookup --apply` against the live Wayback Availability API for every evidence and timeline record that has a primary `url` and no `archive_url`. The result rotates the Merkle root for the first time since the consumer-chain repair at v0.5.2.
-- **Status**: **Implemented** (v0.7.12, commit pending).
+- **Status**: **Implemented** (v0.7.12, commit `a0de80e`).
 - **Why this is a one-shot ingestion, not a CI gate**: the Wayback Availability API is rate-limited and best-effort; running it on every PR would (a) flake CI, (b) hammer archive.org, and (c) produce churn whenever the closest snapshot rotates. The right operational pattern is a rare maintainer-driven sweep (this commit) plus a separate `--submit` sweep for URLs that still have no snapshot. The repo is therefore *not* adding archive_url population to CI.
 - **Files**: `data/evidence.json`, `data/timeline.json` (data rotation: 3 records gained `archive_url`); `data/merkle_root.txt` (root rotation `6736c24a…` → `c516d24f28d9686f6632d147f714bd855e26533701b3e63b366a825b6af63cbd`); `docs/{overview,disputes,timeline}.md` (regenerated by render_md). Tests, schemas, and tooling unchanged.
 - **Empirical numbers (this run)**:
@@ -290,7 +290,41 @@ recorded with date and commit SHA where relevant.
   - Architect H1 / Critic m4: ARCHITECTURE.md test count refresh + AUDIT_PROVENANCE disclaimer commit-range refresh **were** done in v0.7.13 (this entry), but the broader staleness of FAILURE_MODES.md / UNDERSTANDING_LEVELS.md ("definition_locator" / "verbatim_short_statement" / `migrate_v0_2_to_v0_3.py` / `superseded_by_lana_2026_07` / archive_url=required at v0.3) — all describing aspirational mitigations as if implemented — remains. Architect C3 recommended an "honest revision" pass mirroring v0.7.8's ARCHITECTURE.md schemas/v0.{2,3} repair. Deferred to v0.7.14 (separate commit so doc-rewrite churn does not bury Round 10 code fixes).
   - Architect M5: `data/timeline.json` synthetic Jan-1 dates (`event:1985_abc_conjecture`, `event:2008_frobenioids`, `event:2009_etale_theta`) — these are precision-loss artefacts of the `format: date` schema constraint. Adding a `date_precision` field (year / month / day) and migrating the 3 records is an HIGH for v0.7.14.
   - Critic M5: `https://hinanohart.github.io/iut-status-2026/iri/` IRI base URL is 404 (Pages not deployed). Either ship a Pages workflow or honestly document the IRI as opaque-not-dereferenceable. Deferred.
-- **Forward**: Round 10 closes the *gate-drift* class. Round 11 (if user-override fires) will land in semantic / external-reality / docs-honest-revision territory, where the property_audit and section-IRI gates can no longer help. The new operating cadence is per-release mini-audit; that is now a documented part of `AUDIT_PROVENANCE.md`'s honest-revision protocol rather than a hope.
+- **Forward**: Round 10 was originally framed as closing the *gate-drift* class. **v0.7.14 (Round 11) retracts that claim.** Round 11 sub-agents — explicitly instructed to attempt to refute the closure — succeeded on 3 of 4 layers (`_extract_payload_dict_keys` "id" discriminator was bypassable by sibling pollution / dict comprehension / `dict()` Call form; the JSON-RPC compliance was missing §4 jsonrpc-version + §4.2 params-type checks and inputSchema runtime enforcement; the section-IRI regex char-class missed `.` so `iut:Cor.3.12` — the central disputed corollary — was invisible to the very gate that was supposed to protect it). Honest framing going forward: the gate-drift class is **not closed**; per-release mini-audit cadence is the operating norm. See candidate FF for the Round 11 closure of these inherited bypasses.
+
+### FF. v0.7.14 — Round 11 closure: refute Round 10 + AST narrow + JSON-RPC §4/§4.2 + inputSchema runtime + IRI gate dotted-IRI fix + evidence URL scheme parity
+
+- **Idea**: Round 10 INNOVATION_LOG candidate EE claimed *"Round 10 closes the gate-drift class"*. Round 11 user-override audit ran three independent sub-agents instructed to **attempt to refute** that closure. They succeeded on 3 of 4 layers, plus surfaced multiple inherited bypasses. Round 11 ships v0.7.14 with the inherited-bypass closures, and **retracts** the candidate-EE overconfident framing.
+- **Status**: **Implemented** (v0.7.14, commit pending).
+- **Files** (12 modified + 0 added; no new files needed because Round 11 fixes were narrowing existing patches rather than scaffolding new structures):
+  - `tests/test_validation.py:294` — section-IRI gate regex char-class extended `[A-Za-z0-9_]+` → `[A-Za-z][A-Za-z0-9_.\-]*`. Without `.`, `iut:Cor.3.12` (cited 28× across 6 section docs) was invisible to the Round-10 gate. Positive-control regression test added (`test_section_iri_gate_finds_dotted_iris`).
+  - `tests/test_validation.py:test_url_scheme_pattern_uniform_across_schemas` — 4 URL fields (timeline.url, timeline.archive_url, evidence.url, evidence.archive_url) all required to declare `format: uri` + `^https?://` pattern. Round-10 hardened only timeline.url; evidence.* and timeline.archive_url were left silently accepting javascript:/data:/file:.
+  - `schemas/evidence.json` — `url` and `archive_url` gain `format: uri` + `pattern: ^https?://` (parity with timeline.url R10 fix). XSS surface eliminated at schema layer.
+  - `schemas/timeline.json` — `archive_url` ditto. Plus new optional `date_precision: enum [year, month, day]` field for the 3 synthetic Jan-1 dates whose precision is year-only.
+  - `tools/property_audit.py:_extract_payload_dict_keys` — narrowed from "any-Dict-with-`id`-key" (R10 false-positive class identified above) to two explicit patterns: (1) `ast.Assign` whose target name is in `PAYLOAD_VARIABLE_NAMES = ("payload", "payload_list")`, with the assigned subtree walked for nested ast.Dict; (2) `ast.Return` of a top-level `ast.Dict` literal (covers `_entity_to_json` / `_claim_to_json` shape). Critically, `ast.Return` of an `ast.Call` (the `_make_response(...)` envelope wrapper) does NOT count, eliminating envelope-key pollution at its root. Future MCP refactor must adopt one of those two patterns or update `PAYLOAD_VARIABLE_NAMES`.
+  - `mcp/server.py:_handle_jsonrpc` — added (a) §4 jsonrpc-version validation (must be literal `"2.0"`); (b) §4.2 params type validation (Object or Array; `null` / `int` / `string` / `bool` rejected with -32602); (c) §6 nested-batch rejection (`_depth > 0` guard); (d) tools/call requires by-name (Object) parameters specifically.
+  - `mcp/server.py:_validate_tool_arguments` (new helper) — at runtime, enforces the `inputSchema.pattern` / `required` / `type` declarations that v0.7.13 left as documentation-only. Crashes converted to clean -32602 invalid-params responses.
+  - `mcp/server.py` `iut_timeline` payload re-emits `date_precision` (drift-zero propagation through L1-L4).
+  - `tools/archive_evidence.py:200,235` — host check upgraded from `startswith("http://web.archive.org/")` prefix-match to `urlparse(...).netloc.lower() == "web.archive.org"` strict-equality. Closes the `web.archive.org.evil.com/…` redirect class. Path is also asserted to start with `/web/`.
+  - `tools/innovation_explorer.py:COMMIT_REF_RE` — length-bounded `(?:[0-9a-f]{7,12}|[0-9a-f]{40})` so the 64-char Merkle root cannot masquerade as a commit citation in `Implemented-needs-evidence` checks.
+  - `data/context.jsonld` — `date_precision` mapping added (`iut:datePrecision`).
+  - `data/timeline.json` — 3 synthetic Jan-1 records gained `date_precision: "year"` (fabrication-class same as R7 jp-ISBN).
+  - `data/merkle_root.txt` — rotated `c516d24f…` → `e6d1d1b5bfc7fc19f6743be127896abaf5ae25df80a7ad39b30e15f6740c42ae` (timeline.json data rotation; first rotation since v0.7.12 Wayback population).
+  - `loaders/python_minimal.py` — `TimelineEvent.date_precision: str | None = None`; factory accepts the field.
+  - `.github/workflows/ci.yml` — Python matrix `["3.10", "3.11", "3.12"]` so the README's "Python 3.10+" claim is empirically tested.
+  - `README.md` — v0.7.13 + v0.7.14 release-notes rows added (Round-11 critic surfaced the v0.7.13 row missing as an internal contradiction); test-count `177 cases` → `201 cases`.
+  - `docs/INNOVATION_LOG.md` — 13 "commit pending" placeholders replaced with actual short SHAs derived from `git tag → git rev-list -n1`. Candidate EE Forward-block retracts the "gate-drift class closed" claim.
+  - `docs/AUDIT_PROVENANCE.md` — Round 11 row added (the longest entry to date because the meta-finding is significant).
+  - `tests/test_mcp_server.py` — 10 new cases: `test_wrong_jsonrpc_version_returns_invalid_request` / `test_params_null_returns_invalid_params` / `test_params_non_object_non_array_returns_invalid_params` / `test_nested_batch_rejected_at_inner_level` / `IutInputSchemaEnforcementTests` (5 cases pinning -32602 for non-string IRI / pattern violation / wrong namespace / accepting dotted IRI / missing required).
+- **Test count**: 189 → 201 (+12).
+- **Why this layer**: Round 10 INNOVATION_LOG explicitly claimed "the gate-drift class is closed". Round 11 was instructed to attempt to refute that. The attempt succeeded — 3 of 4 layers were reverse-engineered to bypasses. The honest framing is that **gate-drift is a recurring class**: each release ships with at least one Round-N CRITICAL surface, the structural gates are typically narrow patches that catch the exact reproduction case, and adversarial-form testing must be done explicitly each round. Round 11 explicitly retracts the closure claim and codifies the per-release mini-audit cadence as the operating norm.
+- **What R11 did NOT close (deferred to v0.7.15)**:
+  - C5 (R11 architect / critic): `data/context.jsonld:38,65` `proponents` and `actors` carry `@container: @set` but no `@type: @id`, treating them as plain literal strings. Migrating to `person:Mochizuki` / `org:PRIMSEditorialBoard` IRIs requires (a) adding `Organization` to entity schema type enum + entity.json regex, (b) adding 9+ Person + 2+ Organization records to `data/entities.json`, (c) updating `data/claims.json` and `data/timeline.json` to use IRI references, (d) extending `validate.py` with the reverse-direction Person/Organization-must-resolve invariant. v1.0 task; documented as known limitation in `LLM_CONTEXT.md` going forward.
+  - render_md.py URL escape (R11 architect MED-7 / critic CRIT-4 downstream): even after schema-level scheme hardening, defense-in-depth scheme allowlist at render boundary is desirable. v0.7.15 task.
+  - LLM_CONTEXT.md L82-96 IRI references unwrapped in backticks — the section-IRI gate after R11 widening would catch these if backticks are added; mechanical wrap pass deferred.
+  - `cold_start_evidence.md` honest revision (R11 critic MAJ-2): README L73 "empirically tested where vendor evidence is recorded" plus `cold_start_evidence.md` showing 0/0/0 across 7 vendors. Honest revision is to surface the 0-runs state in README itself.
+  - IRI base URL `https://hinanohart.github.io/iut-status-2026/iri/` 404 — Pages deploy or honest disclaimer in v0.7.15.
+- **Forward**: v0.7.15 will land the deferred items above. Round 12 (if user-override fires) is **expected to find at least one CRITICAL** because the empirical pattern from Rounds 4-11 is unbroken; the AST narrow / JSON-RPC compliance / scheme parity / IRI gate widening / inputSchema enforcement done in v0.7.14 are themselves narrow patches that may have bypasses an adversarial Round-12 will surface.
 
 ### Q. (open slot for future innovation-explorer findings)
 

@@ -190,6 +190,100 @@ class JsonRpcProtocolEdgeCaseTests(unittest.TestCase):
         self.assertEqual(len(responses), 1)
         self.assertEqual(responses[0]["error"]["code"], -32600)
 
+    def test_wrong_jsonrpc_version_returns_invalid_request(self) -> None:
+        # Round 11 audit (v0.7.14): JSON-RPC 2.0 §4 mandates the
+        # `jsonrpc` field be the literal string "2.0". Earlier versions
+        # silently accepted "1.0" / missing field.
+        for bad in ({"jsonrpc": "1.0", "id": 1, "method": "tools/list"},
+                    {"id": 1, "method": "tools/list"},
+                    {"jsonrpc": 2.0, "id": 1, "method": "tools/list"}):
+            responses = mcp_server._handle_jsonrpc(bad, self.graph)
+            self.assertEqual(len(responses), 1, f"failed on {bad!r}")
+            self.assertEqual(
+                responses[0]["error"]["code"], -32600,
+                f"wrong jsonrpc field must produce -32600; got {responses[0]!r}",
+            )
+
+    def test_params_null_returns_invalid_params(self) -> None:
+        # Round 11 audit (v0.7.14): `params: null` made req.get("params", {})
+        # return None and crashed downstream `params.get(...)`. JSON-RPC
+        # 2.0 §4.2 says params, when present, MUST be Array or Object.
+        req = {"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": None}
+        responses = mcp_server._handle_jsonrpc(req, self.graph)
+        self.assertEqual(len(responses), 1)
+        self.assertEqual(responses[0]["error"]["code"], -32602)
+
+    def test_params_non_object_non_array_returns_invalid_params(self) -> None:
+        for bad in (42, "string", True):
+            req = {"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": bad}
+            responses = mcp_server._handle_jsonrpc(req, self.graph)
+            self.assertEqual(len(responses), 1, f"failed on params={bad!r}")
+            self.assertEqual(
+                responses[0]["error"]["code"], -32602,
+                f"non-Object/Array params must produce -32602; got {responses[0]!r}",
+            )
+
+    def test_nested_batch_rejected_at_inner_level(self) -> None:
+        # Round 11 audit (v0.7.14): JSON-RPC 2.0 §6 says batches MUST be
+        # flat arrays of Request objects. v0.7.13 silently consumed
+        # nested arrays without producing an error.
+        nested = [[{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}]]
+        responses = mcp_server._handle_jsonrpc(nested, self.graph)
+        self.assertEqual(len(responses), 1)
+        self.assertEqual(responses[0]["error"]["code"], -32600)
+
+
+class IutInputSchemaEnforcementTests(unittest.TestCase):
+    """Round 11 audit (v0.7.14) regression: the ``tools/list`` response
+    advertises ``inputSchema.pattern`` constraints that v0.7.13 did NOT
+    enforce at the runtime dispatch boundary. A confused or malicious
+    client supplying ``{"iri": ["array"]}`` to ``iut_entity`` crashed
+    the loader (TypeError → -32603 internal error). This suite pins
+    the explicit -32602 invalid-params behaviour.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.graph = mcp_server.IutGraph.load(mcp_server.REPO_ROOT / "data")
+
+    def _call(self, name: str, args: dict) -> dict:
+        return mcp_server.handle_tools_call(
+            request_id=1,
+            params={"name": name, "arguments": args},
+            graph=self.graph,
+        )
+
+    def test_iut_entity_rejects_non_string_iri(self) -> None:
+        resp = self._call("iut_entity", {"iri": ["array"]})
+        self.assertIn("error", resp)
+        self.assertEqual(resp["error"]["code"], -32602)
+
+    def test_iut_entity_rejects_pattern_violation(self) -> None:
+        resp = self._call("iut_entity", {"iri": "iut:abc; DROP TABLE"})
+        self.assertIn("error", resp)
+        self.assertEqual(resp["error"]["code"], -32602)
+
+    def test_iut_entity_rejects_wrong_namespace(self) -> None:
+        # claim:foo violates the (iut|person|paper) namespace constraint.
+        resp = self._call("iut_entity", {"iri": "claim:something"})
+        self.assertIn("error", resp)
+        self.assertEqual(resp["error"]["code"], -32602)
+
+    def test_iut_entity_accepts_dotted_iri(self) -> None:
+        # Round 10 schema permits Cor.3.12; v0.7.14 runtime check honors it.
+        resp = self._call("iut_entity", {"iri": "iut:Cor.3.12"})
+        self.assertIn("result", resp)
+
+    def test_iut_evidence_rejects_pattern_violation(self) -> None:
+        resp = self._call("iut_evidence", {"iri": "evidence:has spaces"})
+        self.assertIn("error", resp)
+        self.assertEqual(resp["error"]["code"], -32602)
+
+    def test_iut_entity_missing_required_iri_returns_invalid_params(self) -> None:
+        resp = self._call("iut_entity", {})
+        self.assertIn("error", resp)
+        self.assertEqual(resp["error"]["code"], -32602)
+
 
 class IutTimelinePayloadFieldTests(unittest.TestCase):
     """Round 10 audit (v0.7.13) regression: the ``iut_timeline`` MCP

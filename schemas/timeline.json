@@ -12,6 +12,10 @@
     "type": {"const": "event"},
     "label": {"type": "string", "minLength": 5},
     "date": {"type": "string", "format": "date"},
+    "date_precision": {
+      "enum": ["year", "month", "day"],
+      "description": "v0.7.14 (Round 11): explicit precision marker so synthetic-Jan-1 / synthetic-day-1 dates can no longer pose as full ISO calendar dates. When omitted (default 'day'), the `date` field is interpreted as exact. Set 'year' for events whose precise day/month is not in the public record (Masser-Oesterle 1985, Frobenioids I 2008, Etale Theta 2009 — all -01-01 padded), 'month' for events known to month precision but day unknown."
+    },
     "actors": {
       "type": "array",
       "items": {"type": "string"}
@@ -25,7 +29,8 @@
     "archive_url": {
       "type": "string",
       "format": "uri",
-      "description": "Wayback Machine (or other archival) snapshot URL for the primary `url`. Particularly important for events pinned to volatile index pages such as `kurims.kyoto-u.ac.jp/~motizuki/news-english.html` whose entries rotate over time."
+      "pattern": "^https?://",
+      "description": "Wayback Machine (or other archival) snapshot URL for the primary `url`. Particularly important for events pinned to volatile index pages such as `kurims.kyoto-u.ac.jp/~motizuki/news-english.html` whose entries rotate over time. v0.7.14 (Round 11): http(s) pattern parity with `url`."
     }
   },
   "additionalProperties": false

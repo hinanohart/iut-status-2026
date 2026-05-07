@@ -290,8 +290,14 @@ class GenericityTests(unittest.TestCase):
         # inside backtick-quoted spans only — bare prose words like
         # "iut: introduction" are intentionally excluded by the
         # backtick anchor.
+        # Round 11 audit (v0.7.14): char class extended to include
+        # `.` and `-`. Without the `.` the regex was silently failing
+        # to match `iut:Cor.3.12` — the central disputed corollary
+        # cited 28 times across 6 section docs. The character class
+        # now follows the `entity.json` pattern `[A-Za-z][A-Za-z0-9_.]*`
+        # and additionally allows `-` for safety.
         iri_re = re.compile(
-            r"`((?:iut|claim|evidence|event|person|paper|org):[A-Za-z0-9_]+)`"
+            r"`((?:iut|claim|evidence|event|person|paper|org):[A-Za-z][A-Za-z0-9_.\-]*)`"
         )
         offenders: list[tuple[Path, str]] = []
         for path in sorted((REPO_ROOT / "docs").glob("section_*.md")):
@@ -330,6 +336,64 @@ class GenericityTests(unittest.TestCase):
         self.assertTrue(
             pattern.startswith("^https?"),
             f"timeline.json url pattern must restrict to http(s); got {pattern!r}",
+        )
+
+    def test_url_scheme_pattern_uniform_across_schemas(self) -> None:
+        """Round 11 audit (v0.7.14) gate: ``timeline.json`` was hardened
+        in Round 10 but ``evidence.json`` was left half-fixed. Every URL
+        field in every schema (``url`` and ``archive_url``) must enforce
+        ``format=uri`` + ``^https?://`` pattern. Otherwise
+        ``javascript:alert(1)`` / ``data:`` / ``file:`` survive at the
+        schema layer and propagate to render_md → docs → static-site
+        consumers.
+        """
+        url_field_locations = [
+            ("schemas/timeline.json", "url"),
+            ("schemas/timeline.json", "archive_url"),
+            ("schemas/evidence.json", "url"),
+            ("schemas/evidence.json", "archive_url"),
+        ]
+        for schema_rel, field in url_field_locations:
+            schema = json.loads(
+                (REPO_ROOT / schema_rel).read_text(encoding="utf-8")
+            )
+            props = schema["properties"].get(field, {})
+            self.assertEqual(
+                props.get("format"), "uri",
+                f"{schema_rel}#properties.{field} must declare format=uri",
+            )
+            pattern = props.get("pattern", "")
+            self.assertTrue(
+                pattern.startswith("^https?"),
+                f"{schema_rel}#properties.{field} must restrict to http(s); "
+                f"got pattern={pattern!r}",
+            )
+
+    def test_section_iri_gate_finds_dotted_iris(self) -> None:
+        """Round 11 audit (v0.7.14) positive control: the section IRI
+        gate must observe at least one IRI containing a dot (e.g.
+        ``iut:Cor.3.12``) when scanning ``docs/section_*.md``. Without
+        this control the Round-10 regex character class
+        ``[A-Za-z0-9_]+`` silently bypassed the central disputed
+        corollary across 28 citations.
+        """
+        iri_re = re.compile(
+            r"`((?:iut|claim|evidence|event|person|paper|org):[A-Za-z][A-Za-z0-9_.\-]*)`"
+        )
+        seen_dotted = False
+        for path in (REPO_ROOT / "docs").glob("section_*.md"):
+            text = path.read_text(encoding="utf-8")
+            for match in iri_re.finditer(text):
+                if "." in match.group(1):
+                    seen_dotted = True
+                    break
+            if seen_dotted:
+                break
+        self.assertTrue(
+            seen_dotted,
+            "section IRI regex did not observe any dotted IRI; "
+            "iut:Cor.3.12 (the central disputed corollary) must be visible "
+            "to the gate. Round 11 regression guard.",
         )
 
 

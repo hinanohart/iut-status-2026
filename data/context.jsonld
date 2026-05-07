@@ -62,6 +62,7 @@
 
     "event":           "schema:Event",
     "date":            {"@id": "schema:startDate", "@type": "xsd:date"},
+    "date_precision":  "iut:datePrecision",
     "actors":          {"@id": "schema:actor", "@container": "@set"}
   }
 }

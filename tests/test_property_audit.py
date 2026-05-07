@@ -22,6 +22,7 @@ import json
 import shutil
 import subprocess
 import sys
+import textwrap
 import unittest
 from pathlib import Path
 
@@ -142,6 +143,100 @@ class DriftInjectionTests(unittest.TestCase):
 
             rc = self._run_in_isolated(target)
             self.assertNotEqual(rc, 0, "L2 drift should fail audit")
+
+
+class AstAnchorRobustnessTests(unittest.TestCase):
+    """Round 11 audit (v0.7.14) regression: the v0.7.13 AST extractor used
+    ``"id" in dict.keys`` as the discriminator separating payload dicts
+    from MCP envelope dicts. Round 11 demonstrated three bypasses:
+    (a) sibling-dict pollution — a docstring sample / cache helper
+    containing ``"id"`` would mask a real payload omission;
+    (b) ``dict()`` Call form — never a literal ast.Dict node;
+    (c) dict comprehension — also never a literal ast.Dict node.
+
+    The v0.7.14 fix narrows to ``ast.Assign`` whose target is named
+    ``payload``/``payload_list``, plus ``ast.Return`` of an ``ast.Dict``
+    literal. This test pins that the new anchor catches the sibling
+    pollution case (i.e. an unrelated dict containing ``"id"`` is NOT
+    treated as the payload).
+    """
+
+    def test_sibling_dict_with_id_does_not_mask_payload_omission(self) -> None:
+        sys.path.insert(0, str(REPO_ROOT))
+        import tools.property_audit as audit  # noqa: E402
+
+        # Body simulating an emitter where a docstring / cache helper
+        # contains an "id"-bearing dict, but the actual payload omits
+        # the "type" field. The v0.7.13 substring/AST union check would
+        # incorrectly accept this body because "type" is present in the
+        # sibling dict (NOT in payload). The v0.7.14 anchor must reject.
+        body = textwrap.dedent('''
+            if name == "iut_evidence":
+                ev = graph.evidence.get(args["iri"])
+                if ev is None:
+                    payload: Any = None
+                else:
+                    sample = {"id": "evidence:example", "type": "Paper"}  # noqa: F841
+                    payload = {
+                        "id": ev.id,
+                        "label": ev.label,
+                    }
+                return _make_response(
+                    request_id,
+                    {"content": [{"type": "text", "text": "..."}]},
+                )
+        ''').lstrip()
+        keys = audit._extract_payload_dict_keys(body)
+        self.assertIn("id", keys)
+        self.assertIn("label", keys)
+        self.assertNotIn(
+            "type", keys,
+            "Round 11 regression: the sibling-dict 'sample' must NOT "
+            "pollute payload_keys with its 'type' key. v0.7.13 anchor "
+            "would have included 'type' here.",
+        )
+
+    def test_return_dict_literal_pattern_is_recognised(self) -> None:
+        """`_entity_to_json` and `_claim_to_json` use ``return {...}``
+        directly; this pattern must keep working."""
+        sys.path.insert(0, str(REPO_ROOT))
+        import tools.property_audit as audit  # noqa: E402
+
+        body = textwrap.dedent('''
+            def _entity_to_json(graph, iri):
+                ent = graph.entities.get(iri)
+                if ent is None:
+                    return None
+                return {
+                    "id": ent.id,
+                    "type": ent.type,
+                    "label": ent.label,
+                }
+        ''').lstrip()
+        keys = audit._extract_payload_dict_keys(body)
+        self.assertEqual(keys, {"id", "type", "label"})
+
+    def test_envelope_call_return_is_not_payload(self) -> None:
+        """``return _make_response(...)`` MUST NOT contribute envelope
+        keys (``content``, ``type``, ``text``) to the payload key set.
+        """
+        sys.path.insert(0, str(REPO_ROOT))
+        import tools.property_audit as audit  # noqa: E402
+
+        body = textwrap.dedent('''
+            if name == "iut_protocol":
+                return _make_response(
+                    request_id,
+                    {"content": [{"type": "text", "text": "hello"}]},
+                )
+        ''').lstrip()
+        keys = audit._extract_payload_dict_keys(body)
+        self.assertEqual(
+            keys, set(),
+            "envelope dicts (under _make_response Call) MUST NOT "
+            "contribute to payload_keys; only Assign-target payload "
+            "or top-level Return-of-Dict patterns count.",
+        )
 
 
 class PolicyContractTests(unittest.TestCase):

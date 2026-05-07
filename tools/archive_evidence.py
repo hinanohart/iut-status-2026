@@ -197,7 +197,17 @@ def lookup_one(url: str) -> tuple[str | None, str]:
     # so downstream consumers do not encounter mixed-content issues
     # and so a future content-vs-metadata diff has a stable scheme to
     # compare. Wayback Machine serves https for every snapshot.
-    if snapshot_url.startswith("http://web.archive.org/"):
+    # Round 11 audit (v0.7.14): host check upgraded from prefix-match
+    # (`startswith("http://web.archive.org/")`) — which would silently
+    # accept a hostile redirect to ``web.archive.org.evil.com/...`` —
+    # to strict netloc equality after urlparse. Case-folded for
+    # robustness against ``Web.Archive.Org`` legitimate variants.
+    parsed_snapshot = urlparse(snapshot_url)
+    if parsed_snapshot.scheme not in {"http", "https"}:
+        return None, f"non-http snapshot scheme: {parsed_snapshot.scheme!r}"
+    if parsed_snapshot.netloc.lower() != "web.archive.org":
+        return None, f"snapshot host is not web.archive.org: {parsed_snapshot.netloc!r}"
+    if parsed_snapshot.scheme == "http":
         snapshot_url = "https://" + snapshot_url[len("http://"):]
     return snapshot_url, f"snapshot {closest.get('timestamp', '?')}"
 
@@ -232,8 +242,16 @@ def submit_one(url: str) -> tuple[str | None, str]:
     except Exception as exc:  # noqa: BLE001 — defensive against transport bugs
         return None, f"submit unexpected: {type(exc).__name__}: {exc}"
 
-    if not final_url.startswith("https://web.archive.org/web/"):
-        return None, f"submit returned unexpected url: {final_url!r}"
+    # Round 11 audit (v0.7.14): strict netloc equality (parity with
+    # lookup path above). The earlier prefix `startswith` check would
+    # accept ``https://web.archive.org.evil.com/web/...`` redirects.
+    parsed_final = urlparse(final_url)
+    if parsed_final.scheme != "https":
+        return None, f"submit returned non-https url: {final_url!r}"
+    if parsed_final.netloc.lower() != "web.archive.org":
+        return None, f"submit returned non-web.archive.org host: {parsed_final.netloc!r}"
+    if not parsed_final.path.startswith("/web/"):
+        return None, f"submit returned unexpected url path: {final_url!r}"
     return final_url, f"submitted (status {status})"
 
 

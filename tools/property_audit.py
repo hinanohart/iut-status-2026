@@ -158,11 +158,15 @@ POLICIES: tuple[SchemaPolicy, ...] = (
         loader_factory="_to_timeline",
         mcp_emitter='if name == "iut_timeline":',
         # render_timeline surfaces date / label / actors only.
+        # date_precision is a v0.7.14 (Round 11) precision marker; the
+        # human-facing rendering of "1985-01-01" will be replaced by
+        # render improvements in v0.8 — until then it is MCP-only.
         render_optional=frozenset({
             "id",
             "type",
             "url",
             "archive_url",
+            "date_precision",
         }),
     ),
 )
@@ -304,43 +308,89 @@ def _check_l2_loader(
     return findings
 
 
+PAYLOAD_VARIABLE_NAMES: tuple[str, ...] = ("payload", "payload_list")
+"""Round 11 audit (v0.7.14) — the AST scanner narrows to assignments
+named ``payload`` or ``payload_list``. Any future MCP serializer that
+constructs a different variable name MUST be added here, OR the audit
+will report ``<payload>: payload variable not found`` rather than
+silently passing the union of unrelated dict literals.
+"""
+
+
 def _extract_payload_dict_keys(body: str) -> set[str]:
     """Collect string keys from *payload* dict literals inside ``body``.
 
-    Round 10 audit (v0.7.13) replaced the prior "any-substring-match"
-    heuristic. The earlier check was bypassed by the MCP response
-    envelope ``{"content": [{"type": "text", "text": ...}]}``: the
-    envelope contains ``"type"`` and ``"text"`` as keys regardless of
-    whether the payload dict emits them, so a forgotten payload key was
-    silently passing whenever the envelope happened to share its name
-    (e.g. ``iut_timeline`` payload omitted ``type`` for two releases).
+    Round 10 audit (v0.7.13) introduced AST-based extraction, replacing
+    the substring heuristic that was fooled by the MCP response envelope
+    ``{"content": [{"type": "text", ...}]}``. v0.7.13 used ``"id"`` as
+    the discriminator separating payload from envelope.
 
-    The fix: parse the function body as Python AST, walk every dict
-    literal, and only consider literals that include ``"id"`` as a key
-    — a stable invariant of every payload dict (entity / claim /
-    evidence / timeline). The MCP envelope never carries ``"id"``, so
-    this discriminator cleanly separates payload from framing.
+    Round 11 audit (v0.7.14) narrows further: the v0.7.13 heuristic was
+    reverse-engineered (sibling-dict pollution: any docstring sample,
+    cache, or helper dict containing ``"id"`` would mask a real payload
+    omission; conversely, a future ``dict()`` Call form or a dict
+    comprehension would silently bypass the audit). The Round-11 fix
+    anchors on **assignment-target convention**: the dispatch helpers
+    each assign the outgoing dict to a variable named ``payload`` or
+    ``payload_list``. The AST walker now enumerates ``ast.Assign`` nodes
+    whose target is a ``Name`` with ``id in PAYLOAD_VARIABLE_NAMES`` and
+    extracts the keys from the assigned ``ast.Dict`` (or, for a
+    list-comprehension yielding dicts, the dicts it yields).
+
+    Refactors that adopt a different variable name MUST add it to
+    PAYLOAD_VARIABLE_NAMES; otherwise the audit will surface a clear
+    ``payload variable not found`` finding instead of silently union-ing
+    unrelated literals.
     """
-    # Dedent: the extracted body keeps the original column from the
-    # surrounding function (typically 4 or 8 spaces deep), but ast.parse
-    # requires column-0 code. textwrap.dedent strips the common leading
-    # whitespace.
     dedented = textwrap.dedent(body)
     try:
         tree = ast.parse(dedented)
     except SyntaxError:
         return set()
+
     keys: set[str] = set()
+
+    # Pattern 1 — dispatch branches assign their outgoing payload
+    # to a variable named ``payload`` / ``payload_list`` and then
+    # wrap it inside ``_make_response(..., {"content": [...]})``.
+    # Walk Assign nodes whose target is one of those names; collect
+    # keys from any ast.Dict in the assigned subtree (covers both
+    # plain dict literals and dict comprehensions inside list-comps).
     for node in ast.walk(tree):
-        if not isinstance(node, ast.Dict):
+        if not isinstance(node, ast.Assign):
             continue
-        string_keys = {
-            k.value
-            for k in node.keys
-            if isinstance(k, ast.Constant) and isinstance(k.value, str)
-        }
-        if "id" in string_keys:
-            keys |= string_keys
+        relevant = False
+        for target in node.targets:
+            if (
+                isinstance(target, ast.Name)
+                and target.id in PAYLOAD_VARIABLE_NAMES
+            ):
+                relevant = True
+                break
+        if not relevant:
+            continue
+        for sub in ast.walk(node.value):
+            if isinstance(sub, ast.Dict):
+                for k in sub.keys:
+                    if isinstance(k, ast.Constant) and isinstance(k.value, str):
+                        keys.add(k.value)
+
+    # Pattern 2 — record-level serializers (``_entity_to_json`` /
+    # ``_claim_to_json``) ``return {…}`` directly. Catching this
+    # variant avoids requiring those helpers to introduce a
+    # ``payload`` local just to satisfy the audit. The Return
+    # value is restricted to ast.Dict (not ast.Call) so the
+    # dispatch-branch ``return _make_response(...)`` does NOT
+    # accidentally pollute the key set with envelope keys.
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Return):
+            continue
+        if not isinstance(node.value, ast.Dict):
+            continue
+        for k in node.value.keys:
+            if isinstance(k, ast.Constant) and isinstance(k.value, str):
+                keys.add(k.value)
+
     return keys
 
 

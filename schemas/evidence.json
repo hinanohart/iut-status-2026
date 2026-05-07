@@ -12,11 +12,17 @@
     },
     "type": {"enum": ["Paper", "Blog", "Talk", "Book", "Project"]},
     "label": {"type": "string", "minLength": 5},
-    "url": {"type": "string", "format": "uri"},
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "description": "Source URL for the evidence record. v0.7.14: pattern enforces http(s) only — Round 11 audit found `evidence.url` was left without scheme constraint while timeline.url was hardened in v0.7.13, allowing javascript:/data:/file: schemes to slip through schema validation and propagate to render_md (Markdown link emission) and MCP serializers."
+    },
     "archive_url": {
       "type": "string",
       "format": "uri",
-      "description": "Wayback Machine (or other archival) snapshot URL for the primary `url`. Optional in v0.7.0 (population follow-up); v0.7.x must-band #6 will require Paper / Blog / Book records to carry an archive_url so that Round-6-class content drift can be detected post-hoc."
+      "pattern": "^https?://",
+      "description": "Wayback Machine (or other archival) snapshot URL for the primary `url`. Optional in v0.7.0 (population follow-up); v0.7.x must-band #6 will require Paper / Blog / Book records to carry an archive_url so that Round-6-class content drift can be detected post-hoc. v0.7.14 (Round 11): http(s) scheme pattern parity with `url`."
     },
     "doi": {"type": "string"},
     "isbn": {"type": "string"},
