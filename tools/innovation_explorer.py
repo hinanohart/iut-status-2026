@@ -220,6 +220,28 @@ def explore() -> ExplorerReport:
                     f"evidence the claim is unverifiable."
                 ),
             ))
+        # Round 12 audit (v0.7.15): the v0.7.14 candidate FF declared
+        # itself "Implemented (v0.7.14, commit pending)" — i.e. the
+        # very entry that claimed to replace 13 stale placeholders
+        # left ITSELF as one. The gate matches the *placeholder style*
+        # only (`(vX.Y.Z, commit pending)`), not free-form prose
+        # references to the term that legitimately discuss the
+        # phenomenon (e.g. retracting documentation).
+        elif statuses == ["Implemented"]:
+            placeholder_re = re.compile(
+                r"\(v\d+(?:\.\d+){1,2},\s*commit pending\)"
+            )
+            if placeholder_re.search(c.body):
+                report.findings.append(StructuralFinding(
+                    severity="error", candidate=c.letter,
+                    detail=(
+                        f"candidate {c.title!r} marked Implemented but "
+                        f"carries the literal `(vX.Y.Z, commit pending)` "
+                        f"placeholder. Replace with the actual commit "
+                        f"SHA of the landing tag (Round 12 self-trap "
+                        f"regression guard)."
+                    ),
+                ))
 
     report.open_slot_present = open_slot_seen > 0
     if open_slot_seen == 0:

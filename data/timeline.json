@@ -71,6 +71,7 @@
       "type": "event",
       "label": "Mochizuki additional comment Cmt2018-05",
       "date": "2018-05-01",
+      "date_precision": "month",
       "actors": [
         "Mochizuki"
       ],
@@ -92,6 +93,7 @@
       "type": "event",
       "label": "Mochizuki 'Report on Discussions' counter-response",
       "date": "2018-09-01",
+      "date_precision": "month",
       "actors": [
         "Mochizuki"
       ],
@@ -255,6 +257,7 @@
       "type": "event",
       "label": "Joshi FAQ on Mochizuki-Scholze-Stix dispute posted (math.arizona.edu, supplementary to arXiv:2505.10568v1)",
       "date": "2025-11-01",
+      "date_precision": "month",
       "actors": [
         "Joshi"
       ],

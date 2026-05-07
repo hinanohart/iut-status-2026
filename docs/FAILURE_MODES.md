@@ -13,14 +13,22 @@ agents tend to settle for "approximately the same" wording. The v0.1.1
 audit caught one such drift (`claim:scholze_stix_2018_sub_1` had three
 co-existing wordings of the same SS p.6 sentence).
 
-**Mitigation.**
+**Mitigation (planned, NOT YET IMPLEMENTED — v0.8 target).**
+> ⚠️ Round 12 audit (v0.7.15) honest-revision pass: the items in this
+> Mitigation block describe an *aspirational* design from v0.1.1 — none
+> of `verbatim_sha256`, `verbatim_short_statement`, or
+> `tools/verify_verbatim.py` exist in the v0.7.x codebase. The current
+> drift mitigation is `tools/validate.py` enforcing a 1200-character
+> verbatim cap (see `ARCHITECTURE.md` band table for canonical value)
+> plus the standing 3-agent audit cadence. The original v0.1.1 plan is
+> retained below as a roadmap target for v0.8 schema redesign:
 - `verbatim_sha256` is REQUIRED on every record that has
-  `verbatim_short_statement`.
+  `verbatim_short_statement`. **(planned — not in v0.7.x schema)**
 - `tools/verify_verbatim.py --with-pdf-cache` recomputes the SHA-256
-  from the cached PDF text at the locator and fails CI on mismatch.
+  from the cached PDF text at the locator and fails CI on mismatch. **(planned — file does not exist)**
 - The PDF cache is local (gitignored) but its SHA-256 + pymupdf version
   are pinned in `evidence.json` so any agent or CI runner extracts the
-  same bytes.
+  same bytes. **(planned — fields do not exist)**
 - Auditing 200 records by hand is acknowledged infeasible; the chain
   must be machine-verifiable end-to-end.
 
@@ -152,9 +160,16 @@ sunset path. A v0.4 emergency pivot script
 A policy change or migration on that host can break all of them at once.
 Probability ≈ 25 % over 5 years; impact: evidence layer collapse.
 
-**Mitigation.** `archive_url` (Wayback Machine snapshot) is **required**
-on every Paper / Blog evidence record at v0.3 schema. `tools/archive_evidence.py`
-submits new URLs to the Wayback Machine on entry.
+**Mitigation (current state, not as originally planned).**
+> ⚠️ Round 12 honest revision: as of v0.7.15, `archive_url` is
+> **optional** in `schemas/evidence.json` (not `required`); only
+> 3 / 34 evidence records currently carry one (v0.7.12 Wayback
+> passive-lookup hit rate). `tools/archive_evidence.py` exists and
+> can `--lookup` / `--apply` / `--submit`. The "required at v0.3"
+> framing is retained as the v0.8 schema-redesign target. Until
+> then the layered guard is: (a) `tools/verify_urls.py --network`
+> liveness check; (b) maintainer-driven Wayback sweeps when
+> external URLs degrade.
 
 ### H4. Innovation-explorer triage fatigue → silent PR queue death
 

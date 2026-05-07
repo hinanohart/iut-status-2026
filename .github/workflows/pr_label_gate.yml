@@ -27,7 +27,13 @@ jobs:
       - name: Verify exactly one allowed label is present
         env:
           PR_LABELS_JSON: ${{ toJson(github.event.pull_request.labels) }}
-          ALLOWED_LABELS: "evidence-only claim-add entity-add lean-stub schema docs-fix infra"
+          # Round 12 audit (v0.7.15): added Dependabot's auto-applied
+          # labels (`dependencies`, `github-actions`) so dependency PRs
+          # are not permanently blocked by this gate. CONTRIBUTING.md
+          # PR rule #1 still requires *exactly one* allowed label, so
+          # human PRs continue to be label-disciplined; Dependabot PRs
+          # arrive with exactly one of dependencies/github-actions.
+          ALLOWED_LABELS: "evidence-only claim-add entity-add lean-stub schema docs-fix infra takedown dependencies github-actions"
         run: |
           set -euo pipefail
           # Extract label names from the JSON array provided by GitHub.

@@ -369,6 +369,101 @@ class GenericityTests(unittest.TestCase):
                 f"got pattern={pattern!r}",
             )
 
+    def test_documented_test_count_matches_collected(self) -> None:
+        """Round 12 audit (v0.7.15) gate: README / ARCHITECTURE /
+        INNOVATION_LOG documented test counts must be **at least** the
+        actual ``pytest --collect-only`` count. Drift between those
+        documents (R12 critic M1 found 201/189/204 mismatch across the
+        three) is a cosmetic-but-erodes-trust class. The gate accepts
+        documents that say "204+ cases" / "204 cases" but rejects any
+        document that understates the real count.
+        """
+        import subprocess
+
+        actual = sum(
+            1
+            for line in subprocess.run(
+                [sys.executable, "-m", "pytest", "--collect-only", "-q"],
+                capture_output=True, text=True, cwd=REPO_ROOT, check=False,
+            ).stdout.splitlines()
+            if "::" in line
+        )
+        # Count anchor regex: matches `(NNN cases ... )` or `NNN unittest cases`
+        # in narrative prose. Documents are allowed to use "NNN+" suffix
+        # to mean "at least NNN".
+        count_re = re.compile(r"\b(\d{2,4})\+?\s*(?:cases|unittest cases|tests)\b")
+        for rel in (
+            "README.md",
+            "docs/ARCHITECTURE.md",
+            "docs/INNOVATION_LOG.md",
+        ):
+            text = (REPO_ROOT / rel).read_text(encoding="utf-8")
+            for match in count_re.finditer(text):
+                claimed = int(match.group(1))
+                self.assertLessEqual(
+                    claimed, actual,
+                    f"{rel} claims {claimed} tests but pytest collected "
+                    f"{actual}; documented count must not exceed real count",
+                )
+
+    def test_no_commit_pending_on_implemented_status(self) -> None:
+        """Round 12 audit (v0.7.15) regression: v0.7.14 candidate FF
+        itself left ``commit pending`` on its own ``Implemented`` line —
+        a self-contradiction the v0.7.13 candidate-FF text claimed to
+        have closed. Going forward, no candidate whose ``Status`` line
+        contains ``Implemented`` may carry the literal text ``commit
+        pending`` anywhere in its body.
+        """
+        log = (REPO_ROOT / "docs" / "INNOVATION_LOG.md").read_text(encoding="utf-8")
+        # Split by the "### X." header pattern — innovation_explorer
+        # uses the same regex, so this aligns with the live sentinel.
+        sections = re.split(r"(?m)^### ([A-Z]+)\. ", log)
+        # `sections[0]` is preamble; rest alternate (letter, body).
+        # Match the placeholder STYLE only (the literal `(vX.Y.Z,
+        # commit pending)`); free-form prose mentions of the term
+        # (e.g. retraction notes) are legitimate and must not trip
+        # the gate. Mirrors innovation_explorer's regex.
+        placeholder_re = re.compile(r"\(v\d+(?:\.\d+){1,2},\s*commit pending\)")
+        offenders: list[str] = []
+        for i in range(1, len(sections), 2):
+            letter = sections[i]
+            body = sections[i + 1] if i + 1 < len(sections) else ""
+            status_match = re.search(r"^- \*\*Status\*\*: *(.+)$", body, re.MULTILINE)
+            if status_match is None:
+                continue
+            status_line = status_match.group(1)
+            if "Implemented" not in status_line:
+                continue
+            if placeholder_re.search(body):
+                offenders.append(letter)
+        self.assertEqual(
+            offenders, [],
+            "INNOVATION_LOG.md candidates with Implemented status must "
+            "carry an actual commit SHA, not the placeholder "
+            f"'(vX.Y.Z, commit pending)'. Offenders: {offenders}",
+        )
+
+    def test_javascript_url_in_evidence_rejected(self) -> None:
+        """Round 12 audit (v0.7.15) gate: parity with the v0.7.13
+        timeline.url regression — both evidence.url and evidence.archive_url
+        must enforce ``format: uri`` + ``^https?://`` pattern.
+        """
+        schema = json.loads(
+            (REPO_ROOT / "schemas" / "evidence.json").read_text(encoding="utf-8")
+        )
+        for field in ("url", "archive_url"):
+            props = schema["properties"].get(field, {})
+            self.assertEqual(
+                props.get("format"), "uri",
+                f"evidence.json {field} must declare format=uri",
+            )
+            pattern = props.get("pattern", "")
+            self.assertTrue(
+                pattern.startswith("^https?"),
+                f"evidence.json {field} must restrict to http(s); "
+                f"got pattern={pattern!r}",
+            )
+
     def test_section_iri_gate_finds_dotted_iris(self) -> None:
         """Round 11 audit (v0.7.14) positive control: the section IRI
         gate must observe at least one IRI containing a dot (e.g.

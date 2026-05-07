@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [main]
 
+# Round 12 audit (v0.7.15): explicit least-privilege block. Default
+# GITHUB_TOKEN permissions vary across repo settings and forks; pinning
+# to read-only here removes write capability the validate job never
+# needs. Dependent jobs that mutate state (issue creation, comment
+# posting) declare their own elevated permissions.
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest

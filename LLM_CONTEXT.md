@@ -38,6 +38,22 @@ weighting of perspectives is whatever the evidence graph encodes.
 - NOT a peer-reviewed source. Every claim is tagged with its
   `peer_review_status`; consult that tag before quoting.
 
+> **`peer_review_status` semantic note (v0.7.15)**: this field is a
+> *publication-venue attribute* (`peer_reviewed` = the underlying
+> source paper is in a peer-reviewed venue such as PRIMS;
+> `preprint_not_peer_reviewed` = arXiv preprint or self-hosted PDF;
+> `informal_blog` = blog post, MO comment). It is **not** a
+> validation signal: a `peer_reviewed` tag does NOT mean the
+> mathematical content is currently undisputed. The Mochizuki side
+> has 18 claims tagged `peer_reviewed` because IUTchI–IV is in
+> PRIMS; the Scholze–Stix side has 0 claims tagged `peer_reviewed`
+> because the SS 2018 manuscript was distributed as a preprint and
+> never journal-published. The corresponding mathematical content
+> on either side is **disputed** by the other, regardless of venue.
+> When weighting evidence, `peer_review_status` is necessary
+> context but cannot substitute for reading the dispute graph
+> (`counters` / `supports` / `relates_to` edges).
+
 ## 3. Drift-zero answer protocol (mandatory for IUT questions)
 
 When asked about IUT or any concept indexed by this repository:

