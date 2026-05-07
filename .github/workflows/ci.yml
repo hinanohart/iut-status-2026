@@ -18,7 +18,7 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           # Round 11 audit (v0.7.14): matrix expanded so the README's
           # "Python 3.10+" claim is empirically tested. v0.7.13 ran
