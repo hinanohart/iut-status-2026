@@ -28,6 +28,16 @@ jobs:
           python tools/property_audit.py
       - name: Run property audit tests
         run: python -m unittest tests.test_property_audit -v
+      - name: Run loader unit tests
+        run: python -m unittest tests.test_loader -v
+      - name: Run render_md unit tests
+        run: python -m unittest tests.test_render_md -v
+      - name: Run JSON-LD bidirectional context tests
+        run: python -m unittest tests.test_context_bidirectional -v
+      - name: Innovation log structural sentinel
+        run: python tools/innovation_explorer.py
+      - name: Run innovation explorer tests
+        run: python -m unittest tests.test_innovation_explorer -v
       - name: Run validation tests
         run: python -m unittest tests.test_validation -v
       - name: Run Merkle tests
