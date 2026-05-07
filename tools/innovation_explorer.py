@@ -57,7 +57,13 @@ HEADER_RE = re.compile(r"^### ([A-Z]+)\. (.+?)$")
 # token anywhere on that line. Tolerates ``**Status**: **Implemented**``
 # (emphasis-wrapped) and ``**Status**: Deferred (rationale)`` alike.
 STATUS_LINE_RE = re.compile(r"^- \*\*Status\*\*: *(.+)$", re.MULTILINE)
-COMMIT_REF_RE = re.compile(r"\b[0-9a-f]{7,40}\b")
+# Round 11 audit (v0.7.14): the 7-40 range previously matched 64-char
+# strings such as the Merkle root, allowing a future "commit pending"
+# replacement to substitute the merkle root literal and still satisfy
+# the cites-evidence gate. Git short SHAs are normally 7-12 chars; full
+# SHAs are 40. Restrict to those two regimes so the 64-char Merkle
+# digest cannot masquerade as a commit citation.
+COMMIT_REF_RE = re.compile(r"\b(?:[0-9a-f]{7,12}|[0-9a-f]{40})\b")
 VERSION_TAG_RE = re.compile(r"\bv0\.\d+\.\d+\b")
 FILE_PATH_RE = re.compile(r"`([^`]*?\.(?:py|md|json|lean|yml|yaml|jsonld|txt|toml))`")
 

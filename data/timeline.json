@@ -6,6 +6,7 @@
       "type": "event",
       "label": "abc conjecture proposed (Masser, Oesterle)",
       "date": "1985-01-01",
+      "date_precision": "year",
       "actors": [
         "Masser",
         "Oesterle"
@@ -16,6 +17,7 @@
       "type": "event",
       "label": "Frobenioids I and II published (Mochizuki)",
       "date": "2008-01-01",
+      "date_precision": "year",
       "actors": [
         "Mochizuki"
       ],
@@ -26,6 +28,7 @@
       "type": "event",
       "label": "The etale theta function paper published (Mochizuki)",
       "date": "2009-01-01",
+      "date_precision": "year",
       "actors": [
         "Mochizuki"
       ],

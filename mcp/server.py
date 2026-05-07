@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -226,9 +227,59 @@ def handle_tools_call(
         return _make_error(request_id, -32603, f"internal error: {exc}")
 
 
+def _validate_tool_arguments(name: Any, args: dict[str, Any]) -> str | None:
+    """Round 11 audit (v0.7.14): enforce the ``inputSchema`` advertised
+    in the ``tools/list`` response at the runtime dispatch boundary.
+
+    Returns ``None`` on success, or a human-readable error string when
+    arguments fail to satisfy the declared ``required`` / ``type`` /
+    ``pattern`` constraints. Round-10 left these declarations as
+    documentation-only; a confused or malicious client could supply
+    ``{"iri": ["array"]}`` and crash the loader (TypeError → -32603
+    internal error) instead of receiving a clean -32602.
+    """
+    tool = next((t for t in TOOLS if t.get("name") == name), None)
+    if tool is None:
+        return None  # unknown tool: the dispatch branch returns -32601 instead.
+
+    schema = tool.get("inputSchema") or {}
+    required: list[str] = schema.get("required", []) or []
+    properties: dict[str, Any] = schema.get("properties", {}) or {}
+
+    for req_field in required:
+        if req_field not in args:
+            return f"missing required argument: {req_field!r}"
+
+    for field, prop in properties.items():
+        if field not in args:
+            continue
+        value = args[field]
+        expected_type = prop.get("type")
+        if expected_type == "string" and not isinstance(value, str):
+            return (
+                f"argument {field!r} must be a string per inputSchema; "
+                f"got {type(value).__name__}"
+            )
+        pattern = prop.get("pattern")
+        if pattern and isinstance(value, str):
+            if not re.match(pattern, value):
+                return (
+                    f"argument {field!r}={value!r} does not match the "
+                    f"declared inputSchema pattern {pattern!r}"
+                )
+    return None
+
+
 def _dispatch_tool(
     request_id: Any, name: Any, args: dict[str, Any], graph: IutGraph
 ) -> dict[str, Any]:
+    # Round 11 audit (v0.7.14): enforce inputSchema before reaching
+    # the loader to convert silent crashes / silent nulls into
+    # explicit -32602 invalid-params responses.
+    arg_error = _validate_tool_arguments(name, args)
+    if arg_error is not None:
+        return _make_error(request_id, -32602, arg_error)
+
     if name == "iut_entity":
         record = _entity_to_json(graph, args["iri"])
         return _make_response(
@@ -283,6 +334,7 @@ def _dispatch_tool(
                 "type": e.type,
                 "label": e.label,
                 "date": e.date,
+                "date_precision": e.date_precision,
                 "actors": list(e.actors),
                 "url": e.url,
                 "archive_url": e.archive_url,
@@ -342,23 +394,49 @@ def main() -> int:
     return 0
 
 
-def _handle_jsonrpc(req: object, graph: IutGraph) -> list[dict]:
+def _handle_jsonrpc(req: object, graph: IutGraph, _depth: int = 0) -> list[dict]:
     """Dispatch a single or batch JSON-RPC 2.0 message.
 
     Returns the list of response objects to emit (possibly empty for
     notifications and notification-only batches).
+
+    Round 11 audit (v0.7.14): added (a) ``jsonrpc`` version validation
+    (§4 requires literal ``"2.0"``), (b) ``params`` type validation
+    (§4.2 — params MUST be Array or Object when present; ``null`` is
+    explicitly NOT allowed), (c) nested-batch rejection with depth
+    guard (§6 batches MUST be flat arrays of Request objects, no
+    Array-of-Array nesting). Round 10 closed only the dict/non-object
+    edge cases; the gaps closed here were demonstrated by Round-11
+    architect/critic counter-examples.
     """
     if isinstance(req, list):
-        # JSON-RPC 2.0 §6: batch — empty array → invalid request.
+        # §6 batch — nesting is forbidden; depth>0 means we are already
+        # inside a batch and the current item is itself a batch.
+        if _depth > 0:
+            return [_make_error(
+                None, -32600,
+                "invalid request: batches MUST be flat per JSON-RPC 2.0 §6",
+            )]
         if not req:
             return [_make_error(None, -32600, "invalid request: empty batch")]
         out: list[dict] = []
         for item in req:
-            out.extend(_handle_jsonrpc(item, graph))
+            out.extend(_handle_jsonrpc(item, graph, _depth=_depth + 1))
         return out
 
     if not isinstance(req, dict):
         return [_make_error(None, -32600, "invalid request: not an object")]
+
+    # §4: jsonrpc version MUST be the literal "2.0".
+    if req.get("jsonrpc") != "2.0":
+        # Spec is silent on whether to respond when jsonrpc is missing
+        # AND id is missing. We err on the side of returning a parse-
+        # like error response with id=null so misconfigured clients see
+        # a diagnostic rather than silent acceptance.
+        return [_make_error(
+            req.get("id"), -32600,
+            "invalid request: jsonrpc field MUST be the string '2.0'",
+        )]
 
     method = req.get("method")
     # JSON-RPC 2.0 §1.2: a notification is a Request object that has no
@@ -372,12 +450,45 @@ def _handle_jsonrpc(req: object, graph: IutGraph) -> list[dict]:
             return []
         return [_make_error(request_id, -32600, "invalid request: missing or non-string method")]
 
+    # §4.2: params MUST be an Array or Object when present.
+    # `params: null` and `params: 42` etc. are invalid. Round 10
+    # treated `req.get("params", {})` as if it always returned a dict,
+    # but `params: null` made it return None and crashed downstream
+    # at `params.get(...)`.
+    raw_params = req.get("params", {})
+    if raw_params is None:
+        if is_notification:
+            return []
+        return [_make_error(
+            request_id, -32602,
+            "invalid params: 'params' field MUST be an Object or Array per §4.2 (got null)",
+        )]
+    if not isinstance(raw_params, (dict, list)):
+        if is_notification:
+            return []
+        return [_make_error(
+            request_id, -32602,
+            f"invalid params: expected Object or Array, got {type(raw_params).__name__}",
+        )]
+
     if method == "initialize":
         response = handle_initialize(request_id)
     elif method == "tools/list":
         response = handle_tools_list(request_id)
     elif method == "tools/call":
-        response = handle_tools_call(request_id, req.get("params", {}), graph)
+        # ``raw_params`` guaranteed to be a dict|list above; the call
+        # tool requires Object semantics, list params are accepted as
+        # JSON-RPC §4.2 by-position arguments which this server does
+        # not currently implement — mark as -32602.
+        if not isinstance(raw_params, dict):
+            if is_notification:
+                return []
+            response = _make_error(
+                request_id, -32602,
+                "invalid params: tools/call requires by-name (Object) parameters",
+            )
+        else:
+            response = handle_tools_call(request_id, raw_params, graph)
     elif method == "notifications/initialized":
         return []
     else:

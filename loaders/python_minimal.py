@@ -99,6 +99,11 @@ class TimelineEvent:
     actors: tuple[str, ...] = ()
     url: str | None = None
     archive_url: str | None = None
+    # v0.7.14 (Round 11): explicit precision marker. ``None`` (default)
+    # means the date is intended at full ISO ``YYYY-MM-DD`` precision;
+    # ``"year"`` means the day/month components are synthetic padding
+    # for a year-only event, ``"month"`` for known-to-month-only.
+    date_precision: str | None = None
 
 
 @dataclass
@@ -251,6 +256,7 @@ class IutGraph:
                 actors=tuple(record.get("actors", ())),
                 url=record.get("url"),
                 archive_url=record.get("archive_url"),
+                date_precision=record.get("date_precision"),
             )
         except KeyError as exc:
             raise ValueError(f"timeline missing required field {exc}: {record}") from exc
