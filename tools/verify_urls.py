@@ -49,8 +49,10 @@ Limitations
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import logging
+import socket
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -68,6 +70,32 @@ USER_AGENT = (
     "https://github.com/hinanohart/iut-status-2026)"
 )
 HEAD_TIMEOUT_SECONDS = 10.0
+
+# SSRF guard: restrict network access to known reference hosts only.
+# Extend this set when new authoritative sources are added to data/*.json.
+_ALLOWED_HOSTS: frozenset[str] = frozenset(
+    {
+        "arxiv.org",
+        "ems.press",
+        "galoisrepresentations.org",
+        "math.arizona.edu",
+        "ncatlab.org",
+        "www.kadokawa.co.jp",
+        "www.kurims.kyoto-u.ac.jp",
+        "www.math.columbia.edu",
+        "www.math.uni-bonn.de",
+        "www.quantamagazine.org",
+        "zen.ac.jp",
+        # common reference / library hosts
+        "doi.org",
+        "dx.doi.org",
+        "isbnsearch.org",
+        "openlibrary.org",
+        "ndl.go.jp",
+        "iss.ndl.go.jp",
+        "www.ndl.go.jp",
+    }
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -107,8 +135,51 @@ def collect_urls(data_dir: Path) -> list[tuple[str, str, str]]:
     return out
 
 
+def _check_host_ssrf(host: str) -> tuple[bool, str]:
+    """Return ``(allowed, diagnostic)`` for SSRF guard checks.
+
+    Rejects:
+    * IP literals (force all routing through DNS)
+    * Hosts not in ``_ALLOWED_HOSTS``
+    * DNS-resolved addresses that are private, loopback, link-local, or multicast
+    """
+    # Strip port suffix and brackets if present (handles IPv6 "[::1]:8080" etc.).
+    if host.startswith("["):
+        # IPv6 bracket notation: "[addr]" or "[addr]:port"
+        bare_host = host[1:].split("]", 1)[0]
+    else:
+        bare_host = host.split(":")[0]
+
+    # Reject raw IP literals — allowlist is domain-only.
+    try:
+        ipaddress.ip_address(bare_host)
+        return False, f"IP literal not allowed: {bare_host!r}"
+    except ValueError:
+        pass  # not an IP literal — proceed to domain checks
+
+    # Allowlist gate.
+    if bare_host not in _ALLOWED_HOSTS:
+        return False, f"host not in allowlist: {bare_host!r}"
+
+    # DNS-resolve and reject private/internal addresses.
+    try:
+        resolved_ip = socket.gethostbyname(bare_host)
+        addr = ipaddress.ip_address(resolved_ip)
+        if addr.is_private or addr.is_loopback or addr.is_link_local or addr.is_multicast:
+            return False, f"host resolves to private/internal IP: {resolved_ip}"
+    except OSError:
+        # DNS resolution failed — not a security issue in offline/syntax mode;
+        # the network path will catch actual connectivity failures.
+        pass
+
+    return True, "host ok"
+
+
 def verify_syntax(url: str) -> tuple[bool, str]:
-    """Verify URL syntax. Returns ``(is_valid, diagnostic)``."""
+    """Verify URL syntax and apply SSRF host guard.
+
+    Returns ``(is_valid, diagnostic)``.
+    """
     try:
         parsed = urlparse(url)
     except ValueError as exc:
@@ -117,6 +188,9 @@ def verify_syntax(url: str) -> tuple[bool, str]:
         return False, f"non-http scheme: {parsed.scheme!r}"
     if not parsed.netloc:
         return False, "empty netloc"
+    host_ok, host_detail = _check_host_ssrf(parsed.netloc)
+    if not host_ok:
+        return False, host_detail
     return True, "syntax ok"
 
 

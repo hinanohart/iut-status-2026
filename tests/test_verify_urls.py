@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from tools.verify_urls import (  # noqa: E402
     UrlOutcome,
+    _check_host_ssrf,
     collect_urls,
     main,
     render_summary,
@@ -36,11 +37,11 @@ class SyntaxTests(unittest.TestCase):
         self.assertTrue(ok)
 
     def test_http_url_ok(self) -> None:
-        ok, _ = verify_syntax("http://example.org/")
+        ok, _ = verify_syntax("http://arxiv.org/")
         self.assertTrue(ok)
 
     def test_ftp_rejected(self) -> None:
-        ok, detail = verify_syntax("ftp://example.org/")
+        ok, detail = verify_syntax("ftp://arxiv.org/")
         self.assertFalse(ok)
         self.assertIn("non-http scheme", detail)
 
@@ -48,6 +49,49 @@ class SyntaxTests(unittest.TestCase):
         ok, detail = verify_syntax("https://")
         self.assertFalse(ok)
         self.assertIn("empty netloc", detail)
+
+    def test_unknown_host_rejected(self) -> None:
+        ok, detail = verify_syntax("https://attacker.example.com/")
+        self.assertFalse(ok)
+        self.assertIn("not in allowlist", detail)
+
+
+class SSRFGuardTests(unittest.TestCase):
+    """Unit tests for _check_host_ssrf SSRF mitigations (CWE-918)."""
+
+    def test_ip_literal_ipv4_rejected(self) -> None:
+        ok, detail = _check_host_ssrf("127.0.0.1")
+        self.assertFalse(ok)
+        self.assertIn("IP literal", detail)
+
+    def test_ip_literal_private_rejected(self) -> None:
+        ok, detail = _check_host_ssrf("10.0.0.1")
+        self.assertFalse(ok)
+        self.assertIn("IP literal", detail)
+
+    def test_ip_literal_metadata_endpoint(self) -> None:
+        ok, detail = _check_host_ssrf("169.254.169.254")
+        self.assertFalse(ok)
+        self.assertIn("IP literal", detail)
+
+    def test_ip_literal_ipv6_loopback_rejected(self) -> None:
+        # urlparse delivers netloc as "[::1]" with brackets for IPv6
+        ok, detail = _check_host_ssrf("[::1]")
+        self.assertFalse(ok)
+        self.assertIn("IP literal", detail)
+
+    def test_unknown_host_rejected(self) -> None:
+        ok, detail = _check_host_ssrf("attacker.example.com")
+        self.assertFalse(ok)
+        self.assertIn("not in allowlist", detail)
+
+    def test_allowlisted_host_accepted(self) -> None:
+        ok, _ = _check_host_ssrf("arxiv.org")
+        self.assertTrue(ok)
+
+    def test_allowlisted_doi_host_accepted(self) -> None:
+        ok, _ = _check_host_ssrf("doi.org")
+        self.assertTrue(ok)
 
 
 class CollectTests(unittest.TestCase):
@@ -64,7 +108,7 @@ class CollectTests(unittest.TestCase):
 class OfflineVerifyTests(unittest.TestCase):
     def test_offline_returns_unchecked(self) -> None:
         outcome = verify_one(
-            "evidence:test", "https://example.org/", "evidence", network=False
+            "evidence:test", "https://arxiv.org/abs/0001", "evidence", network=False
         )
         self.assertEqual(outcome.status, "unchecked")
 
@@ -97,7 +141,7 @@ class CLIOfflineTests(unittest.TestCase):
                         "id": "evidence:x",
                         "type": "Paper",
                         "label": "x",
-                        "url": "https://example.org/x.pdf",
+                        "url": "https://arxiv.org/abs/test",
                     }
                 ]
             }
