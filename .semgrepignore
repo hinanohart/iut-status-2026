@@ -1,0 +1,6 @@
+
+# 2026-05-16 audit: Semgrep false-positive 除外
+# 動機: archive/verify 自動化 tool 内部の urllib 動的呼出を audit-level で警告 (intentional)
+tools/archive_evidence.py
+tools/verify_identifiers.py
+tools/verify_urls.py
