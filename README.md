@@ -1,5 +1,8 @@
 # iut-status-2026
 
+[![CI](https://github.com/hinanohart/iut-status-2026/actions/workflows/ci.yml/badge.svg)](https://github.com/hinanohart/iut-status-2026/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+
 > A vendor-neutral, drift-resistant, dispute-preserving status index for
 > Inter-universal Teichmüller theory (IUT) and the surrounding
 > mathematical controversy.
